@@ -1,0 +1,21 @@
+.tab-pane *.tab-header-area *.tab-header-background {
+  -fx-background-color:transparent;
+}
+
+.tab-pane {
+  -fx-tab-min-width: 24.5em;
+  -fx-tab-max-width:24.5em;
+  -fx-alignment: center;
+  -fx-tab-min-height:3em;
+  -fx-tab-max-height:3em;
+  -fx-padding: 0 0.5em 0 0.5em;
+}
+
+.tab {
+  -fx-font-family: Arial;
+  -fx-font-size: 18;
+}
+
+.tab:selected {
+    -fx-background-color:royalblue ;
+}
