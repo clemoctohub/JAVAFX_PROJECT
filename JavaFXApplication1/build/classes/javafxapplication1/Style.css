@@ -67,3 +67,49 @@
 #sub{
     -fx-padding : 0 0 -2em 0;
 }
+
+#title-tab2{
+    -fx-padding : 0 0 0 26em;
+    -fx-font-size : 4em;
+    -fx-alignment : bottom-right;
+}
+
+#children-tab2{
+    -fx-padding : 7em 0 0 10em;
+    -fx-font-size : 4em;
+}
+
+#regular-tab2{
+    -fx-padding : 7em 0 0 45em;
+    -fx-font-size : 4em;
+}
+
+#senior-tab2{
+    -fx-padding : 7em 0 0 81em;
+    -fx-font-size : 4em;
+}
+
+#d10{
+    -fx-padding : 12em 0 0 49em;
+    -fx-font-size : 4em;
+}
+
+#d20{
+    -fx-padding : 12em 0 0 84em;
+    -fx-font-size : 4em;
+}
+
+#d30{
+    -fx-padding : 12em 0 0 14em;
+    -fx-font-size : 4em;
+}
+
+#title2-tab2{
+    -fx-padding : 5em 0 0 43em;
+    -fx-font-size : 2.5em;
+}
+
+#text-tab2{
+    -fx-padding : 9em 0 0 14em;
+    -fx-font-size : 2em;
+}

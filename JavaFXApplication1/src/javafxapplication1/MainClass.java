@@ -5,38 +5,29 @@
  */
 package javafxapplication1;
 
-import com.sun.javafx.scene.layout.region.BackgroundFill;
-import static java.awt.Color.*;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Panel;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import static java.awt.Color.red;
-import static java.awt.Color.yellow;
-import java.awt.Rectangle;
+import java.io.FileNotFoundException;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.ContentDisplay;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
-import static javax.swing.text.StyleConstants.Background;
+import javafx.scene.shape.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 /**
  *
@@ -54,6 +45,7 @@ public class MainClass extends Application {
         TabPane tabPane = new TabPane();
         
         tab4.setContent(getPane());
+        tab2.setContent(getDiscount());
         tabPane.getTabs().add(tab1);
         tabPane.getTabs().add(tab2);
         tabPane.getTabs().add(tab3);
@@ -202,6 +194,86 @@ public class MainClass extends Application {
         test.setBottom(sub);
         
         return test;
+    }
+    
+    
+    public BorderPane getDiscount(){
+        BorderPane pane = new BorderPane();
+        pane.setCenter(getGridtab2());
+
+        Button button = new Button("Sign-in/Sign-up");
+        button.setId("button-tab2");
+        button.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        pane.setBottom(button);
+        BorderPane.setMargin(button,new Insets(10,0,0,550));
+
+        return pane;
+    }
+    
+    public GridPane getGridtab2(){
+        GridPane root=new GridPane();
+        root.setId("root-tab2");
+        
+        Rectangle info1 = new Rectangle();
+        info1.setStrokeWidth(5);info1.setStroke(Color.BLACK);
+        info1.setX(80);info1.setY(50);info1.setWidth(1120);info1.setHeight(200);info1.setArcHeight(50);info1.setArcWidth(50);info1.setFill(Color.WHITE);
+        Rectangle rect1 = new Rectangle();
+        rect1.setStrokeWidth(5);rect1.setStroke(Color.BLACK);
+        rect1.setX(80);rect1.setY(50);rect1.setWidth(300);rect1.setHeight(200);rect1.setArcHeight(50);rect1.setArcWidth(50);rect1.setFill(Color.GRAY); 
+        Rectangle rect2 = new Rectangle();
+        rect2.setStrokeWidth(5);rect2.setStroke(Color.BLACK);
+        rect2.setX(490);rect2.setY(50);rect2.setWidth(300);rect2.setHeight(200);rect2.setArcHeight(50);rect2.setArcWidth(50);rect2.setFill(Color.GRAY);
+        Rectangle rect3 = new Rectangle();
+        rect3.setStrokeWidth(5);rect3.setStroke(Color.BLACK);
+        rect3.setX(900);rect3.setY(50);rect3.setWidth(300);rect3.setHeight(200);rect3.setArcHeight(50);rect3.setArcWidth(50);rect3.setFill(Color.GRAY);
+        
+        Label title = new Label("SIGN-UP & GET A DISCOUNT!");
+        Label children = new Label("CHILDREN");
+        Label regular = new Label("REGULAR");
+        Label senior = new Label("SENIOR");
+        Label d10 = new Label("-10%");
+        Label d20 = new Label("-20%");
+        Label d30 = new Label("-30%");
+        Label title2 = new Label("Benefits all year round!!");
+        Label text = new Label("Thanks to CinéPass, enjoy exclusive benefits and offers throughout the year.\n" +"To make sure you don't miss out on anything, receive our communications by newsletter .");
+        
+        title.setId("title-tab2");
+        children.setId("children-tab2");
+        regular.setId("regular-tab2");
+        senior.setId("senior-tab2");
+        title2.setId("title2-tab2");
+        text.setId("text-tab2");
+        d10.setId("d10");
+        d20.setId("d20");
+        d30.setId("d30");
+        
+            
+        
+        Group rects = new Group();
+        rects.getChildren().add(rect1);
+        rects.getChildren().add(rect2);
+        rects.getChildren().add(rect3);
+        rects.getChildren().add(children);
+        rects.getChildren().add(regular);
+        rects.getChildren().add(senior);
+        rects.getChildren().add(d10);
+        rects.getChildren().add(d20);
+        rects.getChildren().add(d30);
+        
+        
+        Group infos = new Group();
+        infos.getChildren().add(info1);
+        infos.getChildren().add(title2);
+        infos.getChildren().add(text);
+        
+        root.addRow(0, title);
+        root.addRow(2, rects);
+        root.addRow(4, infos);
+        root.setHgap(10);  
+        root.setVgap(10);
+        
+        return root;
+        
     }
     
 }
