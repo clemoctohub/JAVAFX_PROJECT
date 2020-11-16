@@ -200,19 +200,23 @@ public class MainClass extends Application {
     public BorderPane getDiscount(){
         BorderPane pane = new BorderPane();
         pane.setCenter(getGridtab2());
-
+        HBox test = new HBox();
+        test.setAlignment(Pos.CENTER);
         Button button = new Button("Sign-in/Sign-up");
         button.setId("button-tab2");
         button.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
-        pane.setBottom(button);
+        test.getChildren().add(button);
+        pane.setBottom(test);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
 
         return pane;
     }
     
     public GridPane getGridtab2(){
+        
         GridPane root=new GridPane();
         root.setId("root-tab2");
+        root.setAlignment(Pos.CENTER);
         
         Rectangle info1 = new Rectangle();
         info1.setStrokeWidth(5);info1.setStroke(Color.BLACK);
