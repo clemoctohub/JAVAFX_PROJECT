@@ -19,3 +19,23 @@
 .tab:selected {
     -fx-background-color:royalblue ;
 }
+
+#root-tab4{
+    -fx-alignment : center;
+    -fx-padding : 15em 0 0 0;
+    
+}
+
+#text-tab4{
+    -fx-font-size : 2em;
+}
+
+#label-tab4{
+    -fx-font-size : 1.2em;
+}
+
+#title-tab4{
+    -fx-padding : 0 0 3em 6em;
+    -fx-font-size : 1.5em;
+    -fx-alignment : bottom-right;
+}
