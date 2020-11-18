@@ -7,8 +7,13 @@ package javafxapplication1;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import javafx.scene.image.*;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -26,6 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 
 /**
@@ -45,8 +51,7 @@ public class MainClass extends Application {
     @Override
     public void start(Stage primaryStage) {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        //int width = gd.getDisplayMode().getWidth();
-        //int height = gd.getDisplayMode().getHeight();
+        
         Label bande = new Label("WELCOME IN OUR CINEMA");
         bande.setId("bande");
         connected = new Label("");
@@ -56,7 +61,7 @@ public class MainClass extends Application {
         header.setAlignment(Pos.CENTER);
         header.getChildren().addAll(bande,connected);
         tab2.setContent(getDiscount());
-        tab3.setContent(searchVbox());
+        tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
         
         tabPane.getTabs().add(tab1);
@@ -78,41 +83,127 @@ public class MainClass extends Application {
         primaryStage.show();
     }
     
-    public VBox searchVbox(){
-        VBox nvx = new VBox();
-        nvx.setAlignment(Pos.CENTER);
-        String type="";
+    public BorderPane searchTab(boolean condi,ArrayList<Movies> movies){
+        BorderPane nvx = new BorderPane();
+        nvx.setTop(searchVbox());
         
-        TextField recherche = new TextField();
-        HBox hbo1 = new HBox();
+        if(condi==true){
+            nvx.setCenter(resultMovies(movies));
+        }
+        
+        return nvx;
+    }
+    
+    public ScrollPane resultMovies(ArrayList<Movies> movies){
+        ScrollPane bar = new ScrollPane();
+        
+        GridPane tot = new GridPane();
+        
+        tot.setAlignment(Pos.CENTER);
+        VBox vbox = new VBox(30);
+        VBox other = new VBox(30);
+        ArrayList<Button> tabButton = new ArrayList<Button>(); 
+        for(int i=0;i<movies.size();i++){
+            Label nom = new Label("Title : "+movies.get(i).getTitle()+" ");
+            Label auteur = new Label("Author : "+movies.get(i).getAuthor()+" ");
+            Label date = new Label("Date : "+movies.get(i).getDate()+" ");
+            tabButton.add(new Button("Reserve"));
+            HBox hbo = new HBox(20);
+            hbo.setAlignment(Pos.CENTER_LEFT);
+            hbo.setId("disp-movie");
+            hbo.getChildren().addAll(nom,auteur,date,tabButton.get(i));
+            vbox.getChildren().add(hbo);
+            
+            tabButton.add(new Button("Reserve"));
+            tabButton.get(i).setId("disp-button");
+            other.getChildren().add(tabButton.get(i));
+        }
+        tot.addColumn(0, vbox);
+        tot.addColumn(1, other);
+        tot.setId("search");
+        bar.setContent(tot);
+        bar.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        return bar;
+    }
+    
+    public VBox searchVbox(){
+        VBox nvx = new VBox(50);
+        //nvx.setAlignement(Pos.CENTER);
+        final TextField recherche = new TextField();
+        recherche.setPromptText("Name of the movie");
+        VBox hbo1 = new VBox();
         hbo1.setAlignment(Pos.CENTER);
         hbo1.getChildren().add(recherche);
         
-        ChoiceBox split = new ChoiceBox();
+        final ChoiceBox split = new ChoiceBox();
         split.getItems().addAll("Action","Science-Fiction","Horror","Fantastic","Comedia");
         
-        TextField lab1 = new TextField();
+        final TextField lab1 = new TextField();
         lab1.setPromptText("Month");
-        Label lab2 = new Label("/");
-        TextField lab3 = new TextField();
+        final Label lab2 = new Label("/");
+        final TextField lab3 = new TextField();
         lab3.setPromptText("Day");
-        HBox cont = new HBox();
+        HBox cont = new HBox(10);
         cont.getChildren().addAll(lab1,lab2,lab3);
         
-        TextField time = new TextField();
+        recherche.setId("bar-search");
+        nvx.setId("vbox-search");
+        lab1.setId("lab-search");
+        lab2.setId("lab-search");
+        lab3.setId("lab-search");
+        split.setId("lab-search");
+        
+        
+        final TextField time = new TextField();
         time.setPromptText("time");
         
-        HBox hbo2 = new HBox();
+        time.setId("lab-search");
+        
+        HBox hbo2 = new HBox(50);
         hbo2.setAlignment(Pos.CENTER);
         hbo2.getChildren().addAll(split,cont,time);
         
-        nvx.getChildren().addAll(hbo1,hbo2);
+        HBox HButton = new HBox(100);
+        HButton.setAlignment(Pos.CENTER);
+        Button button = new Button("Search");
+        button.setId("but-search");
+        Button reset = new Button("Reset");
+        reset.setId("but-search");
+        HButton.getChildren().addAll(button,reset);
         
+        nvx.getChildren().addAll(hbo1,hbo2,HButton);
+        
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override  
+            public void handle(ActionEvent arg0) {
+                ArrayList<Movies> movies = new ArrayList<>();
+                controller = new Controller("search","search");
+                try {
+                    movies = controller.searchMovies(recherche.getText(),(String)split.getValue(),time.getText());
+                } catch (ClassNotFoundException | ParseException | SQLException ex) {
+                    Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(movies!=null && movies.size()>0)
+                    tab3.setContent(searchTab(true,movies));
+                else{
+                    recherche.setText("");
+                    lab1.setText("");
+                    lab3.setText("");
+                    time.setText("");
+                }
+            }
+        });
+        
+        reset.setOnAction(new EventHandler<ActionEvent>() {
+            @Override  
+            public void handle(ActionEvent arg0) {
+                tab3.setContent(searchTab(false,null));
+            }
+        });
         
         return nvx;
         
     }
-    
     
     public BorderPane getPane(int condi){
         BorderPane pane = new BorderPane();
@@ -133,7 +224,7 @@ public class MainClass extends Application {
 
             @Override
             public void handle(ActionEvent event) {
-                tab4.setContent(getSubscription());
+                tab4.setContent(getSubscription(""));
             }
         });
         
@@ -222,7 +313,6 @@ public class MainClass extends Application {
                 else if(action==false){
                     connected.setText(" : "+actualMember.getFirstName()+" "+actualMember.getLastName());
                     tab4.setContent(membConnected());
-                    System.out.println("MEMBER");
                 }
                 else if(action==true){
                     //nouvelle interface employee
@@ -247,24 +337,39 @@ public class MainClass extends Application {
         return root;
     }
     
-    
     public VBox membConnected(){
         VBox nvx = new VBox(10);
         nvx.setAlignment(Pos.CENTER);
         Label lab1 = new Label("You are connected to your account"); 
         Label lab2 = new Label("First Name : "+actualMember.getFirstName());
         Label lab3 = new Label("Last Name : "+actualMember.getLastName());
-        
+        Image img = null;
+        img = new Image(getClass().getResourceAsStream("/images/deco.jpg"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(80);
+        view.setPreserveRatio(true);
+        Button deco = new Button();
+        deco.setPrefSize(80, 75);
+        deco.setGraphic(view);
         lab1.setId("label-co");
         lab2.setId("label-co");
         lab3.setId("label-co");
         
-        nvx.getChildren().addAll(lab1,lab2,lab3);
+        nvx.getChildren().addAll(deco,lab1,lab2,lab3);
+        
+        deco.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                connected.setText("");
+                actualMember = null;
+                tab4.setContent(getPane(0));
+            }
+        });
         
         return nvx;
     }
     
-    public BorderPane getSubscription(){
+    public BorderPane getSubscription(String message){
         
         BorderPane test = new BorderPane();
         VBox nvx = new VBox(10);
@@ -277,12 +382,14 @@ public class MainClass extends Application {
         Label age = new Label("Enter your age :");
         Label password = new Label("Your Password :");
         Label confirmPassword = new Label("Confirm your password :");
+        final Label error = new Label(message);
+        error.setTextFill(RED);
 //Adding text-field to the form
-        TextField tf1=new TextField();
-        TextField tf2=new TextField();
-        TextField tf3=new TextField();
-        PasswordField tf4=new PasswordField();
-        PasswordField tf5=new PasswordField();
+        final TextField tf1=new TextField();
+        final TextField tf2=new TextField();
+        final TextField tf3=new TextField();
+        final PasswordField tf4=new PasswordField();
+        final PasswordField tf5=new PasswordField();
         tf1.setId("text-sub");
         tf2.setId("text-sub");
         tf3.setId("text-sub");
@@ -297,9 +404,39 @@ public class MainClass extends Application {
         
         Button bout = new Button("Submit");
         bout.setId("submit-tab4");
-        nvx.getChildren().addAll(firstName,tf1,lastName,tf2,age,tf3,password,tf4,confirmPassword,tf5,bout);
+        nvx.getChildren().addAll(firstName,tf1,lastName,tf2,age,tf3,password,tf4,confirmPassword,tf5,error,bout);
         
         nvx.setId("sub");
+        
+        bout.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                boolean condi=false;
+                controller = new Controller("subscription","tab4");
+                if(!tf5.getText().equals(tf4.getText())){
+                    tab4.setContent(getSubscription("Please enter same password"));
+                }
+                else{
+                    try {
+                        condi = controller.createMember(tf1.getText(),tf2.getText(),tf3.getText(),tf4.getText());
+                    } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                        Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println(condi);
+                    if(condi==true){
+                        String login = tf1.getText()+tf2.getText();
+                        int age = Integer.parseInt(tf3.getText());
+                        actualMember = new Members(tf1.getText(),tf2.getText(),tf3.getText(),age,login);
+                        tab4.setContent(membConnected());
+                        connected.setText(" : "+actualMember.getFirstName()+" "+actualMember.getLastName());
+                    }
+                    else{
+                        tab4.setContent(getSubscription("Wrong input try again please"));
+                    }
+                }
+            }
+        });
         
         test.setCenter(nvx);
         
@@ -341,7 +478,7 @@ public class MainClass extends Application {
             @Override  
             public void handle(ActionEvent arg0) {  
                 // TODO Auto-generated method stub
-                tab4.setContent(getSubscription());
+                tab4.setContent(getSubscription(""));
                 tabPane.getSelectionModel().select(tab4);
             }
         });  

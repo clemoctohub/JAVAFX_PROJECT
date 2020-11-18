@@ -365,7 +365,7 @@ public class Connexion {
     }
     
     //Recherche du film parmi la liste de films disponibles
-    public ArrayList<Movies> searchMovie(String name,String type,java.sql.Date date,int time)throws SQLException{
+    public ArrayList<Movies> searchMovie(String name,String type,int time)throws SQLException{
         ArrayList<Movies> liste = new ArrayList<>();
         ArrayList<Movies> request = new ArrayList<>();
         request = recolterChampsMovies();
@@ -380,10 +380,6 @@ public class Connexion {
             else if(request.get(i).getType().equals(type)){
                 condi = true;
                 System.out.println("il y a genre");
-            }
-            else if(request.get(i).getDate()==date){
-                condi = true;
-                System.out.println("il y a la date");
             }
             else if(request.get(i).getRunningTime() == time){
                 condi = true;
