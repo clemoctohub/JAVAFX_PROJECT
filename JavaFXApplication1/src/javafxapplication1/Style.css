@@ -2,13 +2,17 @@
   -fx-background-color:transparent;
 }
 
+#bande{
+    -fx-alignment: center;
+    -fx-font-size : 3em;
+}
+
 .tab-pane {
   -fx-tab-min-width: 24.5em;
   -fx-tab-max-width:24.5em;
   -fx-alignment: center;
   -fx-tab-min-height:3em;
   -fx-tab-max-height:3em;
-  -fx-padding: 0 0.5em 0 0.5em;
 }
 
 .tab {
@@ -17,12 +21,12 @@
 }
 
 .tab:selected {
-    -fx-background-color:royalblue ;
+    -fx-background-color:royalblue;
 }
 
 #root-tab4{
     -fx-alignment : center;
-    -fx-padding : 14em 0 0 7.8em;
+    -fx-padding : 8em 0 0 5em;
 }
 
 #text-tab4{
@@ -116,3 +120,7 @@
     -fx-padding : 2em 0 0 3em;
     -fx-font-size : 2em;
 }*/
+
+#label-co{
+    -fx-font-size : 3em;
+}

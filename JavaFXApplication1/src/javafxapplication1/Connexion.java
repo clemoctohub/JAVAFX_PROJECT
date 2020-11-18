@@ -61,9 +61,6 @@ public class Connexion {
         // création d'un ordre SQL (statement)
         stmt = conn.createStatement(); 
         
-       delete_movie(1);
-        
-        conn.close();
     }
 
     public java.sql.Date convertDate(String date) throws ParseException{
@@ -368,7 +365,7 @@ public class Connexion {
     }
     
     //Recherche du film parmi la liste de films disponibles
-    public void searchMovie(String name,String type,java.sql.Date date,int time)throws SQLException{
+    public ArrayList<Movies> searchMovie(String name,String type,java.sql.Date date,int time)throws SQLException{
         ArrayList<Movies> liste = new ArrayList<>();
         ArrayList<Movies> request = new ArrayList<>();
         request = recolterChampsMovies();
@@ -398,6 +395,7 @@ public class Connexion {
                 condi = false;
             }
         }
+        return liste;
     }
     //Affichage console des Films et des Employés
     public void afficherMovies()throws SQLException{
@@ -414,24 +412,23 @@ public class Connexion {
     }
     
     //Check des logins et mot de passe pour les membres et les employés
-    public boolean checkLoginMember(String login, String mdp) throws SQLException{
+    public Members checkLoginMember(String login, String mdp) throws SQLException{
         ArrayList<Members> listeMem = recolterChampsMember();
-        boolean check = false;
         
         for(int i=0;i<listeMem.size();i++){
             if(listeMem.get(i).getLogin().equals(login) && listeMem.get(i).getPassword().equals(mdp))
-                check = true;
-        }   
-        return check;        
+                return listeMem.get(i);
+        }
+        conn.close();
+        return null;        
     }
-    public boolean checkLoginEmployee(String login, String mdp) throws SQLException{
+    public Employees checkLoginEmployee(String login, String mdp) throws SQLException{
         ArrayList<Employees> listeEmp = recolterChampsEmployee();
-        boolean check = false;
         
         for(int i=0;i<listeEmp.size();i++){
             if(listeEmp.get(i).getLogin().equals(login) && listeEmp.get(i).getPassword().equals(mdp))
-                check = true;
+                return listeEmp.get(i);
         }
-        return check;        
+        return null;        
     }  
 }

@@ -31,4 +31,20 @@ public class Controller {
        Connexion nvx = new Connexion("movie", "root", "");
        //nvx.searchMovies(name,type,date,time)
     }
+    
+    public Members getConnectedMember(String id, String pwd) throws SQLException, ClassNotFoundException, ParseException{
+        Members test;
+        Connexion nvx = new Connexion("movie", "root", "");
+        test = nvx.checkLoginMember(id,pwd);
+        
+        return test;
+    }
+    
+    public Employees getConnectedEmployee(String id, String pwd) throws SQLException, ClassNotFoundException, ParseException{
+        Employees test;
+        Connexion nvx = new Connexion("movie", "root", "");
+        test = nvx.checkLoginEmployee(id, pwd);
+        
+        return test;
+    }
 }
