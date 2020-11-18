@@ -34,8 +34,8 @@
     -fx-font-size : 1.2em;
 }
 
-#title{
-    -fx-padding : 0 0 5em 6em;
+#title-tab4{
+    -fx-padding : 0 0 3em 6em;
     -fx-font-size : 1.5em;
     -fx-alignment : bottom-right;
 }
