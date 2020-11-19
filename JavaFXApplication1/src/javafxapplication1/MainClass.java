@@ -5,6 +5,9 @@
  */
 package javafxapplication1;
 
+//import com.sun.javafx.scene.layout.region.BackgroundFill;
+import static java.awt.Color.*;
+
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import javafx.scene.image.*;
@@ -13,23 +16,30 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.*;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
+import java.net.MalformedURLException;
+import javafx.scene.Node;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.text.Text;
+import static javax.swing.text.StyleConstants.Background;
+import javafx.scene.layout.Pane;
 
 /**
  *
@@ -45,8 +55,7 @@ public class MainClass extends Application {
     private Controller controller;
     private Label connected;
     
-    @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws MalformedURLException, FileNotFoundException {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         
         Label bande = new Label("WELCOME IN OUR CINEMA");
@@ -61,6 +70,7 @@ public class MainClass extends Application {
         tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
         
+        tab1.setContent(getPanetab1());
         tabPane.getTabs().add(tab1);
         tabPane.getTabs().add(tab2);
         tabPane.getTabs().add(tab3);
@@ -365,8 +375,73 @@ public class MainClass extends Application {
         
         return nvx;
     }
+
+    public ScrollPane getSPane()
+    {
+        VBox box = new VBox();      
+        ScrollPane scroll = new ScrollPane();
+        ImageView[] view = new ImageView[3];
+        Image[] image = new Image[3];
+        String[] imageNames = new String[3];
+        imageNames[0]= "https://cdn.radiofrance.fr/s3/cruiser-production/2019/10/796598e0-2d78-492d-9b08-ad2ec8188c2c/1200x680_shrek-et-le-chat-potte-reviennent-bientot-au-cinema-big.jpg";
+        imageNames[1]= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1GwpGofIbWesz2O_2eFxiAX4kDsfCTgaYA&usqp=CAU.jpg";
+        imageNames[2]= "https://cdn.radiofrance.fr/s3/cruiser-production/2019/10/796598e0-2d78-492d-9b08-ad2ec8188c2c/1200x680_shrek-et-le-chat-potte-reviennent-bientot-au-cinema-big.jpg";
+        for(int i=0; i<3 ;i++)
+        {
+            image[i] = new Image(imageNames[i]);
+            view[i] = new ImageView(image[i]);
+            view[i].setFitWidth(300);
+            view[i].setPreserveRatio(true);           
+            box.getChildren().add(view[i]);
+            
+        }
+        scroll.setContent(box);
+        scroll.setPrefSize(320,250);
+        scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        return scroll;
+    }
     
-    public BorderPane getSubscription(String message){
+    public GridPane getGridtab1()
+    {
+        GridPane gp = new GridPane();
+        Label Titre = new Label("Title :");  
+        Label Author = new Label("Author :");
+        Label RD = new Label("Realase Date :");
+        Label GT = new Label("Gender type :");
+        Label RT = new Label("Running Time :");
+        Label Rate = new Label("Rating: ");
+        
+        gp.addRow(0 ,Titre);
+        gp.addRow(1, Author);
+        gp.addRow(2, RD);
+        gp.addRow(3, GT);
+        gp.addRow(4, RT);
+        gp.addRow(5, Rate);
+        gp.setVgap(10);
+        return gp;
+    }
+    
+    public FlowPane getPanetab1()
+    {
+        FlowPane pane = new FlowPane();
+        pane.setHgap(10);
+        pane.getChildren().addAll(getSPane(),getGridtab1());
+        //pane.getChildren().add(getGridtab1());
+        return pane;
+    }
+    public BorderPane getDiscount() throws FileNotFoundException{
+        BorderPane pane = new BorderPane();
+        pane.setCenter(getGridtab2());
+        
+        Button button = new Button("Sign-in/Sign-up");
+        button.setId("button-tab2");
+        button.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        pane.setBottom(button);
+        BorderPane.setMargin(button,new Insets(10,0,0,550));
+        
+        return pane;
+    }
+    public BorderPane getSubscription(){
         
         BorderPane test = new BorderPane();
         VBox nvx = new VBox(10);
@@ -443,7 +518,6 @@ public class MainClass extends Application {
         
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
  
-            @Override
             public void handle(ActionEvent event) {
                 tab4.setContent(getPane(0));
             }
