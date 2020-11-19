@@ -58,13 +58,13 @@
 
 #label-sub{
     -fx-alignment: center;
-    -fx-max-width: 2em;
+    -fx-max-width: 20em;
     -fx-font-size : 1.5em;
 }
 
 #text-sub{
     -fx-alignment: center;
-    -fx-max-width: 2em;
+    -fx-max-width: 20em;
     -fx-font-size : 1.5em;
 }
 
@@ -131,7 +131,6 @@
 
 #bar-search{
     -fx-font-size : 2em;
-    -fx-max-width: 3em;
 }
 
 #vbox-search{

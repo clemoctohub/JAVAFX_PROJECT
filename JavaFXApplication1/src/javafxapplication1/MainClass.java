@@ -370,30 +370,15 @@ public class MainClass extends Application {
         return nvx;
     }
 
-    public ScrollPane getSPane()
-    {
-        //VBox box = new VBox();      
+    public FlowPane getSPane()
+    {   
+        FlowPane pane = new FlowPane();
         ScrollPane scroll = new ScrollPane();
-        /*ImageView[] view = new ImageView[3];
-        Image[] image = new Image[3];
-        String[] imageNames = new String[3];
-        imageNames[0]= "https://cdn.radiofrance.fr/s3/cruiser-production/2019/10/796598e0-2d78-492d-9b08-ad2ec8188c2c/1200x680_shrek-et-le-chat-potte-reviennent-bientot-au-cinema-big.jpg";
-        imageNames[1]= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1GwpGofIbWesz2O_2eFxiAX4kDsfCTgaYA&usqp=CAU.jpg";
-        imageNames[2]= "https://cdn.radiofrance.fr/s3/cruiser-production/2019/10/796598e0-2d78-492d-9b08-ad2ec8188c2c/1200x680_shrek-et-le-chat-potte-reviennent-bientot-au-cinema-big.jpg";
-        for(int i=0; i<3 ;i++)
-        {
-            image[i] = new Image(imageNames[i]);
-            view[i] = new ImageView(image[i]);
-            view[i].setFitWidth(300);
-            view[i].setPreserveRatio(true);           
-            box.getChildren().add(view[i]);
-            
-        }
-        scroll.setContent(box);*/
         scroll.setContent(getPanetab1());
-        scroll.setPrefSize(1000,250);
         scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        return scroll;
+        scroll.setPrefSize(1250,300);
+        pane.getChildren().add(scroll);
+        return pane;
     }
     
     public GridPane getGridtab1()
@@ -423,25 +408,21 @@ public class MainClass extends Application {
         ArrayList<Button> tabButton = new ArrayList<>();
         ImageView[] view = new ImageView[3];
         Image[] image = new Image[3];
-        String[] imageNames = new String[3];
-        imageNames[0]= "https://cdn.radiofrance.fr/s3/cruiser-production/2019/10/796598e0-2d78-492d-9b08-ad2ec8188c2c/1200x680_shrek-et-le-chat-potte-reviennent-bientot-au-cinema-big.jpg";
-        imageNames[1]= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ1GwpGofIbWesz2O_2eFxiAX4kDsfCTgaYA&usqp=CAU.jpg";
-        imageNames[2]= "https://cdn.radiofrance.fr/s3/cruiser-production/2019/10/796598e0-2d78-492d-9b08-ad2ec8188c2c/1200x680_shrek-et-le-chat-potte-reviennent-bientot-au-cinema-big.jpg";
         for(int i=0; i<3 ;i++)
         {
             tabButton.add(new Button());
             HBox box = new HBox(20);
-            image[i] = new Image(imageNames[i]);
+            image[i] = new Image(getClass().getResourceAsStream("/images/Image"+(i+1)+".jpg"));
             view[i] = new ImageView(image[i]);
-            view[i].setFitWidth(300);
+            view[i].setFitWidth(170);
             view[i].setPreserveRatio(true);
-            tabButton.get(i).setPrefSize(300,view[i].getY());
+            tabButton.get(i).setPrefSize(170,view[i].getY());
             tabButton.get(i).setGraphic(view[i]);
             box.getChildren().addAll(tabButton.get(i),getGridtab1());
             gp.addRow(i , box);
         }
         gp.setVgap(10);
-        //pane.setPrefSize(250,250);
+        pane.setPrefSize(300,1000);
         pane.getChildren().add(gp);
         //pane.getChildren().add(getGridtab1());
         return pane;
