@@ -151,3 +151,26 @@
 #search{
     -fx-padding : 2em 0 0 2em;
 }
+
+#box-session{
+    -fx-font-size : 1.8em;
+    -fx-alignment : center;
+}
+
+#button-session{
+    -fx-font-size : 1.4em;
+    -fx-alignment : center;
+}
+
+#co-pay{
+    -fx-font-size : 1.5em;
+    -fx-padding : 1em;
+}
+
+#box-pay{
+    -fx-font-size : 1.5em;
+}
+
+#button-pay{
+    -fx-font-size : 1.4em;
+}

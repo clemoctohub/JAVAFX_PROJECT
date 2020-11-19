@@ -18,6 +18,14 @@ public class Session {
     private int movie;
     private int nbr_places_max;
     
+    public Session(int id,int movie,Date date,int max)
+    {
+        this.movie=movie;
+        this.id = id;
+        this.date = date;
+        this.nbr_places_max = max;
+    }
+    
     public int getMovie(){
         return movie;
     }
@@ -32,13 +40,5 @@ public class Session {
 
     public int getNbr_places_max() {
         return nbr_places_max;
-    }
-    
-    public Session(int id,int movie,Date date,int max)
-    {
-        this.movie=movie;
-        this.id = id;
-        this.date = date;
-        this.nbr_places_max = max;
     }
 }

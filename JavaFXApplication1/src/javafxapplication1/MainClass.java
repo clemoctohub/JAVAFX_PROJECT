@@ -41,14 +41,15 @@ import javafx.scene.paint.Color;
  */
 public class MainClass extends Application {
     
-    private Tab tab1 = new Tab("Home"),tab2 = new Tab("CinePass"),tab3 = new Tab("Search"),tab4 = new Tab("Connection");
-    private TabPane tabPane = new TabPane();
+    private final Tab tab1 = new Tab("Home"),tab2 = new Tab("CinePass"),tab3 = new Tab("Search"),tab4 = new Tab("Connection");
+    private final TabPane tabPane = new TabPane();
     private Members actualMember;
     private Employees actualEmployee;
-    
+    private Cinema cine = new Cinema();
     private Controller controller;
     private Label connected;
     
+    @Override
     public void start(Stage primaryStage) throws MalformedURLException, FileNotFoundException {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         
@@ -84,6 +85,283 @@ public class MainClass extends Application {
         primaryStage.show();
     }
     
+    public double calculatePrice(int i){
+        double j;
+        if(!connected.getText().equals("")){
+            j = cine.prixTicket(actualMember,i);
+            return j;
+        }
+        else
+            return i*cine.getPrix();
+    }
+    
+    public VBox dispMovieToBuy(final Movies movie,Session sess,final ArrayList<Movies> movies){
+        VBox tot = new VBox(50);
+        
+        tot.setAlignment(Pos.CENTER);
+        VBox node = new VBox(20);
+        HBox detail = new HBox();
+        detail.setAlignment(Pos.CENTER);
+        node.setAlignment(Pos.CENTER);
+        Label lab1 = new Label("Title : "+movie.getTitle());
+        Label lab2 = new Label("Author : "+movie.getAuthor());
+        Label lab3 = new Label("Date : "+movie.getDate());
+        Label lab4 = new Label("Type : "+movie.getType());
+        Label lab5 = new Label("Runing time : "+movie.getRunningTime());
+        
+        node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5);
+        
+        Label bis1 = new Label("Date : 2000-12-12");
+        Label bis2 = new Label("Heure : 12h12");
+        
+        detail.getChildren().addAll(bis1,bis2);
+        
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/spider_man.jpg"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(300);
+        view.setPreserveRatio(true);
+        
+        
+        Button but = new Button();
+        Image img2;
+        img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view2 = new ImageView(img2);
+        view2.setFitHeight(90);
+        view2.setPreserveRatio(true);
+        but.setGraphic(view2);
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event){
+                tab3.setContent(dispSeance(movie,movies));
+            }
+        });
+        tot.getChildren().addAll(but,view,detail,node);
+        
+        return tot;
+    }
+    
+    public VBox dispPaiCustomer(){
+        HBox nvx = new HBox(20);
+        nvx.setAlignment(Pos.CENTER);
+        Image[] img = new Image[4];
+        ImageView[] view = new ImageView[4];
+        for(int i=0;i<4;i++){
+            img[i] = new Image(getClass().getResourceAsStream("/images/paie"+i+".JPG"));
+            view[i] = new ImageView(img[i]);
+            view[i].setFitHeight(90);
+            view[i].setPreserveRatio(true);
+            nvx.getChildren().add(view[i]);
+        }
+        
+        VBox input = new VBox(20);
+        input.setAlignment(Pos.CENTER);
+        TextField num = new TextField();
+        num.setPromptText("Enter your number card");
+        num.setAlignment(Pos.CENTER);
+        HBox both = new HBox();
+        both.setAlignment(Pos.CENTER);
+        TextField crypto = new TextField();
+        crypto.setPromptText("Enter your crypto");
+        TextField mv = new TextField();
+        mv.setPromptText("Ex : 01/21");
+        both.getChildren().addAll(crypto,mv);
+        input.getChildren().addAll(num,both);
+        num.setId("box-pay");
+        both.setId("box-pay");
+        HBox ad = new HBox(10);
+        ad.setAlignment(Pos.CENTER);
+        Button plus = new Button("+");
+        Button moins = new Button("-");
+        final Label nbr = new Label();
+        nbr.setText("0");
+        final Label disc = new Label();
+        disc.setId("button-pay");
+        disc.setText("0");
+        
+        plus.setOnAction(new EventHandler<ActionEvent>() {
+            @Override  
+            public void handle(ActionEvent arg0) {
+                int i = Integer.parseInt(nbr.getText());
+                i++;
+                double j = calculatePrice(i);
+                disc.setText(Double.toString(j));
+                nbr.setText(Integer.toString(i));
+            }
+        });
+        moins.setOnAction(new EventHandler<ActionEvent>() {
+            @Override  
+            public void handle(ActionEvent arg0) {
+                int i = Integer.parseInt(nbr.getText());
+                double j=0;
+                i--;
+                if(i<0)
+                    i=0;
+                else{
+                    j = calculatePrice(i);
+                }
+                disc.setText(Double.toString(j)); 
+                nbr.setText(Integer.toString(i));
+                
+            }
+        });
+        
+        Button but = new Button("Ready to pay !");
+        but.setId("button-pay");
+        ad.getChildren().addAll(moins,nbr,plus);
+        ad.setId("button-pay");
+        VBox container = new VBox(80);
+        container.setAlignment(Pos.CENTER);
+        container.getChildren().addAll(nvx,input,ad,disc,but);
+        
+        return container;
+    }
+    
+    public VBox dispTicketCustomer(){
+        VBox tot = new VBox(20);
+        tot.setId("co-pay");
+        Label co = new Label("You are connected as : ");
+        co.setAlignment(Pos.CENTER);
+        Label nom = new Label("");
+        if(!connected.getText().equals("")){
+            nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
+            nom.setAlignment(Pos.CENTER);
+        }
+        else{
+            nom.setText("A Customer");
+            nom.setAlignment(Pos.CENTER);
+        }
+        tot.getChildren().addAll(co,nom);
+        return tot;
+    }
+    
+    public BorderPane paymentPage(Movies movie,Session sess,final ArrayList<Movies> movies){
+        BorderPane tot = new BorderPane();
+        tot.setLeft(dispMovieToBuy(movie,sess,movies));
+        tot.setCenter(dispPaiCustomer());
+        tot.setRight(dispTicketCustomer());
+        //tot.setAlignment(Pos.CENTER);
+        return tot;
+    }
+    
+    public BorderPane dispMovie(Movies movie,final ArrayList<Movies> movies){
+        GridPane tot = new GridPane();
+        BorderPane border = new BorderPane();
+        
+        tot.setHgap(100);
+        tot.setAlignment(Pos.CENTER);
+        VBox node = new VBox(20);
+        node.setAlignment(Pos.CENTER);
+        Label lab1 = new Label("Title : "+movie.getTitle());
+        Label lab2 = new Label("Author : "+movie.getAuthor());
+        Label lab3 = new Label("Date : "+movie.getDate());
+        Label lab4 = new Label("Type : "+movie.getType());
+        Label lab5 = new Label("Runing time : "+movie.getRunningTime());
+        
+        node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5);
+        String desc = "iahfuhzefiuhazeofuhezfuazhfouazhfu. eazrgzaeg ezrhufiazep eruhfazuaezfuh efuahf. aeofiuhazofho azefuiohazouh aui.AZefAZEf fezf. fezffzefz!";
+        for(int i=0;i<desc.length();i++){
+            if(i%30==0 && i!=0){
+                if(desc.charAt(i+1)==' ' || desc.charAt(i+1)=='.'){
+                    desc = desc.substring(0,i) + "\n"+ desc.substring(i);
+                }
+                else{
+                    desc = desc.substring(0,i) + "-\n"+ desc.substring(i);
+                }
+            } 
+        }
+        Label description = new Label(desc);
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/spider_man.jpg"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(300);
+        view.setPreserveRatio(true);
+        
+        tot.addColumn(0, view);
+        tot.addColumn(1, description);
+        tot.addColumn(2, node);
+        
+        Button but = new Button();
+        Image img2;
+        img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view2 = new ImageView(img2);
+        view2.setFitHeight(90);
+        view2.setPreserveRatio(true);
+        but.setGraphic(view2);
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event){
+                tab3.setContent(searchTab(true,movies));
+            }
+        });
+        border.setCenter(tot);
+        border.setLeft(but);
+        
+        return border;
+    }
+    
+    public ScrollPane dispAllSess(final Movies movie,final ArrayList<Movies> movies){
+        ScrollPane tot = new ScrollPane();
+        GridPane nvx = new GridPane();
+        nvx.setHgap(50);
+        ArrayList<Session> sess = new ArrayList<>();
+        controller = new Controller("session","tab3");
+        try{
+            sess = controller.getSessionMovie(movie.getId());
+        }
+        catch(SQLException | ClassNotFoundException | ParseException e){
+            System.out.println("ERROR");
+        }
+        
+        Label date_txt = new Label("Date ");
+        Label heure_txt = new Label("Heure ");
+        Label nbr_txt = new Label("Number of places ");
+        Label reserver = new Label("Click to reserve a place");
+        
+        ArrayList<Button> button = new ArrayList<>();
+        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20);
+        node1.setId("box-session");
+        node2.setId("box-session");
+        node3.setId("box-session");
+        node4.setId("button-session");
+        reserver.setId("box-session");
+        node1.getChildren().add(date_txt);
+        node2.getChildren().add(heure_txt);
+        node3.getChildren().add(nbr_txt);
+        node4.getChildren().add(reserver);
+        for(int i=0;i<sess.size();i++){
+            Label date = new Label("2000-12-12");
+            Label heure = new Label("17h10");
+            String nbrr = Integer.toString(sess.get(i).getNbr_places_max());
+            Label nbr = new Label("Number of places "+nbrr);
+            button.add(new Button("Reserve"));
+            node1.getChildren().add(date);
+            node2.getChildren().add(heure);
+            node3.getChildren().add(nbr);
+            node4.getChildren().add(button.get(i));
+            final Button mybut = button.get(i);
+            final Session session = sess.get(i);
+            mybut.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event){
+                    tab3.setContent(paymentPage(movie,session,movies));
+                }
+            });
+        }
+        nvx.addColumn(0,node1);
+        nvx.addColumn(1,node2);
+        nvx.addColumn(2,node3);
+        nvx.addColumn(3,node4);
+        
+        tot.setContent(nvx);
+        return tot;
+    }
+    
+    public BorderPane dispSeance(Movies movie,ArrayList<Movies> movies){
+        BorderPane tot = new BorderPane();
+        //tot.setAlignment(Pos.CENTER);
+        tot.setTop(dispMovie(movie,movies));
+        tot.setCenter(dispAllSess(movie,movies));
+        return tot;
+    }
+    
     public BorderPane searchTab(boolean condi,ArrayList<Movies> movies){
         BorderPane nvx = new BorderPane();
         nvx.setTop(searchVbox());
@@ -95,7 +373,7 @@ public class MainClass extends Application {
         return nvx;
     }
     
-    public ScrollPane resultMovies(ArrayList<Movies> movies){
+    public ScrollPane resultMovies(final ArrayList<Movies> movies){
         ScrollPane bar = new ScrollPane();
         
         GridPane tot = new GridPane();
@@ -118,6 +396,13 @@ public class MainClass extends Application {
             tabButton.add(new Button("Reserve"));
             tabButton.get(i).setId("disp-button");
             other.getChildren().add(tabButton.get(i));
+            final Button mybut = tabButton.get(i);
+            final Movies movie = movies.get(i);
+            mybut.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event){
+                    tab3.setContent(dispSeance(movie,movies));
+                }
+            });
         }
         tot.addColumn(0, vbox);
         tot.addColumn(1, other);
@@ -344,7 +629,7 @@ public class MainClass extends Application {
         Label lab1 = new Label("You are connected to your account"); 
         Label lab2 = new Label("First Name : "+actualMember.getFirstName());
         Label lab3 = new Label("Last Name : "+actualMember.getLastName());
-        Image img = null;
+        Image img;
         img = new Image(getClass().getResourceAsStream("/images/deco.jpg"));
         ImageView view = new ImageView(img);
         view.setFitHeight(80);
@@ -394,7 +679,6 @@ public class MainClass extends Application {
         scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
         return scroll;
     }
-    
     public GridPane getGridtab1()
     {
         GridPane gp = new GridPane();
@@ -414,7 +698,6 @@ public class MainClass extends Application {
         gp.setVgap(10);
         return gp;
     }
-    
     public FlowPane getPanetab1()
     {
         FlowPane pane = new FlowPane();
@@ -423,7 +706,6 @@ public class MainClass extends Application {
         //pane.getChildren().add(getGridtab1());
         return pane;
     }
-    
     public BorderPane getSubscription(String message){
         
         BorderPane test = new BorderPane();
@@ -533,7 +815,8 @@ public class MainClass extends Application {
             @Override  
             public void handle(ActionEvent arg0) {  
                 // TODO Auto-generated method stub
-                tab4.setContent(getSubscription(""));
+                if(connected.getText().equals(""))
+                    tab4.setContent(getSubscription(""));
                 tabPane.getSelectionModel().select(tab4);
             }
         });  

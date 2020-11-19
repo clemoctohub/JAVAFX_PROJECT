@@ -27,6 +27,7 @@ public class Cinema {
     public void setChildren(double children) {
         this.children = children;
     }
+    public Cinema(){}
     
     public Cinema (ArrayList<Movies> movies)
     {
@@ -45,9 +46,9 @@ public class Cinema {
         return null;
     }
     
-    public double prixTicket(Members mem){
+    public double prixTicket(Members mem,int i){
         double prix;
-        
+        prix = i*PRIX;
         if(mem.getAge()<18)
             prix = PRIX*children;
         else if(mem.getAge()>60)
@@ -56,4 +57,8 @@ public class Cinema {
        
         return prix;
     } 
+    
+    public double getPrix(){
+        return PRIX;
+    }
 }
