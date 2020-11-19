@@ -22,7 +22,8 @@
 
 #root-tab4{
     -fx-alignment : center;
-    -fx-padding : 14em 0 0 7.8em;
+    -fx-padding : 15em 0 0 0;
+    
 }
 
 #text-tab4{
@@ -112,4 +113,5 @@
 #text-tab2{
     -fx-padding : 9em 0 0 14em;
     -fx-font-size : 2em;
+    -fx-alignment : bottom-right;
 }
