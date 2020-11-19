@@ -6,8 +6,6 @@
 package javafxapplication1;
 
 //import com.sun.javafx.scene.layout.region.BackgroundFill;
-import static java.awt.Color.*;
-
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import javafx.scene.image.*;
@@ -16,7 +14,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -35,11 +32,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
-import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.text.Text;
-import static javax.swing.text.StyleConstants.Background;
-import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -429,19 +423,8 @@ public class MainClass extends Application {
         //pane.getChildren().add(getGridtab1());
         return pane;
     }
-    public BorderPane getDiscount() throws FileNotFoundException{
-        BorderPane pane = new BorderPane();
-        pane.setCenter(getGridtab2());
-        
-        Button button = new Button("Sign-in/Sign-up");
-        button.setId("button-tab2");
-        button.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
-        pane.setBottom(button);
-        BorderPane.setMargin(button,new Insets(10,0,0,550));
-        
-        return pane;
-    }
-    public BorderPane getSubscription(){
+    
+    public BorderPane getSubscription(String message){
         
         BorderPane test = new BorderPane();
         VBox nvx = new VBox(10);
@@ -518,6 +501,7 @@ public class MainClass extends Application {
         
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
  
+            @Override
             public void handle(ActionEvent event) {
                 tab4.setContent(getPane(0));
             }
