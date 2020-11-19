@@ -82,7 +82,9 @@ public class Connexion {
         pstmt.setString(3, firstName);
         pstmt.setString(4, lastName);
         pstmt.setInt(5, age);
-        pstmt.execute();        
+        pstmt.execute();
+        
+        conn.close();
     }
     //Ajout d'un nouveau film dans la base de donnees 
     public void insert_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, ArrayList<Session> sessions) throws SQLException{
@@ -385,12 +387,12 @@ public class Connexion {
                 condi = true;
                 System.out.println("il y a temps");
             }
-            
             if(condi==true){
                 liste.add(request.get(i));
                 condi = false;
             }
         }
+        conn.close();
         return liste;
     }
     //Affichage console des Films et des Employés
@@ -425,6 +427,7 @@ public class Connexion {
             if(listeEmp.get(i).getLogin().equals(login) && listeEmp.get(i).getPassword().equals(mdp))
                 return listeEmp.get(i);
         }
+        conn.close();
         return null;        
     }  
 }

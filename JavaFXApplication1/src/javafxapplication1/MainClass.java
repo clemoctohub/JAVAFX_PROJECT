@@ -7,9 +7,6 @@ package javafxapplication1;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import javafx.scene.image.*;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -102,7 +99,7 @@ public class MainClass extends Application {
         tot.setAlignment(Pos.CENTER);
         VBox vbox = new VBox(30);
         VBox other = new VBox(30);
-        ArrayList<Button> tabButton = new ArrayList<Button>(); 
+        ArrayList<Button> tabButton = new ArrayList<>(); 
         for(int i=0;i<movies.size();i++){
             Label nom = new Label("Title : "+movies.get(i).getTitle()+" ");
             Label auteur = new Label("Author : "+movies.get(i).getAuthor()+" ");
