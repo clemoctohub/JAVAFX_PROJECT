@@ -33,7 +33,9 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -41,14 +43,15 @@ import javafx.scene.paint.Color;
  */
 public class MainClass extends Application {
     
-    private Tab tab1 = new Tab("Home"),tab2 = new Tab("CinePass"),tab3 = new Tab("Search"),tab4 = new Tab("Connection");
-    private TabPane tabPane = new TabPane();
+    private final Tab tab1 = new Tab("Home"),tab2 = new Tab("CinePass"),tab3 = new Tab("Search"),tab4 = new Tab("Connection");
+    private final TabPane tabPane = new TabPane();
     private Members actualMember;
     private Employees actualEmployee;
     
     private Controller controller;
     private Label connected;
     
+    @Override
     public void start(Stage primaryStage) throws MalformedURLException, FileNotFoundException {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         
@@ -118,6 +121,14 @@ public class MainClass extends Application {
             tabButton.add(new Button("Reserve"));
             tabButton.get(i).setId("disp-button");
             other.getChildren().add(tabButton.get(i));
+            final Button mybut = tabButton.get(i);
+            final int j = i;
+            mybut.setOnAction(new EventHandler<ActionEvent>() {
+                
+                public void handle(ActionEvent event) {
+                    System.out.println("c'est le bouton : "+j);
+                }
+            });
         }
         tot.addColumn(0, vbox);
         tot.addColumn(1, other);
@@ -130,7 +141,8 @@ public class MainClass extends Application {
     public VBox searchVbox(){
         VBox nvx = new VBox(50);
         //nvx.setAlignement(Pos.CENTER);
-        final TextField recherche = new TextField();
+        final TextField recherche;
+        recherche = new TextField();
         recherche.setPromptText("Name of the movie");
         VBox hbo1 = new VBox();
         hbo1.setAlignment(Pos.CENTER);
@@ -344,7 +356,7 @@ public class MainClass extends Application {
         Label lab1 = new Label("You are connected to your account"); 
         Label lab2 = new Label("First Name : "+actualMember.getFirstName());
         Label lab3 = new Label("Last Name : "+actualMember.getLastName());
-        Image img = null;
+        Image img;
         img = new Image(getClass().getResourceAsStream("/images/deco.jpg"));
         ImageView view = new ImageView(img);
         view.setFitHeight(80);
@@ -380,7 +392,6 @@ public class MainClass extends Application {
         pane.getChildren().add(scroll);
         return pane;
     }
-    
     public GridPane getGridtab1()
     {
         GridPane gp = new GridPane();
@@ -400,7 +411,6 @@ public class MainClass extends Application {
         gp.setVgap(10);
         return gp;
     }
-    
     public FlowPane getPanetab1()
     {
         FlowPane pane = new FlowPane();
@@ -427,7 +437,6 @@ public class MainClass extends Application {
         //pane.getChildren().add(getGridtab1());
         return pane;
     }
-    
     public BorderPane getSubscription(String message){
         
         BorderPane test = new BorderPane();
@@ -551,65 +560,46 @@ public class MainClass extends Application {
         root.setId("root-tab2");
         root.setAlignment(Pos.CENTER);
         
-        Rectangle info1 = new Rectangle();
-        info1.setStrokeWidth(5);info1.setStroke(Color.BLACK);
-        info1.setX(80);info1.setY(50);info1.setWidth(1120);info1.setHeight(200);info1.setArcHeight(50);info1.setArcWidth(50);info1.setFill(Color.WHITE);
-        Rectangle rect1 = new Rectangle();
-        rect1.setStrokeWidth(5);rect1.setStroke(Color.BLACK);
-        rect1.setX(80);rect1.setY(50);rect1.setWidth(300);rect1.setHeight(200);rect1.setArcHeight(50);rect1.setArcWidth(50);rect1.setFill(Color.GRAY); 
-        Rectangle rect2 = new Rectangle();
-        rect2.setStrokeWidth(5);rect2.setStroke(Color.BLACK);
-        rect2.setX(490);rect2.setY(50);rect2.setWidth(300);rect2.setHeight(200);rect2.setArcHeight(50);rect2.setArcWidth(50);rect2.setFill(Color.GRAY);
-        Rectangle rect3 = new Rectangle();
-        rect3.setStrokeWidth(5);rect3.setStroke(Color.BLACK);
-        rect3.setX(900);rect3.setY(50);rect3.setWidth(300);rect3.setHeight(200);rect3.setArcHeight(50);rect3.setArcWidth(50);rect3.setFill(Color.GRAY);
+        Image carte = new Image(getClass().getResourceAsStream("/images/carteCinePass.png"));
+        ImageView view;
+        view = new ImageView(carte);
+        view.setFitHeight(300);
+        view.setPreserveRatio(true);
+        view.setX(-80);
+        view.setY(-10);
         
-        Label title = new Label("SIGN-UP & GET A DISCOUNT!");
-        Label children = new Label("CHILDREN");
-        Label regular = new Label("REGULAR");
-        Label senior = new Label("SENIOR");
-        Label d10 = new Label("-10%");
-        Label d20 = new Label("-20%");
-        Label d30 = new Label("-30%");
-        Label title2 = new Label("Benefits all year round!!");
-        Label text = new Label("Thanks to CinéPass, enjoy exclusive benefits and offers throughout the year.\n" +"To make sure you don't miss out on anything, receive our communications by newsletter .");
+        Text titre = new Text("The CinéPass");
+        titre.setId("titre-tab2");
         
-        title.setId("title-tab2");
-        children.setId("children-tab2");
-        regular.setId("regular-tab2");
-        senior.setId("senior-tab2");
-        title2.setId("title2-tab2");
-        text.setId("text-tab2");
-        d10.setId("d10");
-        d20.setId("d20");
-        d30.setId("d30");
-            
+        Text discounts = new Text(  "  Benefits all year round!!\n"
+                                   +"  Thanks to CinéPass, enjoy exclusive benefits\n"
+                                   +"  and offers throughout the year.\n"
+                                   +"  To make sure you don't miss out on anything,\n"
+                                   +"  receive our communications by newsletter.\n"
+                                   +"  Children : -30%    Regular : -20%    Senior : -15%");
+        discounts.setId("discounts-tab2");
+        discounts.setY(50);
+        
+        Rectangle infos = new Rectangle();
+        infos.setStrokeWidth(2);infos.setStroke(Color.BLACK);
+        infos.setX(90);infos.setY(50);infos.setWidth(630);infos.setHeight(200);infos.setArcHeight(50);infos.setArcWidth(50);infos.setFill(Color.WHITE);
+        
+        StackPane stack = new StackPane();
+        stack.getChildren().addAll(infos,discounts);
+        stack.setLayoutX(50);
+        stack.setLayoutY(50);
+        
         
         Group rects = new Group();
-        rects.getChildren().add(rect1);
-        rects.getChildren().add(rect2);
-        rects.getChildren().add(rect3);
-        rects.getChildren().add(children);
-        rects.getChildren().add(regular);
-        rects.getChildren().add(senior);
-        rects.getChildren().add(d10);
-        rects.getChildren().add(d20);
-        rects.getChildren().add(d30);
+        rects.getChildren().addAll(stack,view);        
         
-        
-        Group infos = new Group();
-        infos.getChildren().add(info1);
-        infos.getChildren().add(title2);
-        infos.getChildren().add(text);
-        
-        root.addRow(0, title);
-        root.addRow(2, rects);
-        root.addRow(4, infos);
+        root.addRow(0, titre);
+        root.addRow(1, rects);
+        //root.addRow(2, discounts);
+
         root.setHgap(10);  
-        root.setVgap(10);
+        root.setVgap(7);
         
-        return root;
-        
-    }
-    
+        return root; 
+    }   
 }

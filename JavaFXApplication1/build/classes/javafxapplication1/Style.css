@@ -72,54 +72,18 @@
     -fx-padding : 0 0 -2em 0;
 }
 
-#title-tab2{
-    -fx-padding : 0 0 0 0em;
-    -fx-font-size : 2em;
-    -fx-alignment : center;
+#titre-tab2{
+    -fx-font: 120px Tahoma;
+    -fx-fill: linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);  
 }
 
-#children-tab2{
-    -fx-padding : 3em 0 0 0em;
-    -fx-font-size : 3em;
-    -fx-alignment : center;
+#discounts-tab2{
+    -fx-padding : 5em 0 0 20em;
+    -fx-font: 20px Tahoma;
+    -fx-fill: linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);
+    -fx-stroke: black;
+    -fx-stroke-width: 0.3;
 }
-
-#regular-tab2{
-    -fx-padding : 3em 0 0 0em;
-    -fx-font-size : 3em;
-    -fx-alignment : center;
-}
-
-#senior-tab2{
-    -fx-padding : 3em 0 0 0em;
-    -fx-font-size : 3em;
-    -fx-alignment : center;
-}
-/*
-#d10{
-    -fx-padding : 3em 0 0 15em;
-    -fx-font-size : 2em;
-}
-
-#d20{
-    -fx-padding : 3em 0 0 10em;
-    -fx-font-size : 2em;
-}
-
-#d30{
-    -fx-padding : 6em 0 0 4em;
-    -fx-font-size : 2em;
-}
-
-#title2-tab2{
-    -fx-padding : 2em 0 0 5em;
-    -fx-font-size : 2em;
-}
-
-#text-tab2{
-    -fx-padding : 2em 0 0 3em;
-    -fx-font-size : 2em;
-}*/
 
 #label-co{
     -fx-font-size : 3em;
