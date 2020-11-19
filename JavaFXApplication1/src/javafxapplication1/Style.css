@@ -2,13 +2,17 @@
   -fx-background-color:transparent;
 }
 
+#bande{
+    -fx-alignment: center;
+    -fx-font-size : 3em;
+}
+
 .tab-pane {
   -fx-tab-min-width: 24.5em;
   -fx-tab-max-width:24.5em;
   -fx-alignment: center;
   -fx-tab-min-height:3em;
   -fx-tab-max-height:3em;
-  -fx-padding: 0 0.5em 0 0.5em;
 }
 
 .tab {
@@ -17,13 +21,12 @@
 }
 
 .tab:selected {
-    -fx-background-color:royalblue ;
+    -fx-background-color:royalblue;
 }
 
 #root-tab4{
     -fx-alignment : center;
-    -fx-padding : 15em 0 0 0;
-    
+    -fx-padding : 8em 0 0 5em;
 }
 
 #text-tab4{
@@ -70,48 +73,81 @@
 }
 
 #title-tab2{
-    -fx-padding : 0 0 0 26em;
-    -fx-font-size : 4em;
-    -fx-alignment : bottom-right;
+    -fx-padding : 0 0 0 0em;
+    -fx-font-size : 2em;
+    -fx-alignment : center;
 }
 
 #children-tab2{
-    -fx-padding : 7em 0 0 10em;
-    -fx-font-size : 4em;
+    -fx-padding : 3em 0 0 0em;
+    -fx-font-size : 3em;
+    -fx-alignment : center;
 }
 
 #regular-tab2{
-    -fx-padding : 7em 0 0 45em;
-    -fx-font-size : 4em;
+    -fx-padding : 3em 0 0 0em;
+    -fx-font-size : 3em;
+    -fx-alignment : center;
 }
 
 #senior-tab2{
-    -fx-padding : 7em 0 0 81em;
-    -fx-font-size : 4em;
+    -fx-padding : 3em 0 0 0em;
+    -fx-font-size : 3em;
+    -fx-alignment : center;
 }
-
+/*
 #d10{
-    -fx-padding : 12em 0 0 49em;
-    -fx-font-size : 4em;
+    -fx-padding : 3em 0 0 15em;
+    -fx-font-size : 2em;
 }
 
 #d20{
-    -fx-padding : 12em 0 0 84em;
-    -fx-font-size : 4em;
+    -fx-padding : 3em 0 0 10em;
+    -fx-font-size : 2em;
 }
 
 #d30{
-    -fx-padding : 12em 0 0 14em;
-    -fx-font-size : 4em;
+    -fx-padding : 6em 0 0 4em;
+    -fx-font-size : 2em;
 }
 
 #title2-tab2{
-    -fx-padding : 5em 0 0 43em;
-    -fx-font-size : 2.5em;
+    -fx-padding : 2em 0 0 5em;
+    -fx-font-size : 2em;
 }
 
 #text-tab2{
-    -fx-padding : 9em 0 0 14em;
+    -fx-padding : 2em 0 0 3em;
     -fx-font-size : 2em;
-    -fx-alignment : bottom-right;
+}*/
+
+#label-co{
+    -fx-font-size : 3em;
+}
+
+#lab-search{
+    -fx-font-size : 2em;
+}
+
+#bar-search{
+    -fx-font-size : 2em;
+    -fx-max-width: 3em;
+}
+
+#vbox-search{
+    -fx-padding : 2em 0 0 0;
+}
+
+#but-search{
+    -fx-font-size : 2em;
+}
+
+#disp-movie{
+    -fx-font-size : 1.8em;
+}
+#disp-button{
+    -fx-font-size : 1.4em;
+}
+#search{
+    -fx-padding : 2em 0 0 2em;
 }
