@@ -325,8 +325,23 @@ public class Connexion {
             int max = rset.getInt(4);
             liste.add(new Session(id,id_movie,date,max));
         }
+        conn.close();
         // Retourner l'ArrayList
         return liste;
+    }
+    
+    public ArrayList<Session> recolterChampsSessionsMovie(int idmov) throws SQLException{
+        ArrayList<Session> sess = new ArrayList<>();
+        ArrayList<Session> rep = new ArrayList<>();
+        sess = recolterChampsSessions();
+        
+        for(int i=0;i<sess.size();i++){
+            if(sess.get(i).getMovie()==idmov)
+                rep.add(sess.get(i));
+        }
+        // Retourner l'ArrayList
+        
+        return rep;
     }
     
     public ArrayList<Customers> recolterChampsCustomer(int id_movie) throws SQLException{
@@ -377,7 +392,6 @@ public class Connexion {
         for(int i=0;i<request.size();i++){
             if(request.get(i).getTitle().indexOf(name)!=-1){
                 condi = true;
-                System.out.println("il y a nom");
             }
             else if(request.get(i).getType().equals(type)){
                 condi = true;
@@ -385,7 +399,6 @@ public class Connexion {
             }
             else if(request.get(i).getRunningTime() == time){
                 condi = true;
-                System.out.println("il y a temps");
             }
             if(condi==true){
                 liste.add(request.get(i));

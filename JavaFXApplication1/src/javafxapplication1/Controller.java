@@ -9,8 +9,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 
 /**
  *
@@ -25,6 +23,13 @@ public class Controller {
         this.location = location;
     }
     
+    public ArrayList<Session> getSessionMovie(int id) throws SQLException, ClassNotFoundException, ParseException{
+        ArrayList<Session> nvx = new ArrayList<>();
+        Connexion conn = new Connexion("movie", "root", "");
+        nvx = conn.recolterChampsSessionsMovie(id);
+        return nvx;
+    }
+    
     public void getAllMovies() throws SQLException, ClassNotFoundException, ParseException{
         Connexion nvx = new Connexion("movie", "root", "");
         //nvx.getAllMovies();
@@ -37,7 +42,6 @@ public class Controller {
             name = name.toLowerCase();
         if(type!=null)
             type = type.toLowerCase();
-        System.out.println(name+" "+type+" "+time);
        
         int temps;
         if(time.equals(""))
