@@ -47,7 +47,7 @@ public class MainClass extends Application {
     private final TabPane tabPane = new TabPane();
     private Members actualMember;
     private Employees actualEmployee;
-    private Cinema cine = new Cinema();
+    private final Cinema cine = new Cinema();
     private Controller controller;
     private Label connected;
     
@@ -87,14 +87,38 @@ public class MainClass extends Application {
         primaryStage.show();
     }
     
-    public double calculatePrice(int i){
+    private double calculatePrice(int i){
         double j;
         if(!connected.getText().equals("")){
+            
             j = cine.prixTicket(actualMember,i);
             return j;
         }
         else
             return i*cine.getPrix();
+    }
+    
+    public VBox buyItemsPage(int id){
+        VBox tot = new VBox(50);
+        tot.setId("paid-page");
+        tot.setAlignment(Pos.CENTER);
+        Label ok = new Label("Your command is on board, you can go to your session !");
+        Label dac = new Label("Here is your ID number for the session :");
+        Label idi = new Label(Integer.toString(id));
+        idi.setTextFill(RED);
+        Label war = new Label("Please keep it if you want to modify your place");
+        
+        Button but = new Button("OK");
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab3.setContent(searchTab(false,null));
+                tab1.setContent(getSPane());
+                tabPane.getSelectionModel().select(tab1);
+            }
+        });
+        tot.getChildren().addAll(ok,dac,idi,war,but);
+        return tot;
     }
     
     public VBox dispMovieToBuy(final Movies movie,Session sess,final ArrayList<Movies> movies){
@@ -133,6 +157,7 @@ public class MainClass extends Application {
         view2.setPreserveRatio(true);
         but.setGraphic(view2);
         but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
             public void handle(ActionEvent event){
                 tab3.setContent(dispSeance(movie,movies));
             }
@@ -142,7 +167,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public VBox dispPaiCustomer(){
+    public VBox dispPaiCustomer(final int id){
         HBox nvx = new HBox(20);
         nvx.setAlignment(Pos.CENTER);
         Image[] img = new Image[4];
@@ -157,17 +182,21 @@ public class MainClass extends Application {
         
         VBox input = new VBox(20);
         input.setAlignment(Pos.CENTER);
-        TextField num = new TextField();
+        final TextField num = new TextField();
         num.setPromptText("Enter your number card");
         num.setAlignment(Pos.CENTER);
         HBox both = new HBox();
         both.setAlignment(Pos.CENTER);
-        TextField crypto = new TextField();
+        final TextField crypto = new TextField();
         crypto.setPromptText("Enter your crypto");
-        TextField mv = new TextField();
+        final TextField mv = new TextField();
         mv.setPromptText("Ex : 01/21");
         both.getChildren().addAll(crypto,mv);
-        input.getChildren().addAll(num,both);
+        final Label error = new Label();
+        error.setAlignment(Pos.CENTER);
+        error.setTextFill(RED);
+        error.setText("");
+        input.getChildren().addAll(num,both,error);
         num.setId("box-pay");
         both.setId("box-pay");
         HBox ad = new HBox(10);
@@ -178,7 +207,7 @@ public class MainClass extends Application {
         nbr.setText("0");
         final Label disc = new Label();
         disc.setId("button-pay");
-        disc.setText("0");
+        disc.setText("Total : 0 $");
         
         plus.setOnAction(new EventHandler<ActionEvent>() {
             @Override  
@@ -186,7 +215,7 @@ public class MainClass extends Application {
                 int i = Integer.parseInt(nbr.getText());
                 i++;
                 double j = calculatePrice(i);
-                disc.setText(Double.toString(j));
+                disc.setText("Total : "+Double.toString(j)+" $");
                 nbr.setText(Integer.toString(i));
             }
         });
@@ -201,19 +230,42 @@ public class MainClass extends Application {
                 else{
                     j = calculatePrice(i);
                 }
-                disc.setText(Double.toString(j)); 
+                disc.setText("Total : "+Double.toString(j)+" $"); 
                 nbr.setText(Integer.toString(i));
-                
             }
         });
         
         Button but = new Button("Ready to pay !");
         but.setId("button-pay");
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override  
+            public void handle(ActionEvent arg0) {
+                int condi;
+                if(nbr.getText().equals("0") || num.getText().equals("") || crypto.getText().equals("") || mv.getText().equals("")){
+                    error.setText("Please fill all the inputs");
+                }
+                else{
+                    controller = new Controller("pay","paypage");
+                    condi = controller.addCustomerToSession(num.getText(),crypto.getText(),mv.getText(),id);
+                    if(condi==-1){
+                        error.setText("Please enter correct inputs");
+                    }
+                    else{
+                        tab3.setContent(buyItemsPage(condi));
+                    }
+                }
+                
+            }
+        });
         ad.getChildren().addAll(moins,nbr,plus);
-        ad.setId("button-pay");
+        VBox intermediaire = new VBox(20);
+        intermediaire.setAlignment(Pos.CENTER);
+        intermediaire.setId("button-pay");
+        Label nbr_tick = new Label("Number of tickets : ");
+        intermediaire.getChildren().addAll(nbr_tick,ad);
         VBox container = new VBox(80);
         container.setAlignment(Pos.CENTER);
-        container.getChildren().addAll(nvx,input,ad,disc,but);
+        container.getChildren().addAll(nvx,input,intermediaire,disc,but);
         
         return container;
     }
@@ -223,7 +275,8 @@ public class MainClass extends Application {
         tot.setId("co-pay");
         Label co = new Label("You are connected as : ");
         co.setAlignment(Pos.CENTER);
-        Label nom = new Label("");
+        final Label nom = new Label();
+        nom.setText("");
         if(!connected.getText().equals("")){
             nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
             nom.setAlignment(Pos.CENTER);
@@ -232,14 +285,31 @@ public class MainClass extends Application {
             nom.setText("A Customer");
             nom.setAlignment(Pos.CENTER);
         }
-        tot.getChildren().addAll(co,nom);
+        Button but = new Button();
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/refresh.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(50);
+        view.setPreserveRatio(true);
+        but.setPrefSize(50, 50);
+        but.setGraphic(view);
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                if(!connected.getText().equals("")){
+                    nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
+                    nom.setAlignment(Pos.CENTER);
+                }
+            }
+        });
+        tot.getChildren().addAll(co,nom,but);
         return tot;
     }
     
     public BorderPane paymentPage(Movies movie,Session sess,final ArrayList<Movies> movies){
         BorderPane tot = new BorderPane();
         tot.setLeft(dispMovieToBuy(movie,sess,movies));
-        tot.setCenter(dispPaiCustomer());
+        tot.setCenter(dispPaiCustomer(sess.getId()));
         tot.setRight(dispTicketCustomer());
         //tot.setAlignment(Pos.CENTER);
         return tot;
@@ -290,6 +360,7 @@ public class MainClass extends Application {
         view2.setPreserveRatio(true);
         but.setGraphic(view2);
         but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
             public void handle(ActionEvent event){
                 tab3.setContent(searchTab(true,movies));
             }
@@ -330,7 +401,8 @@ public class MainClass extends Application {
         node3.getChildren().add(nbr_txt);
         node4.getChildren().add(reserver);
         for(int i=0;i<sess.size();i++){
-            Label date = new Label("2000-12-12");
+            String temp = sess.get(i).getDate().toString();
+            Label date = new Label(temp);
             Label heure = new Label("17h10");
             String nbrr = Integer.toString(sess.get(i).getNbr_places_max());
             Label nbr = new Label("Number of places "+nbrr);
@@ -342,6 +414,7 @@ public class MainClass extends Application {
             final Button mybut = button.get(i);
             final Session session = sess.get(i);
             mybut.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
                 public void handle(ActionEvent event){
                     tab3.setContent(paymentPage(movie,session,movies));
                 }
@@ -401,6 +474,7 @@ public class MainClass extends Application {
             final Button mybut = tabButton.get(i);
             final Movies movie = movies.get(i);
             mybut.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
                 public void handle(ActionEvent event){
                     tab3.setContent(dispSeance(movie,movies));
                 }
@@ -496,8 +570,6 @@ public class MainClass extends Application {
     
     public BorderPane getPane(int condi){
         BorderPane pane = new BorderPane();
-        //BorderPane p = new BorderPane();
-        //p.setCenter(getGridtab4());
         
         pane.setCenter(getGridtab4(condi));
         pane.setBottom(inscription());
@@ -534,9 +606,10 @@ public class MainClass extends Application {
         
         tf1.setId("text-tab4");
         tf2.setId("text-tab4");
-        
-//creating submit button   
-        Button submit=new Button("Submit");
+        tf1.setPromptText("Your username");
+        tf2.setPromptText("Your password");
+//creating submit button
+        Button submit=new Button("Sign in !");
         Button reset=new Button("Reset");
 //setting ID for the submit button so that the particular style rules can be applied to it.   
         submit.setId("submit-tab4");
@@ -643,12 +716,16 @@ public class MainClass extends Application {
         lab1.setId("label-co");
         lab2.setId("label-co");
         lab3.setId("label-co");
-        
-        nvx.getChildren().addAll(deco,lab1,lab2,lab3);
+        HBox deconect = new HBox(50);
+        deconect.setAlignment(Pos.CENTER);
+        Label deconection = new Label("Click here to disconect : ");
+        deconection.setId("label-co");
+        deconect.getChildren().addAll(deconection,deco);
+        nvx.getChildren().addAll(deconect,lab1,lab2,lab3);
         
         deco.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event){
                 connected.setText("");
                 actualMember = null;
                 tab4.setContent(getPane(0));
@@ -713,6 +790,26 @@ public class MainClass extends Application {
         //pane.getChildren().add(getGridtab1());
         return pane;
     }
+    public VBox giveId(String nom){
+        VBox tot = new VBox(50);
+        tot.setId("paid-page");
+        tot.setAlignment(Pos.CENTER);
+        Label ok = new Label("Your are part of the team now !");
+        Label dac = new Label("Here is your ID to login / keep it preciously :");
+        Label idi = new Label(nom);
+        idi.setTextFill(RED);
+        
+        Button but = new Button("OK");
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab4.setContent(membConnected());
+            }
+        });
+        tot.getChildren().addAll(ok,dac,idi,but);
+        return tot;
+    }
+    
     public BorderPane getSubscription(String message){
         
         BorderPane test = new BorderPane();
@@ -746,7 +843,7 @@ public class MainClass extends Application {
         password.setId("label-sub");
         confirmPassword.setId("label-sub");
         
-        Button bout = new Button("Submit");
+        Button bout = new Button("Sign up !");
         bout.setId("submit-tab4");
         nvx.getChildren().addAll(firstName,tf1,lastName,tf2,age,tf3,password,tf4,confirmPassword,tf5,error,bout);
         
@@ -756,9 +853,9 @@ public class MainClass extends Application {
 
             @Override
             public void handle(ActionEvent event) {
-                boolean condi=false;
+                int condi=-1;
                 controller = new Controller("subscription","tab4");
-                if(!tf5.getText().equals(tf4.getText())){
+                if(!tf5.getText().equals(tf4.getText()) || tf4.equals("")){
                     tab4.setContent(getSubscription("Please enter same password"));
                 }
                 else{
@@ -768,11 +865,18 @@ public class MainClass extends Application {
                         Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     System.out.println(condi);
-                    if(condi==true){
-                        String login = tf1.getText()+tf2.getText();
+                    if(condi>0){
+                        String login = tf1.getText()+Integer.toString(condi)+"."+tf2.getText();
                         int age = Integer.parseInt(tf3.getText());
                         actualMember = new Members(tf1.getText(),tf2.getText(),tf3.getText(),age,login);
-                        tab4.setContent(membConnected());
+                        tab4.setContent(giveId(login));
+                        connected.setText(" : "+actualMember.getFirstName()+" "+actualMember.getLastName());
+                    }
+                    else if(condi==0){
+                        String login = tf1.getText()+"."+tf2.getText();
+                        int age = Integer.parseInt(tf3.getText());
+                        actualMember = new Members(tf1.getText(),tf2.getText(),tf3.getText(),age,login);
+                        tab4.setContent(giveId(login));
                         connected.setText(" : "+actualMember.getFirstName()+" "+actualMember.getLastName());
                     }
                     else{

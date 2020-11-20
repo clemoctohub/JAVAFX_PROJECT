@@ -52,7 +52,7 @@ public class Connexion {
         // chargement driver "com.mysql.jdbc.Driver"
         Class.forName("com.mysql.jdbc.Driver");
         
-        String urlDatabase = "jdbc:mysql://localhost:3306/movie";
+        String urlDatabase = "jdbc:mysql://localhost:3308/movie";
        // String urlDatabase = "jdbc:mysql://localhost:3308/jps?characterEncoding=latin1";
 
         //création d'une connexion JDBC à la base 
@@ -70,7 +70,6 @@ public class Connexion {
         java.sql.Date sql = new java.sql.Date(parsed.getTime());
         return sql;
     }
-    
     
     //Ajout d'un nouveau membre dans la base de donnees
     public void insert_member(String login, String motDePasse, String firstName, String lastName, int age) throws SQLException {
@@ -126,10 +125,12 @@ public class Connexion {
     }
     
     public void insert_customer(int session_id,int id) throws SQLException{
-        String sql = " INSERT INTO customer(id, session_id)"+" VALUES(?,?)";
+        String sql = " INSERT INTO customer(id, id_session)"+" VALUES(?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, id);
         pstmt.setInt(2, session_id);
+        pstmt.execute();
+        conn.close();
     }
     
     public void update_seance(Session session,String changes) throws SQLException{
@@ -138,18 +139,21 @@ public class Connexion {
             PreparedStatement preparedStmt = conn.prepareStatement(sql);
             preparedStmt.setInt(1,session.getMovie());
             preparedStmt.setInt(2, session.getId());
+            preparedStmt.execute();
         }
         else if(changes.equals("number_places")){
             String sql = "update session set max_place = ? where id = ?";
             PreparedStatement preparedStmt = conn.prepareStatement(sql);
             preparedStmt.setInt(1,session.getNbr_places_max());
             preparedStmt.setInt(2, session.getId());
+            preparedStmt.execute();
         }
         else if(changes.equals("date")){
             String sql = "update session set date = ? where id = ?";
             PreparedStatement preparedStmt = conn.prepareStatement(sql);
             preparedStmt.setDate(1,session.getDate());
             preparedStmt.setInt(2, session.getId());
+            preparedStmt.execute();
         }
     }
     

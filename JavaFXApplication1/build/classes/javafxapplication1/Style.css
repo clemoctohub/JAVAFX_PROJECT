@@ -31,6 +31,7 @@
 
 #text-tab4{
     -fx-font-size : 2em;
+    -fx-padding : 0.5em;
 }
 
 #label-tab4{
@@ -135,5 +136,8 @@
 }
 
 #button-pay{
+    -fx-font-size : 1.4em;
+}
+#paid-page{
     -fx-font-size : 1.4em;
 }

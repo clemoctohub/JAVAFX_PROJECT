@@ -27,7 +27,11 @@ public class Cinema {
     public void setChildren(double children) {
         this.children = children;
     }
-    public Cinema(){}
+    public Cinema(){
+        this.senior = 0.1;
+        this.children = 0.2;
+        this.regular = 0.05;
+    }
     
     public Cinema (ArrayList<Movies> movies)
     {
@@ -50,10 +54,10 @@ public class Cinema {
         double prix;
         prix = i*PRIX;
         if(mem.getAge()<18)
-            prix = PRIX*children;
+            prix = prix-prix*children;
         else if(mem.getAge()>60)
-            prix = PRIX*senior;
-        else prix = PRIX*regular;
+            prix = prix-prix*senior;
+        else prix = prix-prix*regular;
        
         return prix;
     } 
