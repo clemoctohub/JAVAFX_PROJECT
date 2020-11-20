@@ -745,15 +745,15 @@ public class MainClass extends Application {
         pane.getChildren().add(scroll);
         return pane;
     }
-    public GridPane getGridtab1()
+    public GridPane getGridtab1(Movies movies)
     {
         GridPane gp = new GridPane();
-        Label Titre = new Label("Title :");  
-        Label Author = new Label("Author :");
-        Label RD = new Label("Release Date :");
-        Label GT = new Label("Gender type :");
-        Label RT = new Label("Running Time :");
-        Label Rate = new Label("Rating: ");
+        Label Titre = new Label("Title :"+movies.getTitle());  
+        Label Author = new Label("Author :"+movies.getAuthor());
+        Label RD = new Label("Release Date :"+movies.getDate());
+        Label GT = new Label("Gender type :"+movies.getType());
+        Label RT = new Label("Running Time :"+movies.getRunningTime());
+        Label Rate = new Label("Rating: "+movies.getRate());
         
         gp.addRow(0 ,Titre);
         gp.addRow(1, Author);
@@ -766,6 +766,13 @@ public class MainClass extends Application {
     }
     public FlowPane getPanetab1()
     {
+        ArrayList<Movies> movies = new ArrayList<>();
+        try {
+            controller = new Controller("movie","tab1");
+            movies = controller.dispAllMovies();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
         FlowPane pane = new FlowPane();
         GridPane gp = new GridPane();
         ArrayList<Button> tabButton = new ArrayList<>();
@@ -781,8 +788,16 @@ public class MainClass extends Application {
             view[i].setPreserveRatio(true);
             tabButton.get(i).setPrefSize(170,view[i].getY());
             tabButton.get(i).setGraphic(view[i]);
-            box.getChildren().addAll(tabButton.get(i),getGridtab1());
+            box.getChildren().addAll(tabButton.get(i),getGridtab1(movies.get(i)));
             gp.addRow(i , box);
+            final Button mybut = tabButton.get(i);
+            final Movies movie = movies.get(i);
+            final ArrayList<Movies> M = movies;
+            mybut.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event){
+                    tab1.setContent(dispSeance(movie, M));
+                }
+            });
         }
         gp.setVgap(10);
         pane.setPrefSize(300,1000);
