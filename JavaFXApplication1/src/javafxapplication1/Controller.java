@@ -88,5 +88,14 @@ public class Controller {
         
         return true;
     }
+    
+    public ArrayList<Movies> dispAllMovies() throws SQLException, ClassNotFoundException, ParseException
+    {
+        ArrayList<Movies> movies = new ArrayList<>();
+        Connexion nvx = new Connexion("movie", "root", "");
+        movies = nvx.recolterChampsMovies();
+        return movies;
+    }
 
 }
+
