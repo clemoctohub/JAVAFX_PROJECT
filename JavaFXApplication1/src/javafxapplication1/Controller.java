@@ -25,6 +25,28 @@ public class Controller {
         this.location = location;
     }
     
+    public boolean delete_session_customer(String id){
+        int num;
+        boolean condi=false;
+        try{
+            num = Integer.parseInt(id);
+        }
+        catch(NumberFormatException e){
+            return false;
+        }
+        
+        if(num<0)
+            return false;
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            condi = conn.delete_customer(num);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return condi;
+    }
+    
     public int addCustomerToSession(String num, String crypto, String mv, int id){
         int x=0;
         for(int i=0;i<num.length();i++){
@@ -48,7 +70,6 @@ public class Controller {
             }
             conn.insert_customer(id, x);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
-            System.out.println("errorroorr");
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -60,11 +81,6 @@ public class Controller {
         Connexion conn = new Connexion("movie", "root", "");
         nvx = conn.recolterChampsSessionsMovie(id);
         return nvx;
-    }
-    
-    public void getAllMovies() throws SQLException, ClassNotFoundException, ParseException{
-        Connexion nvx = new Connexion("movie", "root", "");
-        //nvx.getAllMovies();
     }
     
     public ArrayList<Movies> searchMovies(String name,String type,String time) throws SQLException, ClassNotFoundException, ParseException{
@@ -83,7 +99,7 @@ public class Controller {
             if(temps<0)
                 temps = 0;
         }
-       
+        
         rep = nvx.searchMovie(name,type,temps);
         return rep;
     }
@@ -123,20 +139,15 @@ public class Controller {
                 if(membre.get(i).getLogin().equals(firstName+"."+lastName)){
                     condi++;
                     i=-1;
-                    
                 }
             }
-                
             else{
                 if(membre.get(i).getLogin().equals(firstName+Integer.toString(condi)+"."+lastName)){
-                    System.out.println("jentre");
                     condi++;
                     i=-1;
                 }
-            }
-                
+            }   
         }
-        System.out.println("condi = "+condi);
         if(condi==0)
             nvx.insert_member(firstName+"."+lastName, pwd, firstName, lastName, ag);
         else

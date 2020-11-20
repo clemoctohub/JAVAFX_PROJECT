@@ -208,6 +208,7 @@ public class Connexion {
                pstmt.executeUpdate();
             }     
         }  
+        
     }
     
     public void delete_session(int id) throws SQLException{
@@ -223,17 +224,20 @@ public class Connexion {
         }  
     }
     
-    public void delete_customer(int id) throws SQLException{
+    public boolean delete_customer(int id) throws SQLException{
         ArrayList<Members> listeCust = recolterChampsCustomer();
-        
+        boolean condi = false;
         for(int i=0;i<listeCust.size();i++){
             if(listeCust.get(i).getId() == id){
                String sql = " DELETE FROM customer WHERE `id` =?";
                PreparedStatement pstmt = conn.prepareStatement(sql);
                pstmt.setInt(1, id);
                pstmt.executeUpdate();
+               condi = true;
             }     
-        }  
+        }
+        conn.close();
+        return condi;
     }
     
     //Recolte des tables de donnees

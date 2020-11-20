@@ -5,9 +5,7 @@
  */
 package javafxapplication1;
 
-//import com.sun.javafx.scene.layout.region.BackgroundFill;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.Dimension;
 import javafx.scene.image.*;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -53,7 +51,6 @@ public class MainClass extends Application {
     
     @Override
     public void start(Stage primaryStage) throws MalformedURLException, FileNotFoundException {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         
         Label bande = new Label("WELCOME IN OUR CINEMA");
         bande.setId("bande");
@@ -78,19 +75,18 @@ public class MainClass extends Application {
         vbox.getChildren().add(header);
         vbox.getChildren().add(tabPane);
         
-        Scene scene = new Scene(vbox, 400, 600);
+        Scene scene = new Scene(vbox, 1900, 1000);
         //scene.getStylesheets().add("Style.css");
         scene.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
-        primaryStage.setTitle("CHANGE");
+        primaryStage.setTitle("CINEMA");
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
+        primaryStage.setResizable(true);
         primaryStage.show();
     }
     
     private double calculatePrice(int i){
         double j;
         if(!connected.getText().equals("")){
-            
             j = cine.prixTicket(actualMember,i);
             return j;
         }
@@ -141,9 +137,11 @@ public class MainClass extends Application {
         Label bis2 = new Label("Heure : 12h12");
         
         detail.getChildren().addAll(bis1,bis2);
-        
+        String nom = movie.getTitle();
+        nom = nom.toLowerCase();
+        nom = nom.replaceAll(" ", "_");
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/spider_man.jpg"));
+        img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
         ImageView view = new ImageView(img);
         view.setFitHeight(300);
         view.setPreserveRatio(true);
@@ -170,7 +168,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public VBox dispPaiCustomer(final int id){
+    public VBox dispPaiCustomer(final int id,int tab){
         HBox nvx = new HBox(20);
         nvx.setAlignment(Pos.CENTER);
         Image[] img = new Image[4];
@@ -312,7 +310,7 @@ public class MainClass extends Application {
     public BorderPane paymentPage(Movies movie,Session sess,final ArrayList<Movies> movies,int tab){
         BorderPane tot = new BorderPane();
         tot.setLeft(dispMovieToBuy(movie,sess,movies,tab));
-        tot.setCenter(dispPaiCustomer(sess.getId()));
+        tot.setCenter(dispPaiCustomer(sess.getId(),tab));
         tot.setRight(dispTicketCustomer());
         //tot.setAlignment(Pos.CENTER);
         return tot;
@@ -345,8 +343,11 @@ public class MainClass extends Application {
             } 
         }
         Label description = new Label(desc);
+        String nom = movie.getTitle();
+        nom = nom.toLowerCase();
+        nom = nom.replaceAll(" ", "_");
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/spider_man.jpg"));
+        img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
         ImageView view = new ImageView(img);
         view.setFitHeight(300);
         view.setPreserveRatio(true);
@@ -464,9 +465,18 @@ public class MainClass extends Application {
         
         tot.setAlignment(Pos.CENTER);
         VBox vbox = new VBox(30);
-        VBox other = new VBox(30);
         ArrayList<Button> tabButton = new ArrayList<>(); 
         for(int i=0;i<movies.size();i++){
+            Image image;
+            ImageView view;
+            String nomfilm = movies.get(i).getTitle();
+            nomfilm = nomfilm.toLowerCase();
+            nomfilm = nomfilm.replaceAll(" ","_");
+            image = new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg"));
+            view = new ImageView(image);
+            view.setFitWidth(70);
+            view.setPreserveRatio(true);
+            
             Label nom = new Label("Title : "+movies.get(i).getTitle()+" ");
             Label auteur = new Label("Author : "+movies.get(i).getAuthor()+" ");
             Label date = new Label("Date : "+movies.get(i).getDate()+" ");
@@ -474,12 +484,12 @@ public class MainClass extends Application {
             HBox hbo = new HBox(20);
             hbo.setAlignment(Pos.CENTER_LEFT);
             hbo.setId("disp-movie");
-            hbo.getChildren().addAll(nom,auteur,date,tabButton.get(i));
-            vbox.getChildren().add(hbo);
-            
             tabButton.add(new Button("Reserve"));
             tabButton.get(i).setId("disp-button");
-            other.getChildren().add(tabButton.get(i));
+            hbo.getChildren().addAll(view,nom,auteur,date,tabButton.get(i));
+            vbox.getChildren().add(hbo);
+            
+            
             final Button mybut = tabButton.get(i);
             final Movies movie = movies.get(i);
             mybut.setOnAction(new EventHandler<ActionEvent>() {
@@ -490,7 +500,6 @@ public class MainClass extends Application {
             });
         }
         tot.addColumn(0, vbox);
-        tot.addColumn(1, other);
         tot.setId("search");
         bar.setContent(tot);
         bar.setVbarPolicy(ScrollBarPolicy.ALWAYS);
@@ -745,16 +754,54 @@ public class MainClass extends Application {
         return nvx;
     }
 
-    public FlowPane getSPane()
+    public BorderPane getSPane()
     {   
-        FlowPane pane = new FlowPane();
+        BorderPane pane = new BorderPane();
         ScrollPane scroll = new ScrollPane();
         scroll.setContent(getPanetab1());
         scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        scroll.setPrefSize(1250,300);
-        pane.getChildren().add(scroll);
+        pane.setCenter(scroll);
+        pane.setRight(deletePlace());
         return pane;
     }
+    
+    public VBox deletePlace(){
+        VBox nvx = new VBox(50);
+        nvx.setAlignment(Pos.CENTER);
+        nvx.setId("deletePlace");
+        VBox inter = new VBox(20);
+        Label txt = new Label("If you want to remove your place,");
+        Label txt2 = new Label("enter your id session here : ");
+        inter.getChildren().addAll(txt,txt2);
+        
+        final TextField id = new TextField();
+        id.setPromptText("Place's ID");
+        final Label error = new Label();
+        
+        error.setText("");
+        Button button = new Button("Remove my place");
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                controller = new Controller("delete","tab1");
+                boolean condi = controller.delete_session_customer(id.getText());
+                if(condi==false){
+                    id.setText("");
+                    error.setText("Not found or wrong input");
+                    error.setTextFill(RED);
+                }
+                else{
+                    id.setText("");
+                    error.setText("Remove !");
+                    error.setTextFill(GREEN);
+                }
+                    
+            }
+        });
+        nvx.getChildren().addAll(inter,id,error,button);
+        return nvx;
+    }
+    
     public GridPane getGridtab1(Movies movies)
     {
         GridPane gp = new GridPane();
@@ -786,18 +833,21 @@ public class MainClass extends Application {
         FlowPane pane = new FlowPane();
         GridPane gp = new GridPane();
         ArrayList<Button> tabButton = new ArrayList<>();
-        ImageView[] view = new ImageView[3];
-        Image[] image = new Image[3];
-        for(int i=0; i<3 ;i++)
+        ArrayList<ImageView> view = new ArrayList<>();
+        ArrayList<Image> image = new ArrayList<>();
+        for(int i=0; i<movies.size() ;i++)
         {
             tabButton.add(new Button());
             HBox box = new HBox(20);
-            image[i] = new Image(getClass().getResourceAsStream("/images/Image"+(i+1)+".jpg"));
-            view[i] = new ImageView(image[i]);
-            view[i].setFitWidth(170);
-            view[i].setPreserveRatio(true);
-            tabButton.get(i).setPrefSize(170,view[i].getY());
-            tabButton.get(i).setGraphic(view[i]);
+            String nomfilm = movies.get(i).getTitle();
+            nomfilm = nomfilm.toLowerCase();
+            nomfilm = nomfilm.replaceAll(" ","_");
+            image.add(new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg")));
+            view.add(new ImageView(image.get(i)));
+            view.get(i).setFitWidth(170);
+            view.get(i).setPreserveRatio(true);
+            tabButton.get(i).setPrefSize(170,view.get(i).getY());
+            tabButton.get(i).setGraphic(view.get(i));
             box.getChildren().addAll(tabButton.get(i),getGridtab1(movies.get(i)));
             gp.addRow(i , box);
             final Button mybut = tabButton.get(i);

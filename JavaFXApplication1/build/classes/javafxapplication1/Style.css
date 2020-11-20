@@ -30,8 +30,7 @@
 }
 
 #text-tab4{
-    -fx-font-size : 2em;
-    -fx-padding : 0.5em;
+    -fx-font-size : 2.2em;
 }
 
 #label-tab4{
@@ -66,7 +65,7 @@
 #text-sub{
     -fx-alignment: center;
     -fx-max-width: 20em;
-    -fx-font-size : 1.5em;
+    -fx-font-size : 1.4em;
 }
 
 #sub{
@@ -110,7 +109,7 @@
     -fx-font-size : 1.8em;
 }
 #disp-button{
-    -fx-font-size : 1.4em;
+    -fx-font-size : 1.2em;
 }
 #search{
     -fx-padding : 2em 0 0 2em;
@@ -140,4 +139,8 @@
 }
 #paid-page{
     -fx-font-size : 1.4em;
+}
+#deletePlace{
+    -fx-font-size : 1.2em;
+    -fx-padding : 0 0.3em 0 0.3em;
 }
