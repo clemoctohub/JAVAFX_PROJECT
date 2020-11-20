@@ -85,8 +85,6 @@ public class Controller {
         }
        
         rep = nvx.searchMovie(name,type,temps);
-       
-        System.out.println(rep.get(0).getTitle());
         return rep;
     }
     

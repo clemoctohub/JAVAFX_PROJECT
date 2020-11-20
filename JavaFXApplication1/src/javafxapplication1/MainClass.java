@@ -121,7 +121,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public VBox dispMovieToBuy(final Movies movie,Session sess,final ArrayList<Movies> movies){
+    public VBox dispMovieToBuy(final Movies movie,Session sess,final ArrayList<Movies> movies,final int tab){
         VBox tot = new VBox(50);
         
         tot.setAlignment(Pos.CENTER);
@@ -159,7 +159,10 @@ public class MainClass extends Application {
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                tab3.setContent(dispSeance(movie,movies));
+                if(tab==3)
+                    tab3.setContent(dispSeance(movie,movies,3));
+                else if(tab==1)
+                    tab1.setContent(dispSeance(movie,movies,1));
             }
         });
         tot.getChildren().addAll(but,view,detail,node);
@@ -306,16 +309,16 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public BorderPane paymentPage(Movies movie,Session sess,final ArrayList<Movies> movies){
+    public BorderPane paymentPage(Movies movie,Session sess,final ArrayList<Movies> movies,int tab){
         BorderPane tot = new BorderPane();
-        tot.setLeft(dispMovieToBuy(movie,sess,movies));
+        tot.setLeft(dispMovieToBuy(movie,sess,movies,tab));
         tot.setCenter(dispPaiCustomer(sess.getId()));
         tot.setRight(dispTicketCustomer());
         //tot.setAlignment(Pos.CENTER);
         return tot;
     }
     
-    public BorderPane dispMovie(Movies movie,final ArrayList<Movies> movies){
+    public BorderPane dispMovie(Movies movie,final ArrayList<Movies> movies, final int tab){
         GridPane tot = new GridPane();
         BorderPane border = new BorderPane();
         
@@ -362,7 +365,10 @@ public class MainClass extends Application {
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                tab3.setContent(searchTab(true,movies));
+                if(tab==3)
+                    tab3.setContent(searchTab(true,movies));
+                else if(tab==1)
+                    tab1.setContent(getSPane());
             }
         });
         border.setCenter(tot);
@@ -371,7 +377,7 @@ public class MainClass extends Application {
         return border;
     }
     
-    public ScrollPane dispAllSess(final Movies movie,final ArrayList<Movies> movies){
+    public ScrollPane dispAllSess(final Movies movie,final ArrayList<Movies> movies, final int tab){
         ScrollPane tot = new ScrollPane();
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
@@ -416,7 +422,10 @@ public class MainClass extends Application {
             mybut.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event){
-                    tab3.setContent(paymentPage(movie,session,movies));
+                    if(tab==1)
+                        tab1.setContent(paymentPage(movie,session,movies,1));
+                    else if(tab==3)
+                        tab3.setContent(paymentPage(movie,session,movies,3));
                 }
             });
         }
@@ -429,11 +438,11 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public BorderPane dispSeance(Movies movie,ArrayList<Movies> movies){
+    public BorderPane dispSeance(Movies movie,ArrayList<Movies> movies, int tab){
         BorderPane tot = new BorderPane();
         //tot.setAlignment(Pos.CENTER);
-        tot.setTop(dispMovie(movie,movies));
-        tot.setCenter(dispAllSess(movie,movies));
+        tot.setTop(dispMovie(movie,movies,tab));
+        tot.setCenter(dispAllSess(movie,movies,tab));
         return tot;
     }
     
@@ -476,7 +485,7 @@ public class MainClass extends Application {
             mybut.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event){
-                    tab3.setContent(dispSeance(movie,movies));
+                    tab3.setContent(dispSeance(movie,movies,3));
                 }
             });
         }
@@ -546,8 +555,9 @@ public class MainClass extends Application {
                 } catch (ClassNotFoundException | ParseException | SQLException ex) {
                     Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if(movies!=null && movies.size()>0)
+                if(movies!=null && movies.size()>0){
                     tab3.setContent(searchTab(true,movies));
+                } 
                 else{
                     recherche.setText("");
                     lab1.setText("");
@@ -794,8 +804,9 @@ public class MainClass extends Application {
             final Movies movie = movies.get(i);
             final ArrayList<Movies> M = movies;
             mybut.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
                 public void handle(ActionEvent event){
-                    tab1.setContent(dispSeance(movie, M));
+                    tab1.setContent(dispSeance(movie, M,1));
                 }
             });
         }
@@ -870,7 +881,7 @@ public class MainClass extends Application {
             public void handle(ActionEvent event) {
                 int condi=-1;
                 controller = new Controller("subscription","tab4");
-                if(!tf5.getText().equals(tf4.getText()) || tf4.equals("")){
+                if(!tf5.getText().equals(tf4.getText()) || tf4.getText().equals("")){
                     tab4.setContent(getSubscription("Please enter same password"));
                 }
                 else{
