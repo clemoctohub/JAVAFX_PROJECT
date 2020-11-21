@@ -144,3 +144,6 @@
     -fx-font-size : 1.2em;
     -fx-padding : 0 0.3em 0 0.3em;
 }
+#desc-sess{
+    -fx-font-size : 1.2em;
+}

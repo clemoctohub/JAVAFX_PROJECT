@@ -5,7 +5,6 @@
  */
 package javafxapplication1;
 
-import java.awt.Dimension;
 import javafx.scene.image.*;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -52,7 +51,7 @@ public class MainClass extends Application {
     @Override
     public void start(Stage primaryStage) throws MalformedURLException, FileNotFoundException {
         
-        Label bande = new Label("WELCOME IN OUR CINEMA");
+        Label bande = new Label("WELCOME TO OUR CINEMA");
         bande.setId("bande");
         connected = new Label("");
         connected.setId("bande");
@@ -125,7 +124,8 @@ public class MainClass extends Application {
         HBox detail = new HBox();
         detail.setAlignment(Pos.CENTER);
         node.setAlignment(Pos.CENTER);
-        Label lab1 = new Label("Title : "+movie.getTitle());
+        String maString = movie.getTitle().substring(0,1).toUpperCase()+movie.getTitle().substring(1);
+        Label lab1 = new Label("Title : "+maString);
         Label lab2 = new Label("Author : "+movie.getAuthor());
         Label lab3 = new Label("Date : "+movie.getDate());
         Label lab4 = new Label("Type : "+movie.getType());
@@ -168,7 +168,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public VBox dispPaiCustomer(final int id,int tab){
+    public VBox dispPaiCustomer(final int id,final int tab){
         HBox nvx = new HBox(20);
         nvx.setAlignment(Pos.CENTER);
         Image[] img = new Image[4];
@@ -252,7 +252,10 @@ public class MainClass extends Application {
                         error.setText("Please enter correct inputs");
                     }
                     else{
-                        tab3.setContent(buyItemsPage(condi));
+                        if(tab==3)
+                            tab3.setContent(buyItemsPage(condi));
+                        else if(tab==1)
+                            tab1.setContent(buyItemsPage(condi));
                     }
                 }
                 
@@ -324,17 +327,18 @@ public class MainClass extends Application {
         tot.setAlignment(Pos.CENTER);
         VBox node = new VBox(20);
         node.setAlignment(Pos.CENTER);
-        Label lab1 = new Label("Title : "+movie.getTitle());
+        String maString = movie.getTitle().substring(0,1).toUpperCase()+movie.getTitle().substring(1);
+        Label lab1 = new Label("Title : "+maString);
         Label lab2 = new Label("Author : "+movie.getAuthor());
         Label lab3 = new Label("Date : "+movie.getDate());
         Label lab4 = new Label("Type : "+movie.getType());
         Label lab5 = new Label("Runing time : "+movie.getRunningTime());
         
         node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5);
-        String desc = "iahfuhzefiuhazeofuhezfuazhfouazhfu. eazrgzaeg ezrhufiazep eruhfazuaezfuh efuahf. aeofiuhazofho azefuiohazouh aui.AZefAZEf fezf. fezffzefz!";
+        String desc = movie.getDescription();
         for(int i=0;i<desc.length();i++){
-            if(i%30==0 && i!=0){
-                if(desc.charAt(i+1)==' ' || desc.charAt(i+1)=='.'){
+            if(i%40==0 && i!=0){
+                if(desc.charAt(i+1)==' ' || desc.charAt(i+1)=='.' || desc.charAt(i)==' ' || desc.charAt(i)=='.'){
                     desc = desc.substring(0,i) + "\n"+ desc.substring(i);
                 }
                 else{
@@ -343,6 +347,8 @@ public class MainClass extends Application {
             } 
         }
         Label description = new Label(desc);
+        description.setId("desc-sess");
+        node.setId("desc-sess");
         String nom = movie.getTitle();
         nom = nom.toLowerCase();
         nom = nom.replaceAll(" ", "_");
@@ -402,7 +408,7 @@ public class MainClass extends Application {
         node2.setId("box-session");
         node3.setId("box-session");
         node4.setId("button-session");
-        reserver.setId("box-session");
+        reserver.setId("button-session");
         node1.getChildren().add(date_txt);
         node2.getChildren().add(heure_txt);
         node3.getChildren().add(nbr_txt);
@@ -476,8 +482,8 @@ public class MainClass extends Application {
             view = new ImageView(image);
             view.setFitWidth(70);
             view.setPreserveRatio(true);
-            
-            Label nom = new Label("Title : "+movies.get(i).getTitle()+" ");
+            String maString = movies.get(i).getTitle().substring(0,1).toUpperCase()+movies.get(i).getTitle().substring(1);
+            Label nom = new Label("Title : "+maString+" ");
             Label auteur = new Label("Author : "+movies.get(i).getAuthor()+" ");
             Label date = new Label("Date : "+movies.get(i).getDate()+" ");
             tabButton.add(new Button("Reserve"));
@@ -614,7 +620,7 @@ public class MainClass extends Application {
     }
     
     public GridPane getGridtab4(int condi){
-        GridPane root=new GridPane(); 
+        GridPane root=new GridPane();
         Label Email = new Label("Your ID number :");  
         Label Password = new Label("Password :");  
         Email.setId("label-tab4");
@@ -802,15 +808,18 @@ public class MainClass extends Application {
         return nvx;
     }
     
-    public GridPane getGridtab1(Movies movies)
+    public HBox getGridtab1(Movies movies)
     {
+        HBox tot = new HBox(50);
+        tot.setAlignment(Pos.CENTER);
         GridPane gp = new GridPane();
-        Label Titre = new Label("Title :"+movies.getTitle());  
-        Label Author = new Label("Author :"+movies.getAuthor());
-        Label RD = new Label("Release Date :"+movies.getDate());
-        Label GT = new Label("Gender type :"+movies.getType());
-        Label RT = new Label("Running Time :"+movies.getRunningTime());
-        Label Rate = new Label("Rating: "+movies.getRate());
+        String maString = movies.getTitle().substring(0,1).toUpperCase()+movies.getTitle().substring(1);
+        Label Titre = new Label("Title : "+maString);  
+        Label Author = new Label("Author : "+movies.getAuthor());
+        Label RD = new Label("Release Date : "+movies.getDate());
+        Label GT = new Label("Gender type : "+movies.getType());
+        Label RT = new Label("Running Time : "+movies.getRunningTime());
+        Label Rate = new Label("Rating : "+movies.getRate());
         
         gp.addRow(0 ,Titre);
         gp.addRow(1, Author);
@@ -819,7 +828,21 @@ public class MainClass extends Application {
         gp.addRow(4, RT);
         gp.addRow(5, Rate);
         gp.setVgap(10);
-        return gp;
+        String desc = movies.getDescription();
+        for(int i=0;i<desc.length();i++){
+            if(i%40==0 && i!=0){
+                if(desc.charAt(i+1)==' ' || desc.charAt(i+1)=='.' || desc.charAt(i)==' ' || desc.charAt(i)=='.'){
+                    desc = desc.substring(0,i) + "\n"+ desc.substring(i);
+                }
+                else{
+                    desc = desc.substring(0,i) + "-\n"+ desc.substring(i);
+                }
+            } 
+        }
+        Label temp = new Label(desc);
+        tot.getChildren().addAll(gp,temp);
+        
+        return tot;
     }
     public FlowPane getPanetab1()
     {

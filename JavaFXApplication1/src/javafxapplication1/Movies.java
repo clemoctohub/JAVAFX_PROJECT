@@ -19,9 +19,10 @@ public class Movies {
     private int id;
     private String type;
     private int runningTime;
+    private String description;
     //private ArrayList<Session> sessions;
     
-    public Movies(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id)
+    public Movies(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, String description)
     {
         this.title = title;
         this.author = author;
@@ -30,6 +31,7 @@ public class Movies {
         this.rate = rate;
         this.type = type;
         this.runningTime = runningTime;
+        this.description = description;
     }
     
     public String getTitle() {
@@ -58,5 +60,9 @@ public class Movies {
 
     public int getRunningTime() {
         return runningTime;
+    }
+    
+    public String getDescription(){
+        return description;
     }
 }

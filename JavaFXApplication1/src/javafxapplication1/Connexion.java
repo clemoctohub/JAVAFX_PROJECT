@@ -86,8 +86,8 @@ public class Connexion {
         conn.close();
     }
     //Ajout d'un nouveau film dans la base de donnees 
-    public void insert_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, ArrayList<Session> sessions) throws SQLException{
-        String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note)"+" VALUES(?,?,?,?,?,?,?)";
+    public void insert_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, ArrayList<Session> sessions, String description) throws SQLException{
+        String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note, description)"+" VALUES(?,?,?,?,?,?,?,?)";
         
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, id);
@@ -97,6 +97,7 @@ public class Connexion {
         pstmt.setDate(5, date);
         pstmt.setInt(6, runningTime);
         pstmt.setInt(7, rate);
+        pstmt.setString(8, description);
         pstmt.execute(); 
         
         insert_seance(sessions,id);
@@ -174,7 +175,7 @@ public class Connexion {
     }
     
     public void changeAll_(Movies movie) throws SQLException{
-        String sql = "update membre set titre = ?, auteur = ?, genre = ?, date = ?, runnningTime = ? where id = ?";
+        String sql = "update movie set titre = ?, auteur = ?, genre = ?, date = ?, runnningTime = ?, description = ? where id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setString(1,movie.getTitle());
         preparedStmt.setString(2,movie.getAuthor());
@@ -309,7 +310,8 @@ public class Connexion {
             int id = rset.getInt(1);
             int runningTime = rset.getInt(6);
             int rate = rset.getInt(7);
-            mov = new Movies(title,author,date,rate,type,runningTime,id);
+            String description = rset.getString(8);
+            mov = new Movies(title,author,date,rate,type,runningTime,id,description);
             liste.add(mov);
         }
         // Retourner l'ArrayList
@@ -358,7 +360,7 @@ public class Connexion {
         // récupération du résultat de l'ordre
         rsetMeta = rset.getMetaData();
         // creation d'une ArrayList d'Employees
-        ArrayList<Customers> liste = new ArrayList<Customers>();
+        ArrayList<Customers> liste = new ArrayList<>();
         
         // tant qu'il reste une ligne 
         while (rset.next()) {
@@ -377,7 +379,7 @@ public class Connexion {
         // récupération du résultat de l'ordre
         rsetMeta = rset.getMetaData();
         // creation d'une ArrayList d'Employees
-        ArrayList<Members> liste = new ArrayList<Members>();
+        ArrayList<Members> liste = new ArrayList<>();
         
         // tant qu'il reste une ligne 
         while (rset.next()) {
@@ -392,7 +394,7 @@ public class Connexion {
     //Recherche du film parmi la liste de films disponibles
     public ArrayList<Movies> searchMovie(String name,String type,int time)throws SQLException{
         ArrayList<Movies> liste = new ArrayList<>();
-        ArrayList<Movies> request = new ArrayList<>();
+        ArrayList<Movies> request = new ArrayList<Movies>();
         request = recolterChampsMovies();
         // tant qu'il reste une ligne
         boolean condi = false;
