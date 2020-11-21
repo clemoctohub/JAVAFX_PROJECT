@@ -28,16 +28,16 @@ public class Cinema {
         this.children = children;
     }
     public Cinema(){
-        this.senior = 0.1;
-        this.children = 0.2;
-        this.regular = 0.05;
+        this.senior = 0.2;
+        this.children = 0.3;
+        this.regular = 0.15;
     }
     
     public Cinema (ArrayList<Movies> movies)
     {
         this.senior = 0.2;
         this.children = 0.3;
-        this.regular = 0.1;
+        this.regular = 0.15;
         this.movies = movies;
     }
     

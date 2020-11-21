@@ -13,17 +13,22 @@ import java.sql.Date;
  */
 public class Session {
     private Date date;
-    private Horaire horaire;
+    private String horaire;
     private int id;
     private int movie;
     private int nbr_places_max;
+    private int actual_place;
+    private double amount;
     
-    public Session(int id,int movie,Date date,int max)
+    public Session(int id,int movie,Date date,int max,int actual,String horaire,double amount)
     {
         this.movie=movie;
         this.id = id;
         this.date = date;
         this.nbr_places_max = max;
+        this.actual_place = actual;
+        this.horaire = horaire;
+        this.amount = amount;
     }
     
     public int getMovie(){
@@ -40,5 +45,17 @@ public class Session {
 
     public int getNbr_places_max() {
         return nbr_places_max;
+    }
+    
+    public double getAmount(){
+        return amount;
+    }
+    
+    public String getHoraire(){
+        return horaire;
+    }
+    
+    public int getActual(){
+        return actual_place;
     }
 }

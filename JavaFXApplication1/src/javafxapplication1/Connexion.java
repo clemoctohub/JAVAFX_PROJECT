@@ -104,24 +104,30 @@ public class Connexion {
     }
     
     public void insert_seance(ArrayList<Session> sessions,int id) throws SQLException{
-        String sql = " INSERT INTO session(id, movie_id, date, max_place)"+" VALUES(?,?,?,?)";
+        String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         for(int i=0;i<sessions.size();i++){
             pstmt.setInt(1, sessions.get(i).getId());
             pstmt.setInt(2, id);
             pstmt.setDate(3, sessions.get(i).getDate());
             pstmt.setInt(4, sessions.get(i).getNbr_places_max());
+            pstmt.setString(5, sessions.get(i).getHoraire());
+            pstmt.setInt(6, sessions.get(i).getActual());
+            pstmt.setDouble(7, sessions.get(i).getAmount());
             pstmt.execute(); 
         }
     }
     
     public void insert_seance(Session session, int id) throws SQLException{
-        String sql = " INSERT INTO session(id, movie_id, date, max_place)"+" VALUES(?,?,?,?)";
+        String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, session.getId());
         pstmt.setInt(2, id);
         pstmt.setDate(3, session.getDate());
         pstmt.setInt(4, session.getNbr_places_max());
+        pstmt.setString(5, session.getHoraire());
+        pstmt.setInt(6, session.getActual());
+        pstmt.setDouble(7, session.getAmount());
         pstmt.execute();
     }
     
@@ -131,7 +137,6 @@ public class Connexion {
         pstmt.setInt(1, id);
         pstmt.setInt(2, session_id);
         pstmt.execute();
-        conn.close();
     }
     
     public void update_seance(Session session,String changes) throws SQLException{
@@ -156,15 +161,35 @@ public class Connexion {
             preparedStmt.setInt(2, session.getId());
             preparedStmt.execute();
         }
+        else if(changes.equals("horaire")){
+            String sql = "update session set heure = ? where id = ?";
+            PreparedStatement preparedStmt = conn.prepareStatement(sql);
+            preparedStmt.setString(1,session.getHoraire());
+            preparedStmt.setInt(2, session.getId());
+            preparedStmt.execute();
+        }
+    }
+    
+    public void add_update_session(int tot,double amount,int id) throws SQLException{
+        String sql = "update session set actual_place = ?, amount = ? where id = ?";
+        PreparedStatement preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setInt(1,tot);
+        preparedStmt.setDouble(2, amount);
+        preparedStmt.setInt(3,id);
+        preparedStmt.execute();
     }
     
     public void changeAll_seance(Session session) throws SQLException{
-        String sql = "update session set movie_id = ?, date = ?, max_place = ? where id = ?";
+        String sql = "update session set movie_id = ?, date = ?, max_place = ?, heure = ?, actual_place = ?, amount = ? where id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setInt(1,session.getMovie());
         preparedStmt.setDate(2,session.getDate());
         preparedStmt.setInt(3,session.getNbr_places_max());
         preparedStmt.setInt(4, session.getId());
+        preparedStmt.setString(5, session.getHoraire());
+        preparedStmt.setInt(6, session.getActual());
+        preparedStmt.setDouble(7, session.getAmount());
+        preparedStmt.execute();
     }
     
     public void changeAll_user(Members member) throws SQLException{
@@ -172,6 +197,7 @@ public class Connexion {
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setString(1,member.getPassword());
         preparedStmt.setInt(2,member.getId());
+        preparedStmt.execute();
     }
     
     public void changeAll_(Movies movie) throws SQLException{
@@ -183,6 +209,7 @@ public class Connexion {
         preparedStmt.setDate(4,movie.getDate());
         preparedStmt.setInt(5,movie.getRunningTime());
         preparedStmt.setInt(6,movie.getId());
+        preparedStmt.execute();
     }
     //Suppression d'un membre dans la base de donnees
     public void delete_member(String login) throws SQLException{
@@ -239,6 +266,25 @@ public class Connexion {
         }
         conn.close();
         return condi;
+    }
+    
+    public Session recolterAmountSession(int id) throws SQLException{
+        rset = stmt.executeQuery("select * from session");
+        
+        // tant qu'il reste une ligne 
+        while (rset.next()) {
+            int id_ = rset.getInt(1);
+            int id_movie = rset.getInt(2);
+            java.sql.Date date = rset.getDate(3);    
+            int max = rset.getInt(4);
+            String heure = rset.getString(5);
+            int act = rset.getInt(6);
+            double tot = rset.getDouble(7);
+            if(id_==id)
+                return new Session(id,id_movie,date,max,act,heure,tot);
+        }
+        // Retourner l'ArrayList
+        return null;
     }
     
     //Recolte des tables de donnees
@@ -333,7 +379,10 @@ public class Connexion {
             int id_movie = rset.getInt(2);
             java.sql.Date date = rset.getDate(3);    
             int max = rset.getInt(4);
-            liste.add(new Session(id,id_movie,date,max));
+            String heure = rset.getString(5);
+            int act = rset.getInt(6);
+            double tot = rset.getDouble(7);
+            liste.add(new Session(id,id_movie,date,max,act,heure,tot));
         }
         conn.close();
         // Retourner l'ArrayList

@@ -168,7 +168,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public VBox dispPaiCustomer(final int id,final int tab){
+    public VBox dispPaiCustomer(final Session sess,final int tab){
         HBox nvx = new HBox(20);
         nvx.setAlignment(Pos.CENTER);
         Image[] img = new Image[4];
@@ -202,7 +202,7 @@ public class MainClass extends Application {
         both.setId("box-pay");
         HBox ad = new HBox(10);
         ad.setAlignment(Pos.CENTER);
-        Button plus = new Button("+");
+        final Button plus = new Button("+");
         Button moins = new Button("-");
         final Label nbr = new Label();
         nbr.setText("0");
@@ -215,6 +215,9 @@ public class MainClass extends Application {
             public void handle(ActionEvent arg0) {
                 int i = Integer.parseInt(nbr.getText());
                 i++;
+                if(sess.getActual()+i>= sess.getNbr_places_max()){
+                   plus.setDisable(true); 
+                }
                 double j = calculatePrice(i);
                 disc.setText("Total : "+Double.toString(j)+" $");
                 nbr.setText(Integer.toString(i));
@@ -226,6 +229,9 @@ public class MainClass extends Application {
                 int i = Integer.parseInt(nbr.getText());
                 double j=0;
                 i--;
+                if(sess.getActual()+i<sess.getNbr_places_max()){
+                   plus.setDisable(false); 
+                }
                 if(i<0)
                     i=0;
                 else{
@@ -247,7 +253,7 @@ public class MainClass extends Application {
                 }
                 else{
                     controller = new Controller("pay","paypage");
-                    condi = controller.addCustomerToSession(num.getText(),crypto.getText(),mv.getText(),id);
+                    condi = controller.addCustomerToSession(num.getText(),crypto.getText(),mv.getText(),sess.getId(),disc.getText(),nbr.getText());
                     if(condi==-1){
                         error.setText("Please enter correct inputs");
                     }
@@ -313,7 +319,7 @@ public class MainClass extends Application {
     public BorderPane paymentPage(Movies movie,Session sess,final ArrayList<Movies> movies,int tab){
         BorderPane tot = new BorderPane();
         tot.setLeft(dispMovieToBuy(movie,sess,movies,tab));
-        tot.setCenter(dispPaiCustomer(sess.getId(),tab));
+        tot.setCenter(dispPaiCustomer(sess,tab));
         tot.setRight(dispTicketCustomer());
         //tot.setAlignment(Pos.CENTER);
         return tot;
@@ -403,27 +409,41 @@ public class MainClass extends Application {
         Label reserver = new Label("Click to reserve a place");
         
         ArrayList<Button> button = new ArrayList<>();
-        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20);
+        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20),node5 = new VBox(20);
         node1.setId("box-session");
         node2.setId("box-session");
         node3.setId("box-session");
         node4.setId("button-session");
+        node5.setId("box-session");
         reserver.setId("button-session");
         node1.getChildren().add(date_txt);
         node2.getChildren().add(heure_txt);
         node3.getChildren().add(nbr_txt);
         node4.getChildren().add(reserver);
+        node5.getChildren().add(new Label(""));
         for(int i=0;i<sess.size();i++){
             String temp = sess.get(i).getDate().toString();
             Label date = new Label(temp);
-            Label heure = new Label("17h10");
+            Label heure = new Label(sess.get(i).getHoraire());
             String nbrr = Integer.toString(sess.get(i).getNbr_places_max());
             Label nbr = new Label("Number of places "+nbrr);
+            Label max = new Label("");
+            
             button.add(new Button("Reserve"));
             node1.getChildren().add(date);
             node2.getChildren().add(heure);
             node3.getChildren().add(nbr);
+            if(sess.get(i).getActual()>=sess.get(i).getNbr_places_max()){
+                button.get(i).setDisable(true);
+                max.setText("Full session");
+                max.setTextFill(RED);
+            }
+            else{
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" places left");
+                max.setTextFill(GREEN);
+            }
             node4.getChildren().add(button.get(i));
+            node5.getChildren().add(max);
             final Button mybut = button.get(i);
             final Session session = sess.get(i);
             mybut.setOnAction(new EventHandler<ActionEvent>() {
@@ -440,7 +460,7 @@ public class MainClass extends Application {
         nvx.addColumn(1,node2);
         nvx.addColumn(2,node3);
         nvx.addColumn(3,node4);
-        
+        nvx.addColumn(4,node5);
         tot.setContent(nvx);
         return tot;
     }

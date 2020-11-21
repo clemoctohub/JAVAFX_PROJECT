@@ -47,7 +47,7 @@ public class Controller {
         return condi;
     }
     
-    public int addCustomerToSession(String num, String crypto, String mv, int id){
+    public int addCustomerToSession(String num, String crypto, String mv, int id, String tot, String nbr){
         int x=0;
         for(int i=0;i<num.length();i++){
             if(num.charAt(i) < '0' || num.charAt(i)> '9')
@@ -59,6 +59,11 @@ public class Controller {
         }
         if(mv.length()>5 || mv.charAt(2)!='/')
             return -1;
+        tot = tot.replaceAll("Total : ","");
+        tot = tot.substring(0,tot.length()-2);
+        double amount = Double.parseDouble(tot);
+        int nombre = Integer.parseInt(nbr);
+        
         try {
             Connexion conn = new Connexion("movie", "root", "");
             ArrayList<Members> nvx = conn.recolterChampsCustomer();
@@ -69,10 +74,13 @@ public class Controller {
                 }
             }
             conn.insert_customer(id, x);
+            Session sess = conn.recolterAmountSession(id);
+            amount += sess.getAmount();
+            nombre += sess.getActual();
+            conn.add_update_session(nombre, amount, id);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         return x;
     }
     
