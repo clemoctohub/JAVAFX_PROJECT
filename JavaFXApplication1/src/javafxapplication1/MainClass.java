@@ -517,6 +517,7 @@ public class MainClass extends Application {
         //nvx.setAlignement(Pos.CENTER);
         final TextField recherche;
         recherche = new TextField();
+        recherche.setText("");
         recherche.setPromptText("Name of the movie");
         VBox hbo1 = new VBox();
         hbo1.setAlignment(Pos.CENTER);
@@ -527,7 +528,9 @@ public class MainClass extends Application {
         
         final TextField lab1 = new TextField();
         lab1.setPromptText("Month");
-        final Label lab2 = new Label("/");
+        Label lab2 = new Label("/");
+        lab1.setText("");
+        lab2.setText("");
         final TextField lab3 = new TextField();
         lab3.setPromptText("Day");
         HBox cont = new HBox(10);
@@ -542,10 +545,9 @@ public class MainClass extends Application {
         
         
         final TextField time = new TextField();
-        time.setPromptText("time");
-        
+        time.setText("");
+        time.setPromptText("Running time");
         time.setId("lab-search");
-        
         HBox hbo2 = new HBox(50);
         hbo2.setAlignment(Pos.CENTER);
         hbo2.getChildren().addAll(split,cont,time);
@@ -566,7 +568,7 @@ public class MainClass extends Application {
                 ArrayList<Movies> movies = new ArrayList<>();
                 controller = new Controller("search","search");
                 try {
-                    movies = controller.searchMovies(recherche.getText(),(String)split.getValue(),time.getText());
+                    movies = controller.searchMovies(recherche.getText(),(String)split.getValue(),time.getText(),lab3.getText(),lab1.getText());
                 } catch (ClassNotFoundException | ParseException | SQLException ex) {
                     Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
                 }

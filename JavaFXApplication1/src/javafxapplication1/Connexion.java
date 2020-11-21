@@ -363,7 +363,7 @@ public class Connexion {
         ArrayList<Customers> liste = new ArrayList<>();
         
         // tant qu'il reste une ligne 
-        while (rset.next()) {
+        while (rset.next()){
             int id = rset.getInt(1);
             int id2 = rset.getInt(2);
             if(id2==id_movie)
@@ -392,22 +392,25 @@ public class Connexion {
     }
     
     //Recherche du film parmi la liste de films disponibles
-    public ArrayList<Movies> searchMovie(String name,String type,int time)throws SQLException{
+    public ArrayList<Movies> searchMovie(String name,String type,int time,String date)throws SQLException{
         ArrayList<Movies> liste = new ArrayList<>();
-        ArrayList<Movies> request = new ArrayList<Movies>();
+        ArrayList<Movies> request = new ArrayList<>();
         request = recolterChampsMovies();
         // tant qu'il reste une ligne
         boolean condi = false;
-        
         for(int i=0;i<request.size();i++){
-            if(request.get(i).getTitle().indexOf(name)!=-1){
+            String da = request.get(i).getDate().toString();
+            da = da.substring(5);
+            if(request.get(i).getTitle().contains(name) && !name.equals("")){
                 condi = true;
             }
-            else if(request.get(i).getType().equals(type)){
+            if(da.equals(date)){
                 condi = true;
-                System.out.println("il y a genre");
             }
-            else if(request.get(i).getRunningTime() == time){
+            if(request.get(i).getType().equals(type)){
+                condi = true;
+            }
+            if(request.get(i).getRunningTime() == time){
                 condi = true;
             }
             if(condi==true){

@@ -83,24 +83,50 @@ public class Controller {
         return nvx;
     }
     
-    public ArrayList<Movies> searchMovies(String name,String type,String time) throws SQLException, ClassNotFoundException, ParseException{
+    public ArrayList<Movies> searchMovies(String name,String type,String time,String day, String month) throws SQLException, ClassNotFoundException, ParseException{
         Connexion nvx = new Connexion("movie", "root", "");
         ArrayList<Movies> rep = new ArrayList<Movies>();
-        if(name!=null)
-            name = name.toLowerCase();
-        if(type!=null)
-            type = type.toLowerCase();
-       
-        int temps;
-        if(time.equals(""))
-            temps=0;
-        else{
-            temps = Integer.parseInt(time);
-            if(temps<0)
-                temps = 0;
+        int temps,jour,mois;
+        try{
+            if(time.equals(""))
+                temps=0;
+            else{
+                temps = Integer.parseInt(time);
+                if(temps<0)
+                    temps = -temps;
+            }
+        }
+        catch(NumberFormatException | NullPointerException e){
+            return null;
         }
         
-        rep = nvx.searchMovie(name,type,temps);
+        try{
+            type = type.toLowerCase();
+        }
+        catch(NullPointerException e){
+            type = "";
+        }
+        try{
+            name = name.toLowerCase();
+        }
+        catch(NullPointerException e){
+            name = "";
+        }
+        try{
+            jour = Integer.parseInt(day);
+            mois = Integer.parseInt(month);
+            
+        }
+        catch(NullPointerException | NumberFormatException e){
+            day = "00";
+            month = "00";
+        }
+        
+        if(name.equals("")&&type.equals("")&&time.equals("")&&day.equals("00"))
+            return null;
+        
+        
+        rep = nvx.searchMovie(name,type,temps,month+"-"+day);
         return rep;
     }
     
