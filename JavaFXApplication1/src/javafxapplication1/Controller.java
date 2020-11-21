@@ -25,6 +25,32 @@ public class Controller {
         this.location = location;
     }
     
+    public String getAMovie(int id){
+        String nom="";
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            nom = conn.recolterSpecifikMovie(id);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return nom;
+    }
+    
+    public ArrayList<Session> getSessionConnected(String login){
+        ArrayList<Integer> nvx = new ArrayList<>();
+        ArrayList<Session> other = new ArrayList<>();
+        
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            nvx = conn.getSessionConnected(login);
+            other = conn.recolterSessionMember(nvx);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return other;
+    }
+    
     public boolean delete_session_customer(String id,String mail){
         int num;
         boolean condi=false;
@@ -45,6 +71,16 @@ public class Controller {
         }
         
         return condi;
+    }
+    
+    public void changePassword(String password, String id){
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.change_password(password,id);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     public int addCustomerToSession(String num, String crypto, String mv, int id, String tot, String nbr,String date,String mail){

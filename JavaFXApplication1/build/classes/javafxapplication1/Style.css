@@ -1,27 +1,27 @@
 .tab-pane *.tab-header-area *.tab-header-background {
-  -fx-background-color:transparent;
+  -fx-background-color : transparent;
 }
 
 #bande{
-    -fx-alignment: center;
+    -fx-alignment : center;
     -fx-font-size : 3em;
 }
 
 .tab-pane {
-  -fx-tab-min-width: 24.5em;
-  -fx-tab-max-width:24.5em;
-  -fx-alignment: center;
-  -fx-tab-min-height:3em;
-  -fx-tab-max-height:3em;
+  -fx-tab-min-width : 24.5em;
+  -fx-tab-max-width : 24.5em;
+  -fx-alignment : center;
+  -fx-tab-min-height : 3em;
+  -fx-tab-max-height : 3em;
 }
 
 .tab {
-  -fx-font-family: Arial;
-  -fx-font-size: 18;
+  -fx-font-family : Arial;
+  -fx-font-size : 18;
 }
 
 .tab:selected {
-    -fx-background-color:royalblue;
+    -fx-background-color : royalblue;
 }
 
 #root-tab4{
@@ -43,11 +43,11 @@
 }
 
 #submit-tab4{
-    -fx-font-size: 1.5em;
-    -fx-font-family:courier_new;   
-    -fx-text-fill:White;  
-    -fx-border-color: Wheat; 
-    -fx-border-radius: 5;
+    -fx-font-size : 1.5em;
+    -fx-font-family :courier_new;   
+    -fx-text-fill : White;  
+    -fx-border-color : Wheat; 
+    -fx-border-radius : 5;
 }
 
 #HBox-tab4{
@@ -57,14 +57,14 @@
 }
 
 #label-sub{
-    -fx-alignment: center;
-    -fx-max-width: 20em;
+    -fx-alignment : center;
+    -fx-max-width : 20em;
     -fx-font-size : 1.5em;
 }
 
 #text-sub{
-    -fx-alignment: center;
-    -fx-max-width: 20em;
+    -fx-alignment : center;
+    -fx-max-width : 20em;
     -fx-font-size : 1.4em;
 }
 
@@ -73,16 +73,16 @@
 }
 
 #titre-tab2{
-    -fx-font: 120px Tahoma;
-    -fx-fill: linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);  
+    -fx-font : 120px Tahoma;
+    -fx-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);  
 }
 
 #discounts-tab2{
     -fx-padding : 5em 0 0 20em;
-    -fx-font: 20px Tahoma;
-    -fx-fill: linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);
-    -fx-stroke: black;
-    -fx-stroke-width: 0.3;
+    -fx-font : 20px Tahoma;
+    -fx-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);
+    -fx-stroke : black;
+    -fx-stroke-width : 0.3;
 }
 
 #label-co{
@@ -152,5 +152,11 @@
 }
 #toptab1{
     -fx-font-size : 1.4em;
-    -fx-font-weight: bold
+    -fx-font-weight : bold
+}
+#changepass{
+    -fx-font-size : 1.2em;
+    -fx-padding : 0.5em;
+    -fx-border-insets: 0.5em;
+    -fx-background-insets: 0.5em;
 }

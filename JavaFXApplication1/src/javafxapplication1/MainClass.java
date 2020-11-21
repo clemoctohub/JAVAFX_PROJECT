@@ -113,6 +113,8 @@ public class MainClass extends Application {
             public void handle(ActionEvent event){
                 tab3.setContent(searchTab(false,null));
                 tab1.setContent(getSPane());
+                if(!connected.equals(""))
+                    tab4.setContent(connectedOK());
                 tabPane.getSelectionModel().select(tab1);
             }
         });
@@ -737,7 +739,7 @@ public class MainClass extends Application {
                     prenom = actualMember.getFirstName().substring(0, 1).toUpperCase()+actualMember.getFirstName().substring(1);
                     nom = actualMember.getLastName().substring(0, 1).toUpperCase()+actualMember.getLastName().substring(1);
                     connected.setText(" : "+prenom+" "+nom);
-                    tab4.setContent(membConnected());
+                    tab4.setContent(connectedOK());
                 }
                 else if(action==true){
                     //nouvelle interface employee
@@ -762,7 +764,76 @@ public class MainClass extends Application {
         return root;
     }
     
-    public VBox membConnected(){
+    public BorderPane connectedOK(){
+        BorderPane pane = new BorderPane();
+        pane.setRight(changeMdp());
+        pane.setCenter(membConnecte());
+        pane.setLeft(dispSessOfMemb());
+        return pane;
+    }
+    
+    public VBox dispSessOfMemb(){
+        VBox tot = new VBox(50);
+        tot.setAlignment(Pos.CENTER);
+        tot.setId("changepass");
+        controller = new Controller("session_member_connected","tab4");
+        ArrayList<Session> sess = new ArrayList<>();
+        sess = controller.getSessionConnected(actualMember.getLogin());
+        
+        Label title = new Label("Your reservations : ");
+        tot.getChildren().add(title);
+        if(sess.size()==0){
+            tot.getChildren().add(new Label("You don't have any reservation"));
+        }
+        for(int i=0;i<sess.size();i++){
+            HBox tst = new HBox(20);
+            tst.setAlignment(Pos.CENTER);
+            Label lab1 = new Label((i+1)+")");
+            Label lab2 = new Label(controller.getAMovie(sess.get(i).getMovie()));
+            Label lab3 = new Label(sess.get(i).getDate().toString());
+            Label lab4 = new Label(sess.get(i).getHoraire());
+            tst.getChildren().addAll(lab1,lab2,lab3,lab4);
+            tot.getChildren().add(tst);
+        }
+        
+        return tot;
+    }
+    
+    public VBox changeMdp(){
+        VBox tot = new VBox(50);
+        tot.setAlignment(Pos.CENTER);
+        final PasswordField txt1 = new PasswordField();
+        txt1.setPromptText("New Password");
+        final PasswordField txt2 = new PasswordField();
+        txt2.setPromptText("Confirm Password");
+        final Label txt3 = new Label();
+        txt3.setTextFill(RED);
+        txt3.setText("");
+        txt1.setId("changepass");
+        txt2.setId("changepass");
+        txt3.setId("changepass");
+        Button txt4 = new Button("Change password");
+        txt4.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                if(!txt1.getText().equals(txt2.getText())){
+                    txt3.setText("Not same password");
+                }
+                else if(txt1.getText().equals("")){
+                    txt3.setText("Enter a password");
+                }
+                else{
+                    controller = new Controller("changeMdp","tab4");
+                    controller.changePassword(txt1.getText(),actualMember.getLogin());
+                    txt3.setText("Changed !");
+                }
+            }
+        });
+        tot.getChildren().addAll(txt1,txt2,txt3,txt4);
+        return tot;
+    }
+    
+    public VBox membConnecte(){
         VBox nvx = new VBox(10);
         nvx.setAlignment(Pos.CENTER);
         Label lab1 = new Label("You are connected to your account !"); 
@@ -816,7 +887,7 @@ public class MainClass extends Application {
         HBox nvx = new HBox(10);
         nvx.setAlignment(Pos.CENTER);
         nvx.setId("boxtoptab1");
-        Label first = new Label("TIcket's price : "+cine.getPrix()+" $\t\t");
+        Label first = new Label("Ticket's price : "+cine.getPrix()+" $\t\t");
         Label second = new Label("Click here to see the promotion : ");
         first.setId("toptab1");
         second.setId("toptab1");
@@ -966,7 +1037,7 @@ public class MainClass extends Application {
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                tab4.setContent(membConnected());
+                tab4.setContent(connectedOK());
             }
         });
         tot.getChildren().addAll(ok,dac,idi,but);

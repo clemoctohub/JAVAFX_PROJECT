@@ -196,11 +196,11 @@ public class Connexion {
         preparedStmt.execute();
     }
     
-    public void changeAll_user(Members member) throws SQLException{
-        String sql = "update membre set password = ? where id = ?";
+    public void change_password(String password,String id) throws SQLException{
+        String sql = "update membre set password = ? where login = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
-        preparedStmt.setString(1,member.getPassword());
-        preparedStmt.setInt(2,member.getId());
+        preparedStmt.setString(1, password);
+        preparedStmt.setString(2,id);
         preparedStmt.execute();
     }
     
@@ -270,6 +270,40 @@ public class Connexion {
         }
         conn.close();
         return condi;
+    }
+    
+    public ArrayList<Integer> getSessionConnected(String login) throws SQLException{
+        ArrayList<Integer> nvx = new ArrayList<>();
+        rset = stmt.executeQuery("select * from customer");
+        while (rset.next()) {
+            String test = rset.getString(4);
+            int id = rset.getInt(2);
+            if(test.equals(login))
+                nvx.add(id);
+        }
+        
+        return nvx;
+    }
+    
+    public ArrayList<Session> recolterSessionMember(ArrayList<Integer> nvx) throws SQLException{
+        ArrayList<Session> other = new ArrayList<>();
+        rset = stmt.executeQuery("select * from session");
+        
+        while (rset.next()) {
+            int id_ = rset.getInt(1);
+            int id_movie = rset.getInt(2);
+            java.sql.Date date = rset.getDate(3);    
+            int max = rset.getInt(4);
+            String heure = rset.getString(5);
+            int act = rset.getInt(6);
+            double tot = rset.getDouble(7);
+            for(int i=0;i<nvx.size();i++){
+                if(nvx.get(i)==id_)
+                    other.add(new Session(id_,id_movie,date,max,act,heure,tot));
+            }
+        }
+        conn.close();
+        return other;
     }
     
     public Session recolterAmountSession(int id) throws SQLException{
@@ -367,6 +401,19 @@ public class Connexion {
         // Retourner l'ArrayList
         return liste;
     }
+    
+    public String recolterSpecifikMovie(int id) throws SQLException{
+        rset = stmt.executeQuery("select * from movie");
+        while (rset.next()) {
+            int title = rset.getInt(1);
+            String titre = rset.getString(2);
+            if(title==id){
+                return titre;
+            }
+        }
+        return "<Not found>";
+    }
+    
     public ArrayList<Session> recolterChampsSessions() throws SQLException{
         rset = stmt.executeQuery("select * from session");
 
@@ -476,6 +523,7 @@ public class Connexion {
         conn.close();
         return liste;
     }
+    
     //Affichage console des Films et des Employés
     public void afficherMovies()throws SQLException{
         ArrayList<Movies> listeMov = recolterChampsMovies();
