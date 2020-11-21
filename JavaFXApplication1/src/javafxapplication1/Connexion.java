@@ -131,11 +131,14 @@ public class Connexion {
         pstmt.execute();
     }
     
-    public void insert_customer(int session_id,int id) throws SQLException{
-        String sql = " INSERT INTO customer(id, id_session)"+" VALUES(?,?)";
+    public void insert_customer(int session_id, int id, String date,String mail) throws SQLException, ParseException{
+        java.sql.Date dat = convertDate(date);
+        String sql = " INSERT INTO customer(id, id_session, date, mail)"+" VALUES(?,?,?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, id);
         pstmt.setInt(2, session_id);
+        pstmt.setDate(3, dat);
+        pstmt.setString(4, mail);
         pstmt.execute();
     }
     
@@ -177,6 +180,7 @@ public class Connexion {
         preparedStmt.setDouble(2, amount);
         preparedStmt.setInt(3,id);
         preparedStmt.execute();
+        conn.close();
     }
     
     public void changeAll_seance(Session session) throws SQLException{
@@ -252,11 +256,11 @@ public class Connexion {
         }  
     }
     
-    public boolean delete_customer(int id) throws SQLException{
+    public boolean delete_customer(int id,String e) throws SQLException{
         ArrayList<Members> listeCust = recolterChampsCustomer();
         boolean condi = false;
         for(int i=0;i<listeCust.size();i++){
-            if(listeCust.get(i).getId() == id){
+            if(listeCust.get(i).getId() == id && listeCust.get(i).getLogin().equals(e)){
                String sql = " DELETE FROM customer WHERE `id` =?";
                PreparedStatement pstmt = conn.prepareStatement(sql);
                pstmt.setInt(1, id);
@@ -415,8 +419,9 @@ public class Connexion {
         while (rset.next()){
             int id = rset.getInt(1);
             int id2 = rset.getInt(2);
+            String id3 = rset.getString(4);
             if(id2==id_movie)
-                liste.add(new Members(id));
+                liste.add(new Members(id,id3));
         }
         // Retourner l'ArrayList
         return liste;
@@ -434,7 +439,8 @@ public class Connexion {
         while (rset.next()) {
             int id = rset.getInt(1);
             int id2 = rset.getInt(2);
-            liste.add(new Members(id));
+            String id3 = rset.getString(4);
+            liste.add(new Members(id,id3));
         }
         // Retourner l'ArrayList
         return liste;

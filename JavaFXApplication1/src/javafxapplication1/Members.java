@@ -22,8 +22,9 @@ public class Members extends Customers{
         this.login = login;
     }
     
-    public Members(int id){
+    public Members(int id,String login){
         super(id);
+        this.login = login;
     }
     
     @Override

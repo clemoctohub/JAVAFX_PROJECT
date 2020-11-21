@@ -6,6 +6,9 @@
 package javafxapplication1;
 
 import javafx.scene.image.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ public class MainClass extends Application {
     private final Cinema cine = new Cinema();
     private Controller controller;
     private Label connected;
+    private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
     
     @Override
     public void start(Stage primaryStage) throws MalformedURLException, FileNotFoundException {
@@ -121,7 +125,7 @@ public class MainClass extends Application {
         
         tot.setAlignment(Pos.CENTER);
         VBox node = new VBox(20);
-        HBox detail = new HBox();
+        HBox detail = new HBox(20);
         detail.setAlignment(Pos.CENTER);
         node.setAlignment(Pos.CENTER);
         String maString = movie.getTitle().substring(0,1).toUpperCase()+movie.getTitle().substring(1);
@@ -204,6 +208,14 @@ public class MainClass extends Application {
         ad.setAlignment(Pos.CENTER);
         final Button plus = new Button("+");
         Button moins = new Button("-");
+        HBox email = new HBox(20);
+        email.setAlignment(Pos.CENTER);
+        Label ver = new Label("Please enter your mail (login if you are a member) before to click : ");
+        ver.setStyle("-fx-font-weigth: bold");
+        final TextField mail = new TextField();
+        mail.setId("box-pay");
+        mail.setPromptText("Enter your mail/login");
+        email.getChildren().addAll(ver,mail);
         final Label nbr = new Label();
         nbr.setText("0");
         final Label disc = new Label();
@@ -253,7 +265,8 @@ public class MainClass extends Application {
                 }
                 else{
                     controller = new Controller("pay","paypage");
-                    condi = controller.addCustomerToSession(num.getText(),crypto.getText(),mv.getText(),sess.getId(),disc.getText(),nbr.getText());
+                    Date date = new Date();
+                    condi = controller.addCustomerToSession(num.getText(),crypto.getText(),mv.getText(),sess.getId(),disc.getText(),nbr.getText(),sdf.format(date).toString(),mail.getText());
                     if(condi==-1){
                         error.setText("Please enter correct inputs");
                     }
@@ -275,7 +288,7 @@ public class MainClass extends Application {
         intermediaire.getChildren().addAll(nbr_tick,ad);
         VBox container = new VBox(80);
         container.setAlignment(Pos.CENTER);
-        container.getChildren().addAll(nvx,input,intermediaire,disc,but);
+        container.getChildren().addAll(nvx,input,intermediaire,email,disc,but);
         
         return container;
     }
@@ -720,7 +733,10 @@ public class MainClass extends Application {
                     tab4.setContent(getPane(1));
                 }
                 else if(action==false){
-                    connected.setText(" : "+actualMember.getFirstName()+" "+actualMember.getLastName());
+                    String nom,prenom;
+                    prenom = actualMember.getFirstName().substring(0, 1).toUpperCase()+actualMember.getFirstName().substring(1);
+                    nom = actualMember.getLastName().substring(0, 1).toUpperCase()+actualMember.getLastName().substring(1);
+                    connected.setText(" : "+prenom+" "+nom);
                     tab4.setContent(membConnected());
                 }
                 else if(action==true){
@@ -749,9 +765,10 @@ public class MainClass extends Application {
     public VBox membConnected(){
         VBox nvx = new VBox(10);
         nvx.setAlignment(Pos.CENTER);
-        Label lab1 = new Label("You are connected to your account"); 
+        Label lab1 = new Label("You are connected to your account !"); 
         Label lab2 = new Label("First Name : "+actualMember.getFirstName());
         Label lab3 = new Label("Last Name : "+actualMember.getLastName());
+        Label lab4 = new Label("Login : "+actualMember.getLogin());
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/deco.jpg"));
         ImageView view = new ImageView(img);
@@ -763,12 +780,13 @@ public class MainClass extends Application {
         lab1.setId("label-co");
         lab2.setId("label-co");
         lab3.setId("label-co");
+        lab4.setId("label-co");
         HBox deconect = new HBox(50);
         deconect.setAlignment(Pos.CENTER);
         Label deconection = new Label("Click here to disconect : ");
         deconection.setId("label-co");
         deconect.getChildren().addAll(deconection,deco);
-        nvx.getChildren().addAll(deconect,lab1,lab2,lab3);
+        nvx.getChildren().addAll(deconect,lab1,lab2,lab3,lab4);
         
         deco.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -790,7 +808,29 @@ public class MainClass extends Application {
         scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
         pane.setCenter(scroll);
         pane.setRight(deletePlace());
+        pane.setTop(dispPriceReduc());
         return pane;
+    }
+    
+    public HBox dispPriceReduc(){
+        HBox nvx = new HBox(10);
+        nvx.setAlignment(Pos.CENTER);
+        nvx.setId("boxtoptab1");
+        Label first = new Label("TIcket's price : "+cine.getPrix()+" $\t\t");
+        Label second = new Label("Click here to see the promotion : ");
+        first.setId("toptab1");
+        second.setId("toptab1");
+        Button third = new Button("See discount offers");
+        
+        third.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tabPane.getSelectionModel().select(tab2);
+            }
+        });
+        
+        nvx.getChildren().addAll(first,second,third);
+        return nvx;
     }
     
     public VBox deletePlace(){
@@ -803,7 +843,9 @@ public class MainClass extends Application {
         inter.getChildren().addAll(txt,txt2);
         
         final TextField id = new TextField();
+        final TextField mail = new TextField();
         id.setPromptText("Place's ID");
+        mail.setPromptText("Enter your mail");
         final Label error = new Label();
         
         error.setText("");
@@ -812,21 +854,20 @@ public class MainClass extends Application {
             @Override
             public void handle(ActionEvent event){
                 controller = new Controller("delete","tab1");
-                boolean condi = controller.delete_session_customer(id.getText());
+                boolean condi = controller.delete_session_customer(id.getText(),mail.getText());
                 if(condi==false){
-                    id.setText("");
                     error.setText("Not found or wrong input");
                     error.setTextFill(RED);
                 }
                 else{
-                    id.setText("");
                     error.setText("Remove !");
                     error.setTextFill(GREEN);
                 }
-                    
+                id.setText("");
+                mail.setText("");
             }
         });
-        nvx.getChildren().addAll(inter,id,error,button);
+        nvx.getChildren().addAll(inter,id,mail,error,button);
         return nvx;
     }
     
@@ -835,6 +876,7 @@ public class MainClass extends Application {
         HBox tot = new HBox(50);
         tot.setAlignment(Pos.CENTER);
         GridPane gp = new GridPane();
+        gp.setAlignment(Pos.CENTER);
         String maString = movies.getTitle().substring(0,1).toUpperCase()+movies.getTitle().substring(1);
         Label Titre = new Label("Title : "+maString);  
         Label Author = new Label("Author : "+movies.getAuthor());
@@ -905,7 +947,7 @@ public class MainClass extends Application {
                 }
             });
         }
-        gp.setVgap(10);
+        gp.setVgap(50);
         pane.setPrefSize(300,1000);
         pane.getChildren().add(gp);
         //pane.getChildren().add(getGridtab1());
@@ -1078,7 +1120,7 @@ public class MainClass extends Application {
                                    +"  and offers throughout the year.\n"
                                    +"  To make sure you don't miss out on anything,\n"
                                    +"  receive our communications by newsletter.\n"
-                                   +"  Children : -30%    Regular : -20%    Senior : -15%");
+                                   +"  Children : -30%    Regular : -15%    Senior : -20%");
         discounts.setId("discounts-tab2");
         discounts.setY(50);
         

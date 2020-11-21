@@ -25,7 +25,7 @@ public class Controller {
         this.location = location;
     }
     
-    public boolean delete_session_customer(String id){
+    public boolean delete_session_customer(String id,String mail){
         int num;
         boolean condi=false;
         try{
@@ -39,7 +39,7 @@ public class Controller {
             return false;
         try {
             Connexion conn = new Connexion("movie", "root", "");
-            condi = conn.delete_customer(num);
+            condi = conn.delete_customer(num,mail);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -47,7 +47,7 @@ public class Controller {
         return condi;
     }
     
-    public int addCustomerToSession(String num, String crypto, String mv, int id, String tot, String nbr){
+    public int addCustomerToSession(String num, String crypto, String mv, int id, String tot, String nbr,String date,String mail){
         int x=0;
         for(int i=0;i<num.length();i++){
             if(num.charAt(i) < '0' || num.charAt(i)> '9')
@@ -63,7 +63,9 @@ public class Controller {
         tot = tot.substring(0,tot.length()-2);
         double amount = Double.parseDouble(tot);
         int nombre = Integer.parseInt(nbr);
-        
+        if(mail==null || mail.equals(""))
+            mail = "noMailForThisUser@error";
+        date = date.replaceAll("/", "-");
         try {
             Connexion conn = new Connexion("movie", "root", "");
             ArrayList<Members> nvx = conn.recolterChampsCustomer();
@@ -73,7 +75,7 @@ public class Controller {
                     i=-1;
                 }
             }
-            conn.insert_customer(id, x);
+            conn.insert_customer(id, x,date,mail);
             Session sess = conn.recolterAmountSession(id);
             amount += sess.getAmount();
             nombre += sess.getActual();

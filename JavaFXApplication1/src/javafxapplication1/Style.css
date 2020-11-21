@@ -147,3 +147,10 @@
 #desc-sess{
     -fx-font-size : 1.2em;
 }
+#boxtoptab1{
+    -fx-padding : 1em;
+}
+#toptab1{
+    -fx-font-size : 1.4em;
+    -fx-font-weight: bold
+}
