@@ -5,8 +5,6 @@
  */
 package javafxapplication1;
 
-import java.sql.SQLException;
-import java.text.ParseException;
 import javafx.application.Application;
 
 

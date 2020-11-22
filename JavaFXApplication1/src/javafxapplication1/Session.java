@@ -12,13 +12,13 @@ import java.sql.Date;
  * @author Utilisateur
  */
 public class Session {
-    private Date date;
-    private String horaire;
-    private int id;
-    private int movie;
-    private int nbr_places_max;
-    private int actual_place;
-    private double amount;
+    private final Date date;
+    private final String horaire;
+    private final int id;
+    private final int movie;
+    private final int nbr_places_max;
+    private final int actual_place;
+    private final double amount;
     
     public Session(int id,int movie,Date date,int max,int actual,String horaire,double amount)
     {

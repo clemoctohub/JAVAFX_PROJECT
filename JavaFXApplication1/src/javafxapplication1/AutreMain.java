@@ -26,9 +26,9 @@ import javafx.stage.Stage;
  */
 public class AutreMain implements Runnable{
 
-    private Employees actual;
-    private Stage second;
-    private Tab tab = new Tab();
+    private final Employees actual;
+    private final Stage second;
+    private final Tab tab = new Tab();
     private Label connected = new Label("");
     
     public AutreMain(Employees nvx){
@@ -74,13 +74,15 @@ public class AutreMain implements Runnable{
         view2.setFitHeight(90);
         view2.setPreserveRatio(true);
         but5.setGraphic(view2);
-        if(actual.getAccess().equals("C")){
-            but2.setDisable(true);
-            but3.setDisable(true);
-            but4.setDisable(true);
-        }
-        else if(actual.getAccess().equals("B")){
-            but4.setDisable(true);
+        switch (actual.getAccess()) {
+            case "C":
+                but2.setDisable(true);
+                but3.setDisable(true);
+                but4.setDisable(true);
+                break;
+            case "B":
+                but4.setDisable(true);
+                break;
         }
         
         but5.setOnAction(new EventHandler<ActionEvent>() {     

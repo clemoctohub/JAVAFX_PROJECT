@@ -5,7 +5,6 @@
  */
 package javafxapplication1;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -17,8 +16,8 @@ import java.util.logging.Logger;
  * @author clemf
  */
 public class Controller {
-    private String request;
-    private String location;
+    private final String request;
+    private final String location;
     
     public Controller(String request,String location){
         this.request = request;
@@ -51,9 +50,21 @@ public class Controller {
         return other;
     }
     
+    public ArrayList<Integer> getIdCustomerSess(String login){
+        ArrayList<Integer> nvx = new ArrayList<>();
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            nvx = conn.getSessionConnectedID(login);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return nvx;
+    }
+    
     public boolean delete_session_customer(String id,String mail){
         int num;
         boolean condi=false;
+        int num_sess;
         try{
             num = Integer.parseInt(id);
         }
@@ -65,7 +76,14 @@ public class Controller {
             return false;
         try {
             Connexion conn = new Connexion("movie", "root", "");
+            num_sess = conn.getMovieFromCust(num,mail);
             condi = conn.delete_customer(num,mail);
+            if(condi==true){
+                Session nvx = conn.recolterAmountSession(num_sess);
+                double amount = nvx.getAmount()-4;
+                int nbr = nvx.getActual()-1;
+                conn.add_update_session(nbr, amount, num_sess);
+            }
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -131,7 +149,7 @@ public class Controller {
     
     public ArrayList<Movies> searchMovies(String name,String type,String time,String day, String month) throws SQLException, ClassNotFoundException, ParseException{
         Connexion nvx = new Connexion("movie", "root", "");
-        ArrayList<Movies> rep = new ArrayList<Movies>();
+        ArrayList<Movies> rep = new ArrayList<>();
         int temps,jour,mois;
         try{
             if(time.equals(""))
@@ -203,7 +221,7 @@ public class Controller {
         int condi = 0;
         Connexion nvx = new Connexion("movie", "root", "");
         ArrayList<Members> membre = nvx.recolterChampsMember();
-        for(int i=0;i<membre.size();i++){;
+        for(int i=0;i<membre.size();i++){
             
             if(condi==0){
                 if(membre.get(i).getLogin().equals(firstName+"."+lastName)){

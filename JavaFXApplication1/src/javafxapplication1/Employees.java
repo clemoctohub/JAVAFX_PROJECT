@@ -10,11 +10,11 @@ package javafxapplication1;
  * @author Utilisateur
  */
 public class Employees implements Person{
-    private String login;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String access;
+    private final String login;
+    private final String password;
+    private final String firstName;
+    private final String lastName;
+    private final String access;
     
     public Employees(String login,String password,String firstName, String lastname,String access)
     {

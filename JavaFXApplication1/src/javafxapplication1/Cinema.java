@@ -42,9 +42,9 @@ public class Cinema {
     }
     
     public Movies getCorrectMovie(int id){
-        for(int i=0;i<movies.size();i++){
-            if(movies.get(i).getId()==id){
-                return movies.get(i);
+        for (Movies movie : movies) {
+            if (movie.getId() == id) {
+                return movie;
             }
         }
         return null;

@@ -780,7 +780,9 @@ public class MainClass extends Application {
         tot.setId("changepass");
         controller = new Controller("session_member_connected","tab4");
         ArrayList<Session> sess = new ArrayList<>();
+        ArrayList<Integer> tt = new ArrayList<>();
         sess = controller.getSessionConnected(actualMember.getLogin());
+        tt = controller.getIdCustomerSess(actualMember.getLogin());
         
         Label title = new Label("Your reservations : ");
         tot.getChildren().add(title);
@@ -794,7 +796,7 @@ public class MainClass extends Application {
             Label lab2 = new Label(controller.getAMovie(sess.get(i).getMovie()));
             Label lab3 = new Label(sess.get(i).getDate().toString());
             Label lab4 = new Label(sess.get(i).getHoraire());
-            Label lab5 = new Label("Id : "+Integer.toString(sess.get(i).getId()));
+            Label lab5 = new Label("Id : "+Integer.toString(tt.get(i)));
             tst.getChildren().addAll(lab1,lab2,lab3,lab4,lab5);
             tot.getChildren().add(tst);
         }
@@ -1108,7 +1110,6 @@ public class MainClass extends Application {
                     } catch (SQLException | ClassNotFoundException | ParseException ex) {
                         Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    System.out.println(condi);
                     if(condi>0){
                         String login = tf1.getText()+Integer.toString(condi)+"."+tf2.getText();
                         int age = Integer.parseInt(tf3.getText());

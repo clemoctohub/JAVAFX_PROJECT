@@ -47,6 +47,7 @@ public class Connexion {
      * @param passwordDatabase
      * @throws java.sql.SQLException
      * @throws java.lang.ClassNotFoundException
+     * @throws java.text.ParseException
      */
     public Connexion(String nameDatabase, String loginDatabase, String passwordDatabase) throws SQLException, ClassNotFoundException, ParseException{
         // chargement driver "com.mysql.jdbc.Driver"
@@ -75,13 +76,13 @@ public class Connexion {
     public void insert_member(String login, String motDePasse, String firstName, String lastName, int age) throws SQLException {
         String sql = " INSERT INTO membre(login, mot_de_passe, first_name, last_name, age)"+" VALUES(?,?,?,?,?)";
 
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, login);
-        pstmt.setString(2, motDePasse);
-        pstmt.setString(3, firstName);
-        pstmt.setString(4, lastName);
-        pstmt.setInt(5, age);
-        pstmt.execute();
+        PreparedStatement var = conn.prepareStatement(sql);
+        var.setString(1, login);
+        var.setString(2, motDePasse);
+        var.setString(3, firstName);
+        var.setString(4, lastName);
+        var.setInt(5, age);
+        var.execute();
         
         conn.close();
     }
@@ -89,87 +90,97 @@ public class Connexion {
     public void insert_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, ArrayList<Session> sessions, String description) throws SQLException{
         String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note, description)"+" VALUES(?,?,?,?,?,?,?,?)";
         
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, id);
-        pstmt.setString(2, title);
-        pstmt.setString(3, author);
-        pstmt.setString(4, type);
-        pstmt.setDate(5, date);
-        pstmt.setInt(6, runningTime);
-        pstmt.setInt(7, rate);
-        pstmt.setString(8, description);
-        pstmt.execute(); 
+        PreparedStatement nn = conn.prepareStatement(sql);
+        nn.setInt(1, id);
+        nn.setString(2, title);
+        nn.setString(3, author);
+        nn.setString(4, type);
+        nn.setDate(5, date);
+        nn.setInt(6, runningTime);
+        nn.setInt(7, rate);
+        nn.setString(8, description);
+        nn.execute(); 
         
         insert_seance(sessions,id);
     }
     
     public void insert_seance(ArrayList<Session> sessions,int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        for(int i=0;i<sessions.size();i++){
-            pstmt.setInt(1, sessions.get(i).getId());
-            pstmt.setInt(2, id);
-            pstmt.setDate(3, sessions.get(i).getDate());
-            pstmt.setInt(4, sessions.get(i).getNbr_places_max());
-            pstmt.setString(5, sessions.get(i).getHoraire());
-            pstmt.setInt(6, sessions.get(i).getActual());
-            pstmt.setDouble(7, sessions.get(i).getAmount());
-            pstmt.execute(); 
+        PreparedStatement mt = conn.prepareStatement(sql);
+        for (Session session : sessions) {
+            mt.setInt(1, session.getId());
+            mt.setInt(2, id);
+            mt.setDate(3, session.getDate());
+            mt.setInt(4, session.getNbr_places_max());
+            mt.setString(5, session.getHoraire());
+            mt.setInt(6, session.getActual());
+            mt.setDouble(7, session.getAmount());
+            mt.execute(); 
         }
     }
     
     public void insert_seance(Session session, int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, session.getId());
-        pstmt.setInt(2, id);
-        pstmt.setDate(3, session.getDate());
-        pstmt.setInt(4, session.getNbr_places_max());
-        pstmt.setString(5, session.getHoraire());
-        pstmt.setInt(6, session.getActual());
-        pstmt.setDouble(7, session.getAmount());
-        pstmt.execute();
+        PreparedStatement pstm = conn.prepareStatement(sql);
+        pstm.setInt(1, session.getId());
+        pstm.setInt(2, id);
+        pstm.setDate(3, session.getDate());
+        pstm.setInt(4, session.getNbr_places_max());
+        pstm.setString(5, session.getHoraire());
+        pstm.setInt(6, session.getActual());
+        pstm.setDouble(7, session.getAmount());
+        pstm.execute();
     }
     
     public void insert_customer(int session_id, int id, String date,String mail) throws SQLException, ParseException{
         java.sql.Date dat = convertDate(date);
         String sql = " INSERT INTO customer(id, id_session, date, mail)"+" VALUES(?,?,?,?)";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, id);
-        pstmt.setInt(2, session_id);
-        pstmt.setDate(3, dat);
-        pstmt.setString(4, mail);
-        pstmt.execute();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, id);
+        ps.setInt(2, session_id);
+        ps.setDate(3, dat);
+        ps.setString(4, mail);
+        ps.execute();
     }
     
     public void update_seance(Session session,String changes) throws SQLException{
-        if(changes.equals("movie_id")){
-            String sql = "update session set movie_id = ? where id = ?";
-            PreparedStatement preparedStmt = conn.prepareStatement(sql);
-            preparedStmt.setInt(1,session.getMovie());
-            preparedStmt.setInt(2, session.getId());
-            preparedStmt.execute();
-        }
-        else if(changes.equals("number_places")){
-            String sql = "update session set max_place = ? where id = ?";
-            PreparedStatement preparedStmt = conn.prepareStatement(sql);
-            preparedStmt.setInt(1,session.getNbr_places_max());
-            preparedStmt.setInt(2, session.getId());
-            preparedStmt.execute();
-        }
-        else if(changes.equals("date")){
-            String sql = "update session set date = ? where id = ?";
-            PreparedStatement preparedStmt = conn.prepareStatement(sql);
-            preparedStmt.setDate(1,session.getDate());
-            preparedStmt.setInt(2, session.getId());
-            preparedStmt.execute();
-        }
-        else if(changes.equals("horaire")){
-            String sql = "update session set heure = ? where id = ?";
-            PreparedStatement preparedStmt = conn.prepareStatement(sql);
-            preparedStmt.setString(1,session.getHoraire());
-            preparedStmt.setInt(2, session.getId());
-            preparedStmt.execute();
+        switch (changes) {
+            case "movie_id":
+                {
+                    String sql = "update session set movie_id = ? where id = ?";
+                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
+                    preparedStmt.setInt(1,session.getMovie());
+                    preparedStmt.setInt(2, session.getId());
+                    preparedStmt.execute();
+                    break;
+                }
+            case "number_places":
+                {
+                    String sql = "update session set max_place = ? where id = ?";
+                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
+                    preparedStmt.setInt(1,session.getNbr_places_max());
+                    preparedStmt.setInt(2, session.getId());
+                    preparedStmt.execute();
+                    break;
+                }
+            case "date":
+                {
+                    String sql = "update session set date = ? where id = ?";
+                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
+                    preparedStmt.setDate(1,session.getDate());
+                    preparedStmt.setInt(2, session.getId());
+                    preparedStmt.execute();
+                    break;
+                }
+            case "horaire":
+                {
+                    String sql = "update session set heure = ? where id = ?";
+                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
+                    preparedStmt.setString(1,session.getHoraire());
+                    preparedStmt.setInt(2, session.getId());
+                    preparedStmt.execute();
+                    break;
+                }
         }
     }
     
@@ -219,26 +230,26 @@ public class Connexion {
     public void delete_member(String login) throws SQLException{
         ArrayList<Members> listeMem = recolterChampsMember();
         
-        for(int i=0;i<listeMem.size();i++){
-            if(listeMem.get(i).getLogin().equals(login)){
-               String sql = " DELETE FROM membre WHERE `login` =?";
-               PreparedStatement pstmt = conn.prepareStatement(sql);
-               pstmt.setString(1, login);
-               pstmt.executeUpdate();
-            }     
+        for (Members listeMem1 : listeMem) {
+            if (listeMem1.getLogin().equals(login)) {
+                String sql = " DELETE FROM membre WHERE `login` =?";
+                PreparedStatement tmt = conn.prepareStatement(sql);
+                tmt.setString(1, login);
+                tmt.executeUpdate();
+            }
         }  
     }
     //Suppression d'un movie de la base de donnees
     public void delete_movie(int id) throws SQLException{
         ArrayList<Movies> listeMov = recolterChampsMovies();
         
-        for(int i=0;i<listeMov.size();i++){
-            if(listeMov.get(i).getId() == id){
-               String sql = " DELETE FROM movie WHERE `id` =?";
-               PreparedStatement pstmt = conn.prepareStatement(sql);
-               pstmt.setInt(1, id);
-               pstmt.executeUpdate();
-            }     
+        for (Movies listeMov1 : listeMov) {
+            if (listeMov1.getId() == id) {
+                String sql = " DELETE FROM movie WHERE `id` =?";
+                PreparedStatement pst = conn.prepareStatement(sql);
+                pst.setInt(1, id);
+                pst.executeUpdate();
+            }
         }  
         
     }
@@ -246,29 +257,28 @@ public class Connexion {
     public void delete_session(int id) throws SQLException{
         ArrayList<Session> listeSess = recolterChampsSessions();
         
-        for(int i=0;i<listeSess.size();i++){
-            if(listeSess.get(i).getId() == id){
-               String sql = " DELETE FROM session WHERE `id` =?";
-               PreparedStatement pstmt = conn.prepareStatement(sql);
-               pstmt.setInt(1, id);
-               pstmt.executeUpdate();
-            }     
+        for (Session listeSes : listeSess) {
+            if (listeSes.getId() == id) {
+                String sql = " DELETE FROM session WHERE `id` =?";
+                PreparedStatement psmt_ = conn.prepareStatement(sql);
+                psmt_.setInt(1, id);
+                psmt_.executeUpdate();
+            }
         }  
     }
     
     public boolean delete_customer(int id,String e) throws SQLException{
         ArrayList<Members> listeCust = recolterChampsCustomer();
         boolean condi = false;
-        for(int i=0;i<listeCust.size();i++){
-            if(listeCust.get(i).getId() == id && listeCust.get(i).getLogin().equals(e)){
-               String sql = " DELETE FROM customer WHERE `id` =?";
-               PreparedStatement pstmt = conn.prepareStatement(sql);
-               pstmt.setInt(1, id);
-               pstmt.executeUpdate();
-               condi = true;
-            }     
+        for (Members listeCust1 : listeCust) {
+            if (listeCust1.getId() == id && listeCust1.getLogin().equals(e)) {
+                String sql = " DELETE FROM customer WHERE `id` =?";
+                PreparedStatement pstmt1 = conn.prepareStatement(sql);
+                pstmt1.setInt(1, id);
+                pstmt1.executeUpdate();
+                condi = true;
+            }
         }
-        conn.close();
         return condi;
     }
     
@@ -284,6 +294,18 @@ public class Connexion {
         
         return nvx;
     }
+    public ArrayList<Integer> getSessionConnectedID(String login) throws SQLException{
+        ArrayList<Integer> nvx = new ArrayList<>();
+        rset = stmt.executeQuery("select * from customer");
+        while (rset.next()) {
+            String test = rset.getString(4);
+            int id = rset.getInt(1);
+            if(test.equals(login))
+                nvx.add(id);
+        }
+        conn.close();
+        return nvx;
+    }
     
     public ArrayList<Session> recolterSessionMember(ArrayList<Integer> nvx) throws SQLException{
         ArrayList<Session> other = new ArrayList<>();
@@ -297,9 +319,10 @@ public class Connexion {
             String heure = rset.getString(5);
             int act = rset.getInt(6);
             double tot = rset.getDouble(7);
-            for(int i=0;i<nvx.size();i++){
-                if(nvx.get(i)==id_)
+            for (Integer nvx1 : nvx) {
+                if (nvx1 == id_) {
                     other.add(new Session(id_,id_movie,date,max,act,heure,tot));
+                }
             }
         }
         conn.close();
@@ -414,13 +437,42 @@ public class Connexion {
         return "<Not found>";
     }
     
+    
+    public int recolterSpecifikSession(int id) throws SQLException{
+        rset = stmt.executeQuery("select * from session");
+        while (rset.next()) {
+            int id_ = rset.getInt(1);
+            int nbr = rset.getInt(4);
+            if(id_==id){
+                return nbr;
+            }
+        }
+        return -1;
+    }
+    
+    public int getMovieFromCust(int id,String e) throws SQLException{
+        rset = stmt.executeQuery("select * from customer");
+
+        // récupération du résultat de l'ordre
+        rsetMeta = rset.getMetaData();
+        // creation d'une ArrayList d'Employees
+        
+        // tant qu'il reste une ligne 
+        while (rset.next()) {
+            int id_ = rset.getInt(1);
+            int id2 = rset.getInt(2);
+            String id3 = rset.getString(4);
+            if(id_==id && e.equals(id3))
+                return id2;
+        }
+        return -1;
+    }
+    
     public ArrayList<Session> recolterChampsSessions() throws SQLException{
         rset = stmt.executeQuery("select * from session");
 
         // récupération du résultat de l'ordre
         rsetMeta = rset.getMetaData();
-
-
         // creation d'une ArrayList d'Employees
         ArrayList<Session> liste = new ArrayList<>();
         
@@ -445,9 +497,10 @@ public class Connexion {
         ArrayList<Session> rep = new ArrayList<>();
         sess = recolterChampsSessions();
         
-        for(int i=0;i<sess.size();i++){
-            if(sess.get(i).getMovie()==idmov)
-                rep.add(sess.get(i));
+        for (Session ses : sess) {
+            if (ses.getMovie() == idmov) {
+                rep.add(ses);
+            }
         }
         // Retourner l'ArrayList
         
@@ -500,23 +553,23 @@ public class Connexion {
         request = recolterChampsMovies();
         // tant qu'il reste une ligne
         boolean condi = false;
-        for(int i=0;i<request.size();i++){
-            String da = request.get(i).getDate().toString();
+        for (Movies request1 : request) {
+            String da = request1.getDate().toString();
             da = da.substring(5);
-            if(request.get(i).getTitle().contains(name) && !name.equals("")){
+            if (request1.getTitle().contains(name) && !name.equals("")) {
                 condi = true;
             }
             if(da.equals(date)){
                 condi = true;
             }
-            if(request.get(i).getType().equals(type)){
+            if (request1.getType().equals(type)) {
                 condi = true;
             }
-            if(request.get(i).getRunningTime() == time){
+            if (request1.getRunningTime() == time) {
                 condi = true;
             }
-            if(condi==true){
-                liste.add(request.get(i));
+            if (condi==true) {
+                liste.add(request1);
                 condi = false;
             }
         }
@@ -527,14 +580,14 @@ public class Connexion {
     //Affichage console des Films et des Employés
     public void afficherMovies()throws SQLException{
         ArrayList<Movies> listeMov = recolterChampsMovies();
-        for(int i=0;i<listeMov.size();i++){
-            System.out.println("title "+listeMov.get(i).getTitle()+" date "+listeMov.get(i).getDate());
+        for (Movies listeMov1 : listeMov) {
+            System.out.println("title " + listeMov1.getTitle() + " date " + listeMov1.getDate());
         }
     }
     public void afficherEmployees() throws SQLException{
         ArrayList<Employees> listeEmp = recolterChampsEmployee();
-        for(int i=0;i<listeEmp.size();i++){
-            System.out.println(listeEmp.get(i).getFirstName()+" "+listeEmp.get(i).getLastName()+" "+listeEmp.get(i).getLogin()+" "+listeEmp.get(i).getPassword());
+        for (Employees listeEmp1 : listeEmp) {
+            System.out.println(listeEmp1.getFirstName() + " " + listeEmp1.getLastName() + " " + listeEmp1.getLogin() + " " + listeEmp1.getPassword());
         }
     }
     
@@ -542,9 +595,10 @@ public class Connexion {
     public Members checkLoginMember(String login, String mdp) throws SQLException{
         ArrayList<Members> listeMem = recolterChampsMember();
         
-        for(int i=0;i<listeMem.size();i++){
-            if(listeMem.get(i).getLogin().equals(login) && listeMem.get(i).getPassword().equals(mdp))
-                return listeMem.get(i);
+        for (Members listeMem1 : listeMem) {
+            if (listeMem1.getLogin().equals(login) && listeMem1.getPassword().equals(mdp)) {
+                return listeMem1;
+            }
         }
         conn.close();
         return null;        
@@ -552,9 +606,10 @@ public class Connexion {
     public Employees checkLoginEmployee(String login, String mdp) throws SQLException{
         ArrayList<Employees> listeEmp = recolterChampsEmployee();
         
-        for(int i=0;i<listeEmp.size();i++){
-            if(listeEmp.get(i).getLogin().equals(login) && listeEmp.get(i).getPassword().equals(mdp))
-                return listeEmp.get(i);
+        for (Employees listeEmp1 : listeEmp) {
+            if (listeEmp1.getLogin().equals(login) && listeEmp1.getPassword().equals(mdp)) {
+                return listeEmp1;
+            }
         }
         conn.close();
         return null;        

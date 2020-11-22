@@ -5,21 +5,19 @@
  */
 package javafxapplication1;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Utilisateur
  */
 public class Movies {
-    private String title;
-    private String author;
-    private java.sql.Date date;
-    private int rate;
-    private int id;
-    private String type;
-    private int runningTime;
-    private String description;
+    private final String title;
+    private final String author;
+    private final java.sql.Date date;
+    private final int rate;
+    private final int id;
+    private final String type;
+    private final int runningTime;
+    private final String description;
     //private ArrayList<Session> sessions;
     
     public Movies(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, String description)
