@@ -336,12 +336,12 @@ public class Connexion {
         Employees emp;
         // tant qu'il reste une ligne 
         while (rset.next()) {
-            String champs[] = new String[4];
+            String champs[] = new String[5];
             
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 champs[i] = rset.getString(i+1);
             }
-            emp = new Employees(champs[0], champs[1], champs[2], champs[3]);
+            emp = new Employees(champs[0], champs[1], champs[2], champs[3], champs[4]);
 
             // ajouter l'Employees dans l'ArrayList
             liste.add(emp);

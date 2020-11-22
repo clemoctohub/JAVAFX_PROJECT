@@ -113,7 +113,7 @@ public class MainClass extends Application {
             public void handle(ActionEvent event){
                 tab3.setContent(searchTab(false,null));
                 tab1.setContent(getSPane());
-                if(!connected.equals(""))
+                if(!connected.getText().equals(""))
                     tab4.setContent(connectedOK());
                 tabPane.getSelectionModel().select(tab1);
             }
@@ -268,7 +268,7 @@ public class MainClass extends Application {
                 else{
                     controller = new Controller("pay","paypage");
                     Date date = new Date();
-                    condi = controller.addCustomerToSession(num.getText(),crypto.getText(),mv.getText(),sess.getId(),disc.getText(),nbr.getText(),sdf.format(date).toString(),mail.getText());
+                    condi = controller.addCustomerToSession(num.getText(),crypto.getText(),mv.getText(),sess.getId(),disc.getText(),nbr.getText(),sdf.format(date),mail.getText());
                     if(condi==-1){
                         error.setText("Please enter correct inputs");
                     }
@@ -324,6 +324,9 @@ public class MainClass extends Application {
                 if(!connected.getText().equals("")){
                     nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
                     nom.setAlignment(Pos.CENTER);
+                }
+                else if(connected.getText().equals("")){
+                    nom.setText("A Customer");
                 }
             }
         });
@@ -390,7 +393,7 @@ public class MainClass extends Application {
         view2.setFitHeight(90);
         view2.setPreserveRatio(true);
         but.setGraphic(view2);
-        but.setOnAction(new EventHandler<ActionEvent>() {
+        but.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent event){
                 if(tab==3)
@@ -401,7 +404,6 @@ public class MainClass extends Application {
         });
         border.setCenter(tot);
         border.setLeft(but);
-        
         return border;
     }
     
@@ -482,7 +484,6 @@ public class MainClass extends Application {
     
     public BorderPane dispSeance(Movies movie,ArrayList<Movies> movies, int tab){
         BorderPane tot = new BorderPane();
-        //tot.setAlignment(Pos.CENTER);
         tot.setTop(dispMovie(movie,movies,tab));
         tot.setCenter(dispAllSess(movie,movies,tab));
         return tot;
@@ -742,8 +743,9 @@ public class MainClass extends Application {
                     tab4.setContent(connectedOK());
                 }
                 else if(action==true){
-                    //nouvelle interface employee
-                    System.out.println("EMPLOYEE");
+                    AutreMain autre = new AutreMain(actualEmployee);
+                    tf1.setText("");
+                    tf2.setText("");
                 }
             }
         }); 
@@ -782,7 +784,7 @@ public class MainClass extends Application {
         
         Label title = new Label("Your reservations : ");
         tot.getChildren().add(title);
-        if(sess.size()==0){
+        if(sess.isEmpty()){
             tot.getChildren().add(new Label("You don't have any reservation"));
         }
         for(int i=0;i<sess.size();i++){
@@ -792,7 +794,8 @@ public class MainClass extends Application {
             Label lab2 = new Label(controller.getAMovie(sess.get(i).getMovie()));
             Label lab3 = new Label(sess.get(i).getDate().toString());
             Label lab4 = new Label(sess.get(i).getHoraire());
-            tst.getChildren().addAll(lab1,lab2,lab3,lab4);
+            Label lab5 = new Label("Id : "+Integer.toString(sess.get(i).getId()));
+            tst.getChildren().addAll(lab1,lab2,lab3,lab4,lab5);
             tot.getChildren().add(tst);
         }
         
@@ -933,6 +936,8 @@ public class MainClass extends Application {
                 else{
                     error.setText("Remove !");
                     error.setTextFill(GREEN);
+                    if(!connected.getText().equals(""))
+                        tab4.setContent(connectedOK());
                 }
                 id.setText("");
                 mail.setText("");
@@ -1015,6 +1020,11 @@ public class MainClass extends Application {
                 @Override
                 public void handle(ActionEvent event){
                     tab1.setContent(dispSeance(movie, M,1));
+                    String right = connected.getText();
+                    if(!right.equals("")) {
+                        tab4.setContent(connectedOK());
+                    } else {
+                    }
                 }
             });
         }

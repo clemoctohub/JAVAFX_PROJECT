@@ -14,13 +14,15 @@ public class Employees implements Person{
     private String password;
     private String firstName;
     private String lastName;
+    private String access;
     
-    public Employees(String login,String password,String firstName, String lastname)
+    public Employees(String login,String password,String firstName, String lastname,String access)
     {
         this.login =login;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastname;
+        this.access = access;
     }
     public String getLogin() {
         return login;
@@ -36,6 +38,10 @@ public class Employees implements Person{
 
     public String getLastName() {
         return lastName;
+    }
+    
+    public String getAccess(){
+        return access;
     }
 
     @Override

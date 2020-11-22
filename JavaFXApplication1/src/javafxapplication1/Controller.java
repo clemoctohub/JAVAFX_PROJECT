@@ -203,9 +203,7 @@ public class Controller {
         int condi = 0;
         Connexion nvx = new Connexion("movie", "root", "");
         ArrayList<Members> membre = nvx.recolterChampsMember();
-        for(int i=0;i<membre.size();i++){
-            System.out.println(membre.get(i).getLogin());
-            System.out.println(firstName+Integer.toString(condi)+"."+lastName);
+        for(int i=0;i<membre.size();i++){;
             
             if(condi==0){
                 if(membre.get(i).getLogin().equals(firstName+"."+lastName)){
