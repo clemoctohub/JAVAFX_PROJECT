@@ -5,12 +5,21 @@
  */
 package javafxapplication1;
 
+import java.util.ArrayList;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.PieChart.Data; 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -23,6 +32,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import static javafx.scene.paint.Color.GREEN;
@@ -116,7 +126,7 @@ public class AutreMain{
         but3.setOnAction(new EventHandler<ActionEvent>() {     
             @Override  
             public void handle(ActionEvent arg0) {
-                //second.close();
+                tab.setContent(seeStatistics());
             }
         });
         but4.setOnAction(new EventHandler<ActionEvent>() {     
@@ -128,6 +138,68 @@ public class AutreMain{
         nvx.getChildren().addAll(lab1,but1,but2,but3,but4,but5);
         tot.setCenter(nvx);
         return tot;
+    }
+    
+    public GridPane seeStatistics(){
+        GridPane nvx = new GridPane();
+        ArrayList<Members> membres;
+        ArrayList<Integer> nbr = new ArrayList<>();
+        ArrayList<Integer> str = new ArrayList<>();
+        ArrayList<Session> sessions;
+        PieChart piechart = new PieChart();
+        int senior = 0, children = 0, regular = 0;
+        Controller controller = new Controller("statistics","member");
+        membres = controller.recolterMembre();
+        sessions = controller.recolterSessions();
+        
+        for(int i=0;i<membres.size();i++){
+            if(membres.get(i).getAge()<18)
+                children++;
+            else if(membres.get(i).getAge()>60)
+                senior++;
+            else regular++;
+        }
+        
+        int total=senior+children+regular;
+        
+        ObservableList<Data> list = FXCollections.observableArrayList();  
+        list.addAll(new PieChart.Data("Senior", senior*100/total),  
+            new PieChart.Data("Children", children*100/total),new PieChart.Data("Regular",regular*100/total));
+        piechart.setData(list);
+        nvx.addRow(0,piechart);
+        
+        boolean condi = false;
+        int j;
+        for(int i=0;i<sessions.size();i++){
+            for(j=0;j<nbr.size() && condi!=true;j++){
+                if(sessions.get(i).getMovie()==nbr.get(j)){
+                    condi=true;
+                }
+            }
+            if(condi==true){
+                condi = false;
+                int temp = nbr.get(j);
+                nbr.set(j,temp++);
+            }
+            else{
+                nbr.add(0);
+                str.add(0);
+            }
+        }
+        
+        CategoryAxis xaxis= new CategoryAxis();  
+        NumberAxis yaxis = new NumberAxis(0.1,2,0.1);  
+        xaxis.setLabel("Movies' name");  
+        yaxis.setLabel("Number of places bought");  
+      
+    //Configuring BarChart   
+        BarChart<String,Float> bar = new BarChart(xaxis,yaxis);
+        bar.setTitle("Number of places according to the movie");
+        
+        XYChart.Series<String,Float> series = new XYChart.Series<>();
+        
+        
+        return nvx;
     }
     
     public VBox changePromotion(){
@@ -144,9 +216,15 @@ public class AutreMain{
         button1.setUserData("0");
         button2.setUserData("1");
         button3.setUserData("2");
+        button1.setId("dsgn-promo-radio");
+        button2.setId("dsgn-promo-radio");
+        button3.setId("dsgn-promo-radio");
         final TextField txt1 = new TextField();
         final TextField txt2 = new TextField();
         final TextField txt3 = new TextField();
+        txt1.setId("dsgn-promo-txt");
+        txt2.setId("dsgn-promo-txt");
+        txt3.setId("dsgn-promo-txt");
         txt1.setPromptText("Enter value of promotion");
         final Label lab1 = new Label();
         lab1.setTextFill(RED);
@@ -197,6 +275,7 @@ public class AutreMain{
         box4.setAlignment(Pos.CENTER);
         final PasswordField pwd = new PasswordField();
         pwd.setPromptText("Enter your password");
+        pwd.setId("dsgn-promo-txt");
         final Label lab4 = new Label();
         
         box1.getChildren().addAll(button1,txt1);

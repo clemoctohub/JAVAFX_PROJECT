@@ -23,3 +23,9 @@ and open the template in the editor.
 .tab-pane .tab-header-area {
        visibility: hidden ;
 }
+#dsgn-promo-txt{
+    -fx-font-size : 1.5em;
+}
+#dsgn-promo-radio{
+    -fx-font-size : 1.2em;
+}

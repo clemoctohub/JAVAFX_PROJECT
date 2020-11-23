@@ -312,6 +312,27 @@ public class Controller {
         }
         return -1;
     }
+    
+    public ArrayList<Members> recolterMembre(){
+        ArrayList<Members> nvx = new ArrayList<>();
+        try {
+            Connexion conn = new Connexion("movie","root","");
+            nvx = conn.recolterChampsMember();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return nvx;
+    }
+    public ArrayList<Session> recolterSessions(){
+        ArrayList<Session> nvx = new ArrayList<>();
+        try {
+            Connexion conn = new Connexion("movie","root","");
+            nvx = conn.recolterChampsSessions();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return nvx;
+    }
 
 }
 

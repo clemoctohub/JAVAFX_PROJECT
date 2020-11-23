@@ -914,7 +914,7 @@ public class MainClass extends Application {
         nvx.setId("deletePlace");
         VBox inter = new VBox(20);
         Label txt = new Label("If you want to remove your place,");
-        Label txt2 = new Label("enter your id session here : ");
+        Label txt2 = new Label("enter your id session and email/login here : ");
         inter.getChildren().addAll(txt,txt2);
         
         final TextField id = new TextField();
