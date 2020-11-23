@@ -36,7 +36,7 @@ public class Controller {
     }
     
     public ArrayList<Session> getSessionConnected(String login){
-        ArrayList<Integer> nvx = new ArrayList<>();
+        ArrayList<Integer> nvx;
         ArrayList<Session> other = new ArrayList<>();
         
         try {
@@ -141,7 +141,7 @@ public class Controller {
     }
     
     public ArrayList<Session> getSessionMovie(int id) throws SQLException, ClassNotFoundException, ParseException{
-        ArrayList<Session> nvx = new ArrayList<>();
+        ArrayList<Session> nvx;
         Connexion conn = new Connexion("movie", "root", "");
         nvx = conn.recolterChampsSessionsMovie(id);
         return nvx;
@@ -149,7 +149,7 @@ public class Controller {
     
     public ArrayList<Movies> searchMovies(String name,String type,String time,String day, String month) throws SQLException, ClassNotFoundException, ParseException{
         Connexion nvx = new Connexion("movie", "root", "");
-        ArrayList<Movies> rep = new ArrayList<>();
+        ArrayList<Movies> rep;
         int temps,jour,mois;
         try{
             if(time.equals(""))
@@ -246,10 +246,71 @@ public class Controller {
     
     public ArrayList<Movies> dispAllMovies() throws SQLException, ClassNotFoundException, ParseException
     {
-        ArrayList<Movies> movies = new ArrayList<>();
+        ArrayList<Movies> movies;
         Connexion nvx = new Connexion("movie", "root", "");
         movies = nvx.recolterChampsMovies();
         return movies;
+    }
+    
+    public int changePromotion(String in1, String in2, String in3){
+        
+        double i1=-1,i2=-1,i3=-1;
+        try{
+            if(!in1.equals(""))
+                i1 = Double.parseDouble(in1);
+        }
+        catch(NumberFormatException e){
+            return 0;
+        }
+        try{
+            if(!in1.equals(""))
+                i2 = Double.parseDouble(in2);
+        }
+        catch(NumberFormatException e){
+            return 1;
+        }
+        try{
+            if(!in1.equals(""))
+                i3 = Double.parseDouble(in3);
+        }
+        catch(NumberFormatException e){
+            return 2;
+        }
+        
+        if(i1<1 && i1!=-1){
+            i1*=100;
+            if(i1>50)
+                return 0;
+        }
+        else if(i1>50){
+            return 0;
+        }
+        
+        if(i2<1 && i2!=-1){
+            i2*=100;
+            if(i2>50)
+                return 1;
+        }
+        else if(i2>50){
+            return 1;
+        }
+        
+        if(i3<1 && i3!=-1){
+            i3*=100;
+            if(i3>50)
+                return 2;
+        }
+        else if(i3>50){
+            return 2;
+        }
+        
+        try {
+            Connexion nvx = new Connexion("movie","root","");
+            nvx.changePromotions(i1,i2,i3);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 
 }

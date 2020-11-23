@@ -5,7 +5,11 @@
  */
 package javafxapplication1;
 
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,6 +19,7 @@ public class Cinema {
     private ArrayList<Movies> movies;
     final double PRIX = 8;
     private double regular,senior,children;
+    private String description;
 
     public void setRegular(double regular) {
         this.regular = regular;
@@ -28,17 +33,24 @@ public class Cinema {
         this.children = children;
     }
     public Cinema(){
-        this.senior = 0.2;
-        this.children = 0.3;
-        this.regular = 0.15;
+        double[] promo = new double[3];
+        try {
+            Connexion nvx = new Connexion("movie", "root", "");
+            promo = nvx.getReduc();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Cinema.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.senior = promo[1];
+        this.children = promo[2];
+        this.regular = promo[0];
+        System.out.println(promo[0]+" "+senior);
     }
     
-    public Cinema (ArrayList<Movies> movies)
+    public Cinema (ArrayList<Movies> movies,double senior,double children,double regular)
     {
-        this.senior = 0.2;
-        this.children = 0.3;
-        this.regular = 0.15;
-        this.movies = movies;
+        this.senior = senior;
+        this.children = children;
+        this.regular = regular;
     }
     
     public Movies getCorrectMovie(int id){
@@ -64,5 +76,14 @@ public class Cinema {
     
     public double getPrix(){
         return PRIX;
+    }
+    
+    public String getDescription(){
+        return description = "  Benefits all year round!!\n"
+                                   +"  Thanks to CinéPass, enjoy exclusive benefits\n"
+                                   +"  and offers throughout the year.\n"
+                                   +"  To make sure you don't miss out on anything,\n"
+                                   +"  receive our communications by newsletter.\n"
+                                   +"  Children : -"+(children*100)+"%    Regular : -"+(regular*100)+"%    Senior : -"+senior*100+"%";
     }
 }

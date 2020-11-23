@@ -226,6 +226,33 @@ public class Connexion {
         preparedStmt.setInt(6,movie.getId());
         preparedStmt.execute();
     }
+    
+    public void changePromotions(double i1,double i2, double i3) throws SQLException{
+        if(i1!=-1){
+            String sql = "update reduction set promo = ? where id = ?";
+            PreparedStatement preparedStmt = conn.prepareStatement(sql);
+            preparedStmt.setDouble(1, i1);
+            preparedStmt.setString(2, "senior");
+            preparedStmt.execute();
+        }
+        if(i2!=-1){
+            String sql = "update reduction set promo = ? where id = ?";
+            PreparedStatement preparedStmt = conn.prepareStatement(sql);
+            preparedStmt.setDouble(1, i2);
+            preparedStmt.setString(2, "children");
+            preparedStmt.execute();
+        }
+        if(i3!=-1){
+            String sql = "update reduction set promo = ? where id = ?";
+            PreparedStatement preparedStmt = conn.prepareStatement(sql);
+            preparedStmt.setDouble(1, i3);
+            preparedStmt.setString(2, "regular");
+            preparedStmt.execute();
+        }
+        
+        
+        
+    }
     //Suppression d'un membre dans la base de donnees
     public void delete_member(String login) throws SQLException{
         ArrayList<Members> listeMem = recolterChampsMember();
@@ -493,7 +520,7 @@ public class Connexion {
     }
     
     public ArrayList<Session> recolterChampsSessionsMovie(int idmov) throws SQLException{
-        ArrayList<Session> sess = new ArrayList<>();
+        ArrayList<Session> sess;
         ArrayList<Session> rep = new ArrayList<>();
         sess = recolterChampsSessions();
         
@@ -549,7 +576,7 @@ public class Connexion {
     //Recherche du film parmi la liste de films disponibles
     public ArrayList<Movies> searchMovie(String name,String type,int time,String date)throws SQLException{
         ArrayList<Movies> liste = new ArrayList<>();
-        ArrayList<Movies> request = new ArrayList<>();
+        ArrayList<Movies> request;
         request = recolterChampsMovies();
         // tant qu'il reste une ligne
         boolean condi = false;
@@ -614,4 +641,24 @@ public class Connexion {
         conn.close();
         return null;        
     }  
+    
+    public double[] getReduc() throws SQLException{
+        double[] promo = new double[3];
+        
+        rset = stmt.executeQuery("select * from reduction");
+
+        // récupération du résultat de l'ordre
+        rsetMeta = rset.getMetaData();
+        
+        // tant qu'il reste une ligne 
+        int i=0;
+        while (rset.next()) {
+            String id = rset.getString(1);
+            double id2 = rset.getDouble(2);
+            promo[i] = id2;
+            i++;
+        }
+        
+        return promo;
+    }
 }

@@ -5,31 +5,41 @@
  */
 package javafxapplication1;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import static javafx.scene.paint.Color.GREEN;
+import static javafx.scene.paint.Color.RED;
 import javafx.stage.Stage;
 
 /**
  *
  * @author clemf
  */
-public class AutreMain implements Runnable{
+public class AutreMain{
 
     private final Employees actual;
     private final Stage second;
     private final Tab tab = new Tab();
     private Label connected = new Label("");
+    
     
     public AutreMain(Employees nvx){
         this.actual = nvx;
@@ -100,7 +110,7 @@ public class AutreMain implements Runnable{
         but2.setOnAction(new EventHandler<ActionEvent>() {     
             @Override  
             public void handle(ActionEvent arg0) {
-                //second.close();
+                tab.setContent(changePromotion());
             }
         });
         but3.setOnAction(new EventHandler<ActionEvent>() {     
@@ -116,9 +126,130 @@ public class AutreMain implements Runnable{
             }
         });
         nvx.getChildren().addAll(lab1,but1,but2,but3,but4,but5);
-        
-        
         tot.setCenter(nvx);
+        return tot;
+    }
+    
+    public VBox changePromotion(){
+        VBox tot = new VBox(30);
+        tot.setAlignment(Pos.CENTER);
+        Label lab = new Label("Change actual offers : ");
+        final ToggleGroup group = new ToggleGroup();
+        RadioButton button1 = new RadioButton("Senior : ");
+        RadioButton button2 = new RadioButton("Children : ");  
+        RadioButton button3 = new RadioButton("Regular : "); 
+        button1.setToggleGroup(group);  
+        button2.setToggleGroup(group);
+        button3.setToggleGroup(group);
+        button1.setUserData("0");
+        button2.setUserData("1");
+        button3.setUserData("2");
+        final TextField txt1 = new TextField();
+        final TextField txt2 = new TextField();
+        final TextField txt3 = new TextField();
+        txt1.setPromptText("Enter value of promotion");
+        final Label lab1 = new Label();
+        lab1.setTextFill(RED);
+        final Label lab2 = new Label();
+        lab2.setTextFill(RED);
+        final Label lab3 = new Label();
+        lab3.setTextFill(RED);
+        txt2.setPromptText("Enter value of promotion");
+        txt3.setPromptText("Enter value of promotion");
+        txt1.setEditable(false);
+        txt2.setEditable(false);
+        txt3.setEditable(false);
+
+        group.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            @Override
+            public void changed(ObservableValue<? extends Toggle> ov,
+                Toggle toggle, Toggle new_toggle) {
+                    if (new_toggle == null){
+                        System.out.println("ah oe");
+                    }
+                    else{
+                        int temp = Integer.parseInt((String) group.getSelectedToggle().getUserData());
+                        switch(temp){
+                            case 0 :txt1.setEditable(true);
+                                    txt2.setEditable(false);
+                                    txt3.setEditable(false);
+                                break;
+                            case 1 :txt1.setEditable(false);
+                                    txt2.setEditable(true);
+                                    txt3.setEditable(false);
+                                break;
+                            case 2 :txt1.setEditable(false);
+                                    txt2.setEditable(false);
+                                    txt3.setEditable(true);
+                                break;
+                        }
+                                
+                    }
+            }
+        });
+        HBox box1 = new HBox(30);
+        HBox box2 = new HBox(30);
+        HBox box3 = new HBox(30);
+        HBox box4 = new HBox();
+        box1.setAlignment(Pos.CENTER);
+        box2.setAlignment(Pos.CENTER);
+        box3.setAlignment(Pos.CENTER);
+        box4.setAlignment(Pos.CENTER);
+        final PasswordField pwd = new PasswordField();
+        pwd.setPromptText("Enter your password");
+        final Label lab4 = new Label();
+        
+        box1.getChildren().addAll(button1,txt1);
+        box2.getChildren().addAll(button2,txt2);
+        box3.getChildren().addAll(button3,txt3);
+        box4.getChildren().addAll(pwd);
+        Button button = new Button("Change actual promotions");
+        tot.getChildren().addAll(lab,box1,lab1,box2,lab2,box3,lab3,box4,lab4,button);
+        
+        button.setOnAction(new EventHandler<ActionEvent>() {     
+            @Override  
+            public void handle(ActionEvent arg0) {
+                int condi=-1;
+                if(!pwd.getText().equals(actual.getPassword())){
+                    lab4.setText("Wrong password");
+                    lab4.setTextFill(RED);
+                }
+                else{
+                    Controller controller = new Controller("managePromotions","employeeTab");
+                    condi = controller.changePromotion(txt1.getText(),txt2.getText(),txt3.getText());
+                    if(condi==0){
+                        lab1.setText("Wrong input here - Reduction can't be higher than 50% - please only enter the number");
+                        lab2.setText("");
+                        lab3.setText("");
+                        lab4.setText("");
+                    }
+                    else if(condi==1){
+                        lab2.setText("Wrong input here - Reduction can't be higher than 50% - please only enter the number");
+                        lab1.setText("");
+                        lab3.setText("");
+                        lab4.setText("");
+                    }
+                    else if(condi==2){
+                        lab3.setText("Wrong input here - Reduction can't be higher than 50% - please only enter the number");
+                        lab2.setText("");
+                        lab1.setText("");
+                        lab4.setText("");
+                    }
+                    else if(condi==-1){
+                        lab4.setText("Promotion changed !");
+                        lab4.setTextFill(GREEN);
+                        lab1.setText("");
+                        lab2.setText("");
+                        lab3.setText("");
+                        lab4.setText("");
+                        txt1.setText("");
+                        txt2.setText("");
+                        txt3.setText("");
+                    }
+                }
+            }
+        });
+        
         return tot;
     }
     
@@ -142,7 +273,6 @@ public class AutreMain implements Runnable{
         nvx.setAlignment(Pos.CENTER);
         
         HBox inter = new HBox(50);
-        
         
         Label lab1 = new Label("Modify Employee/Member Data Bases");
         lab1.setId("labMenu");
@@ -221,21 +351,5 @@ public class AutreMain implements Runnable{
         tot.setCenter(nvx);
         return tot;
     }
-    
-    
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(10) ;
-        }catch (InterruptedException e) {
-            System.out.println("error");
-                    
-        }
-    }
-    public void cancel() {
-      
-       // interruption du thread courant, c'est-à-dire le nôtre
-        Thread.currentThread().interrupt() ;
-   }
     
 }

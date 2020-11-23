@@ -79,7 +79,6 @@ public class MainClass extends Application {
         vbox.getChildren().add(tabPane);
         
         Scene scene = new Scene(vbox, 1900, 1000);
-        //scene.getStylesheets().add("Style.css");
         scene.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         primaryStage.setTitle("CINEMA");
         primaryStage.setScene(scene);
@@ -779,8 +778,8 @@ public class MainClass extends Application {
         tot.setAlignment(Pos.CENTER);
         tot.setId("changepass");
         controller = new Controller("session_member_connected","tab4");
-        ArrayList<Session> sess = new ArrayList<>();
-        ArrayList<Integer> tt = new ArrayList<>();
+        ArrayList<Session> sess;
+        ArrayList<Integer> tt;
         sess = controller.getSessionConnected(actualMember.getLogin());
         tt = controller.getIdCustomerSess(actualMember.getLogin());
         
@@ -979,7 +978,7 @@ public class MainClass extends Application {
                 else{
                     desc = desc.substring(0,i) + "-\n"+ desc.substring(i);
                 }
-            } 
+            }
         }
         Label temp = new Label(desc);
         tot.getChildren().addAll(gp,temp);
@@ -1197,12 +1196,7 @@ public class MainClass extends Application {
         Text titre = new Text("The CinéPass");
         titre.setId("titre-tab2");
         
-        Text discounts = new Text(  "  Benefits all year round!!\n"
-                                   +"  Thanks to CinéPass, enjoy exclusive benefits\n"
-                                   +"  and offers throughout the year.\n"
-                                   +"  To make sure you don't miss out on anything,\n"
-                                   +"  receive our communications by newsletter.\n"
-                                   +"  Children : -30%    Regular : -15%    Senior : -20%");
+        Text discounts = new Text(cine.getDescription());
         discounts.setId("discounts-tab2");
         discounts.setY(50);
         
