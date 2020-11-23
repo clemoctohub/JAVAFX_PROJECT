@@ -642,7 +642,7 @@ public class MainClass extends Application {
     public HBox inscription(){
         HBox nvx = new HBox();
         Label str = new Label("Subscribe if you don't have an account yet : ");
-        Hyperlink hyperlink = new Hyperlink("Subscibe here");
+        Hyperlink hyperlink = new Hyperlink("Subscribe here");
         
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
