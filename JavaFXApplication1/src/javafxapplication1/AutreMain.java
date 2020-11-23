@@ -5,6 +5,11 @@
  */
 package javafxapplication1;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -30,6 +35,7 @@ public class AutreMain implements Runnable{
     private final Stage second;
     private final Tab tab = new Tab();
     private Label connected = new Label("");
+    private Controller controller;
     
     public AutreMain(Employees nvx){
         this.actual = nvx;
@@ -200,10 +206,16 @@ public class AutreMain implements Runnable{
         but2.setId("button-home");
         but3.setId("button-home");
         nvx.getChildren().addAll(inter,lab1,but1,but2,but3);
+        
         but1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                //tab.setContent(homePage());
+                try {
+                    tab.setContent(accesMoviesData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
         });
         but2.setOnAction(new EventHandler<ActionEvent>() {
@@ -222,6 +234,58 @@ public class AutreMain implements Runnable{
         return tot;
     }
     
+    public BorderPane accesMoviesData() throws SQLException, ClassNotFoundException, ParseException{
+        BorderPane pane = new BorderPane();
+
+        //Bouton back
+        Button back = new Button();
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(accessCinemaData());
+            }
+        }); 
+        HBox inter = new HBox(50);
+        inter.getChildren().add(back);
+        
+        //titre
+        Label title = new Label("Modify Movie DataBase");
+        title.setId("title-moviedata");
+        
+        try {
+            controller = new Controller("movie","MoviesData");
+            ArrayList<Movies> movies = controller.dispAllMovies();
+            ArrayList<Button> movie = new ArrayList<>();
+            for(int i=0;i<movies.size();i++){
+                movie.add(new Button());
+                movie.get(i).setText(movies.get(i).getTitle());
+            }
+            VBox box = new VBox(20);
+            box.setAlignment(Pos.CENTER);
+            box.getChildren().addAll(inter,title);
+            for(int i=0;i<movie.size();i++){
+                box.getChildren().add(movie.get(i));
+            }
+        
+        pane.setCenter(box);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //liste des films sous forme de boutons
+        
+        
+        
+        
+        
+       return pane; 
+    }
     
     @Override
     public void run() {

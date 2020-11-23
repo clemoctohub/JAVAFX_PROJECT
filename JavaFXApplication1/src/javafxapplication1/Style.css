@@ -79,10 +79,11 @@
 
 #discounts-tab2{
     -fx-padding : 5em 0 0 20em;
-    -fx-font : 20px Tahoma;
-    -fx-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);
-    -fx-stroke : black;
-    -fx-stroke-width : 0.3;
+
+    -fx-font: 20px Tahoma;
+    -fx-fill: linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);
+    -fx-stroke: black;
+    -fx-stroke-width: 0.2;
 }
 
 #label-co{

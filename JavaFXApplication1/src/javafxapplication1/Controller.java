@@ -24,6 +24,22 @@ public class Controller {
         this.location = location;
     }
     
+    
+    public ArrayList<Movies> getAllMovies()throws SQLException, ClassNotFoundException, ParseException{
+        
+        ArrayList<Movies> list = new ArrayList<>();
+        
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            list = conn.recolterChampsMovies();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    
+    
     public String getAMovie(int id){
         String nom="";
         try {
