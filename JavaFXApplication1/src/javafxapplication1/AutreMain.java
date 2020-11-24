@@ -5,24 +5,35 @@
  */
 package javafxapplication1;
 
+import javafx.scene.control.TextField;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.*;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -214,8 +225,7 @@ public class AutreMain implements Runnable{
                     tab.setContent(accesMoviesData());
                 } catch (SQLException | ClassNotFoundException | ParseException ex) {
                     Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
+                }   
             }
         });
         but2.setOnAction(new EventHandler<ActionEvent>() {
@@ -239,6 +249,7 @@ public class AutreMain implements Runnable{
 
         //Bouton back
         Button back = new Button();
+        back.setId("button-home2");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -251,17 +262,35 @@ public class AutreMain implements Runnable{
                 tab.setContent(accessCinemaData());
             }
         }); 
+        
+        
+        
+        //Boutton Ajouter movie
+        Button addMovie = new Button("(+) Add a movie");
+        addMovie.setStyle("-fx-font-weight: bold;");
+        addMovie.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                try {
+                    tab.setContent(AddMovie());
+                } catch (ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }); 
+        
         HBox inter = new HBox(50);
-        inter.getChildren().add(back);
+        inter.getChildren().addAll(back);
         
         //titre
         Label title = new Label("Modify Movie DataBase");
         title.setId("title-moviedata");
         
         try {
+            //liste des films sous forme de boutons
             controller = new Controller("movie","MoviesData");
-            ArrayList<Movies> movies = controller.dispAllMovies();
-            ArrayList<Button> movie = new ArrayList<>();
+            final ArrayList<Movies> movies = controller.dispAllMovies();
+            ArrayList<Button> movie = new ArrayList<>();  
             for(int i=0;i<movies.size();i++){
                 movie.add(new Button());
                 movie.get(i).setText(movies.get(i).getTitle());
@@ -272,20 +301,243 @@ public class AutreMain implements Runnable{
             for(int i=0;i<movie.size();i++){
                 box.getChildren().add(movie.get(i));
             }
+            
+            box.getChildren().add(addMovie);
+            
+            //Action sur les boutons
+            for(int i=0;i<movies.size();i++){
+                final Button but = movie.get(i);
+                final Movies mov = movies.get(i);
+                
+                but.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event){
+                        tab.setContent(ModifMovie(mov));
+                    }
+                });
+            }
         
-        pane.setCenter(box);
+            pane.setCenter(box);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //liste des films sous forme de boutons
+       return pane; 
+    }
+    
+    public BorderPane ModifMovie(final Movies movie){
+        BorderPane pane = new BorderPane();
+        
+        //Bouton back
+        Button back = new Button();
+        back.setId("button-home2");
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                try {
+                    tab.setContent(accesMoviesData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }); 
+         
+        
+        Label aut = new Label("Author : ");
+        final TextField auteur = new TextField(movie.getAuthor());
+        Label tit = new Label("Title : ");
+        final TextField titre = new TextField(movie.getTitle());
+        Label desc = new Label("Summary : ");
+        final TextArea description = new TextArea(movie.getDescription());
+        description.setWrapText(true);
+        Label type = new Label("Type : ");
+        final TextField genre = new TextField(movie.getType());
+        Label rate = new Label("Rate : ");
+        final TextField note = new TextField(Integer.toString(movie.getRate()));
+        
+        
+        //Bouton Validate
+        Button validate = new Button("Validate");
+        validate.setId("button-home");
+        validate.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                controller = new Controller("movie","MoviesData");
+                Movies mov = new Movies(titre.getText(),auteur.getText(),movie.getDate(),Integer.valueOf(note.getText()),genre.getText(),movie.getRunningTime(),movie.getId(),description.getText());
+                System.out.println("note "+Integer.valueOf(note.getText()));
+                controller.update_movie(mov);
+                try {                   
+                    tab.setContent(accesMoviesData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        //Bouton Delete
+        Button delete = new Button("Delete");
+        delete.setId("button-home");
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                controller = new Controller("movie","MoviesData");
+                controller.delete_movie(movie.getId());
+                try {
+                    tab.setContent(accesMoviesData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        GridPane grid = new GridPane();
+        grid.setHgap(5);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(0, 0, 0, 10));
+        
+        grid.add(aut,3,1);
+        grid.add(auteur,4,1);
+        grid.add(tit,3,2);
+        grid.add(titre,4,2);
+        grid.add(desc,3,3);
+        grid.add(description,4,3);
+        grid.add(type,3,4);
+        grid.add(genre,4,4);
+        grid.add(rate,3,5);
+        grid.add(note,4,5);       
+        grid.add(back,1,1);
+        grid.add(validate,4,6);
+        grid.add(delete,4,7);
+        
+        grid.setAlignment(Pos.TOP_CENTER);          
+        pane.setCenter(grid);       
+        return pane;
+    }
+    
+    public BorderPane AddMovie() throws ParseException{
+        BorderPane pane = new BorderPane();
+         
+        
+        //Bouton back
+        Button back = new Button();
+        back.setId("button-home2");
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                try {
+                    tab.setContent(accesMoviesData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        Label aut = new Label("Author : ");
+        final TextField auteur = new TextField();
+        Label tit = new Label("Title : ");
+        final TextField titre = new TextField();
+        Label desc = new Label("Summary : ");
+        final TextArea description = new TextArea();
+        description.setWrapText(true);
+        Label type = new Label("Type : ");
+        //final TextField genre = new TextField();
+        final ChoiceBox genre = new ChoiceBox();
+        genre.getItems().addAll("action","science-fiction","horror","fantastic","comedia");
+        Label rate = new Label("Rate : ");
+        final TextField note = new TextField();
+        Label date = new Label("Date (yyyy-MM-dd) : ");
+        final TextField dat = new TextField();
+        Label runningTime = new Label("Running Time (minutes) : ");
+        final TextField time = new TextField();
+        Label id = new Label("Id : ");
+        final TextField ID = new TextField();
         
         
         
+
         
+        //Bouton Ajout Image
+        Button image = new Button("Import Image");
+        image.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                FileChooser file = new FileChooser();  
+                file.setTitle("Open File");  
+                file.showOpenDialog(second);
+            }
+        });
+        
+        //Bouton Ajout Film
+        Button add = new Button("Add Movie");
+        add.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller = new Controller("addmovie","");
+                ArrayList<Movies> movies;
+                try {
+                    //conversion date
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsed = (Date) format.parse(dat.getText());
+        final java.sql.Date sql = new java.sql.Date(parsed.getTime());
+                    movies = controller.dispAllMovies();
+                    ArrayList IDs = new ArrayList();
+                    for(int i=0;i<movies.size();i++){
+                        IDs.add(movies.get(i).getId());
+                    }
+                    if(!IDs.contains(Integer.valueOf( ID.getText())) ) {
+                        controller.addmovie(new Movies(titre.getText(),auteur.getText(),sql,Integer.valueOf( note.getText()),(String)genre.getValue(),Integer.valueOf( time.getText()),Integer.valueOf( ID.getText()),description.getText()));
+                        tab.setContent(accesMoviesData());
+                    }      
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        GridPane grid = new GridPane();
+        grid.setHgap(5);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(0, 0, 0, 10));
+        
+        grid.add(aut,3,1);
+        grid.add(auteur,4,1);
+        grid.add(tit,3,2);
+        grid.add(titre,4,2);
+        grid.add(desc,3,3);
+        grid.add(description,4,3);
+        grid.add(type,3,4);
+        grid.add(genre,4,4);
+        grid.add(rate,3,5);
+        grid.add(note,4,5);
+        grid.add(date,3,6);
+        grid.add(dat,4,6);
+        grid.add(runningTime,3,7);
+        grid.add(time,4,7);
+        grid.add(id,3,8);
+        grid.add(ID,4,8);
+        grid.add(image,3,9);
+        grid.add(add,4,9);
+        grid.add(back,1,1);
+        
+        grid.setAlignment(Pos.TOP_CENTER); 
+        pane.setCenter(grid);
         
        return pane; 
     }
+    
+    
     
     @Override
     public void run() {

@@ -10,6 +10,11 @@ and open the template in the editor.
 #button-home{
     -fx-font-size : 1.7em;
 }
+
+#title-moviedata{
+    -fx-font-size : 3em;
+}
+
 #labMenu{
     -fx-font-size : 2em;
     -fx-font-weigth : bold;

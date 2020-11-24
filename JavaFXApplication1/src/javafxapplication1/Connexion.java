@@ -104,6 +104,22 @@ public class Connexion {
         insert_seance(sessions,id);
     }
     
+    public void add_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, String description)throws SQLException{
+        String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note, description)"+" VALUES(?,?,?,?,?,?,?,?)";
+        
+        PreparedStatement nn = conn.prepareStatement(sql);
+        nn.setInt(1, id);
+        nn.setString(2, title);
+        nn.setString(3, author);
+        nn.setString(4, type);
+        nn.setDate(5, date);
+        nn.setInt(6, runningTime);
+        nn.setInt(7, rate);
+        nn.setString(8, description);
+        nn.execute();
+    }
+    
+    
     public void insert_seance(ArrayList<Session> sessions,int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
         PreparedStatement mt = conn.prepareStatement(sql);
@@ -216,15 +232,17 @@ public class Connexion {
     }
     
     public void changeAll_(Movies movie) throws SQLException{
-        String sql = "update movie set titre = ?, auteur = ?, genre = ?, date = ?, runnningTime = ?, description = ? where id = ?";
+        String sql = "UPDATE movie SET titre = ?, auteur = ?, genre = ?, date = ?, runningTime = ?, description = ?, note = ? WHERE id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setString(1,movie.getTitle());
         preparedStmt.setString(2,movie.getAuthor());
         preparedStmt.setString(3,movie.getType());
         preparedStmt.setDate(4,movie.getDate());
         preparedStmt.setInt(5,movie.getRunningTime());
-        preparedStmt.setInt(6,movie.getId());
-        preparedStmt.execute();
+        preparedStmt.setString(6,movie.getDescription());
+        preparedStmt.setInt(7,movie.getRate());
+        preparedStmt.setInt(8,movie.getId());
+        preparedStmt.executeUpdate();
     }
     //Suppression d'un membre dans la base de donnees
     public void delete_member(String login) throws SQLException{
