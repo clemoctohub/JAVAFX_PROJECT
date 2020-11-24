@@ -22,24 +22,8 @@ public class Controller {
     public Controller(String request,String location){
         this.request = request;
         this.location = location;
-    }
-    
-    
-    public ArrayList<Movies> getAllMovies()throws SQLException, ClassNotFoundException, ParseException{
+    }  
         
-        ArrayList<Movies> list = new ArrayList<>();
-        
-        try {
-            Connexion conn = new Connexion("movie", "root", "");
-            list = conn.recolterChampsMovies();
-        } catch (SQLException | ClassNotFoundException | ParseException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
-    
-    
-    
     public String getAMovie(int id){
         String nom="";
         try {
@@ -75,6 +59,36 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
         return nvx;
+    }
+    
+    
+    public void delete_movie(int id){
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.delete_movie(id);
+            
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void update_movie(Movies movie){
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.changeAll_(movie);           
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+    public void addmovie(Movies movie){
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.add_movie(movie.getTitle(),movie.getAuthor(),movie.getDate(),movie.getRate(),movie.getType(),movie.getRunningTime(),movie.getId(),movie.getDescription());           
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public boolean delete_session_customer(String id,String mail){

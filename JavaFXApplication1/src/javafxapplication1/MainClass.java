@@ -936,7 +936,7 @@ public class MainClass extends Application {
                     error.setTextFill(RED);
                 }
                 else{
-                    error.setText("Remove !");
+                    error.setText("Removed !");
                     error.setTextFill(GREEN);
                     if(!connected.getText().equals(""))
                         tab4.setContent(connectedOK());
