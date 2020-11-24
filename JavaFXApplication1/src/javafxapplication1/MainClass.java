@@ -47,7 +47,6 @@ public class MainClass extends Application {
     private final TabPane tabPane = new TabPane();
     private Members actualMember;
     private Employees actualEmployee;
-    private final Cinema cine = new Cinema();
     private Controller controller;
     private Label connected;
     private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -66,7 +65,6 @@ public class MainClass extends Application {
         tab2.setContent(getDiscount());
         tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
-        
         tab1.setContent(getSPane());
         tabPane.getTabs().add(tab1);
         tabPane.getTabs().add(tab2);
@@ -87,6 +85,7 @@ public class MainClass extends Application {
     }
     
     private double calculatePrice(int i){
+        Cinema cine = new Cinema();
         double j;
         if(!connected.getText().equals("")){
             j = cine.prixTicket(actualMember,i);
@@ -357,7 +356,7 @@ public class MainClass extends Application {
         Label lab4 = new Label("Type : "+movie.getType());
         Label lab5 = new Label("Runing time : "+movie.getRunningTime());
         
-        node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5);
+        
         String desc = movie.getDescription();
         for(int i=0;i<desc.length();i++){
             if(i%40==0 && i!=0){
@@ -381,9 +380,18 @@ public class MainClass extends Application {
         view.setFitHeight(300);
         view.setPreserveRatio(true);
         
+        int temp = movie.getRate()/2;
+        Image img3;
+        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.JPG"));
+        ImageView view3 = new ImageView(img3);
+        view3.setPreserveRatio(true);
+        
+        node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5,view3);
+        
         tot.addColumn(0, view);
         tot.addColumn(1, description);
         tot.addColumn(2, node);
+        
         
         Button but = new Button();
         Image img2;
@@ -888,6 +896,7 @@ public class MainClass extends Application {
     }
     
     public HBox dispPriceReduc(){
+        Cinema cine = new Cinema();
         HBox nvx = new HBox(10);
         nvx.setAlignment(Pos.CENTER);
         nvx.setId("boxtoptab1");
@@ -896,6 +905,14 @@ public class MainClass extends Application {
         first.setId("toptab1");
         second.setId("toptab1");
         Button third = new Button("See discount offers");
+        Button but = new Button("Refresh");
+        
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab1.setContent(getSPane());
+            }
+        });
         
         third.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -904,7 +921,7 @@ public class MainClass extends Application {
             }
         });
         
-        nvx.getChildren().addAll(first,second,third);
+        nvx.getChildren().addAll(but,first,second,third);
         return nvx;
     }
     
@@ -988,12 +1005,8 @@ public class MainClass extends Application {
     public FlowPane getPanetab1()
     {
         ArrayList<Movies> movies = new ArrayList<>();
-        try {
-            controller = new Controller("movie","tab1");
-            movies = controller.dispAllMovies();
-        } catch (SQLException | ClassNotFoundException | ParseException ex) {
-            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        controller = new Controller("movie","tab1");
+        movies = controller.dispAllMovies();
         FlowPane pane = new FlowPane();
         GridPane gp = new GridPane();
         ArrayList<Button> tabButton = new ArrayList<>();
@@ -1162,25 +1175,31 @@ public class MainClass extends Application {
         button.setId("button-tab2");
         button.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
         test.getChildren().add(button);
-        pane.setBottom(test);
+        HBox bouton = new HBox(100);
+        bouton.setAlignment(Pos.CENTER);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
-        
-        button.setOnAction(new EventHandler<ActionEvent>() {  
-              
+        Button but = new Button("Refresh Page");
+        bouton.getChildren().addAll(but,button);
+        but.setOnAction(new EventHandler<ActionEvent>() {
             @Override  
-            public void handle(ActionEvent arg0) {  
-                // TODO Auto-generated method stub
+            public void handle(ActionEvent arg0) {
+                tab2.setContent(getDiscount());
+            }
+        });  
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override  
+            public void handle(ActionEvent arg0) {
                 if(connected.getText().equals(""))
                     tab4.setContent(getSubscription(""));
                 tabPane.getSelectionModel().select(tab4);
             }
         });  
-
+        pane.setBottom(bouton);
         return pane;
     }
     
     public GridPane getGridtab2(){
-        
+        Cinema cine = new Cinema();
         GridPane root=new GridPane();
         root.setId("root-tab2");
         root.setAlignment(Pos.CENTER);

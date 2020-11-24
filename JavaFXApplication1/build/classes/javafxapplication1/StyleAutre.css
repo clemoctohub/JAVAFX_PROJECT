@@ -29,3 +29,7 @@ and open the template in the editor.
 #dsgn-promo-radio{
     -fx-font-size : 1.2em;
 }
+#stat-grid{
+    -fx-padding : 0 0 0 2em;
+    -fx-font-size : 1.5em;
+}

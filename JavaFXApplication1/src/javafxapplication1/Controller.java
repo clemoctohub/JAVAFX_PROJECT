@@ -244,11 +244,17 @@ public class Controller {
         return condi;
     }
     
-    public ArrayList<Movies> dispAllMovies() throws SQLException, ClassNotFoundException, ParseException
+    public ArrayList<Movies> dispAllMovies()
     {
-        ArrayList<Movies> movies;
-        Connexion nvx = new Connexion("movie", "root", "");
-        movies = nvx.recolterChampsMovies();
+        ArrayList<Movies> movies=null;
+        Connexion nvx;
+        try {
+            nvx = new Connexion("movie", "root", "");
+            movies = nvx.recolterChampsMovies();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return movies;
     }
     
@@ -277,30 +283,30 @@ public class Controller {
             return 2;
         }
         
-        if(i1<1 && i1!=-1){
-            i1*=100;
-            if(i1>50)
+        if(i1>1 && i1!=-1){
+            i1/=100;
+            if(i1>0.5)
                 return 0;
         }
-        else if(i1>50){
+        else if(i1>0.5){
             return 0;
         }
         
-        if(i2<1 && i2!=-1){
-            i2*=100;
-            if(i2>50)
+        if(i2>1 && i2!=-1){
+            i2/=100;
+            if(i2>0.5)
                 return 1;
         }
-        else if(i2>50){
+        else if(i2>0.5){
             return 1;
         }
         
-        if(i3<1 && i3!=-1){
-            i3*=100;
-            if(i3>50)
+        if(i3>1 && i3!=-1){
+            i3/=100;
+            if(i3>0.5)
                 return 2;
         }
-        else if(i3>50){
+        else if(i3>0.5){
             return 2;
         }
         

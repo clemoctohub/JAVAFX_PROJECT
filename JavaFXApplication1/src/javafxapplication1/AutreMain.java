@@ -13,10 +13,12 @@ import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart.Data; 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
@@ -24,6 +26,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -38,6 +42,7 @@ import javafx.scene.layout.VBox;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 import javafx.stage.Stage;
+import java.util.Collections;
 
 /**
  *
@@ -140,24 +145,37 @@ public class AutreMain{
         return tot;
     }
     
-    public GridPane seeStatistics(){
+    public ScrollPane seeStatistics(){
+        ScrollPane scroll = new ScrollPane();
         GridPane nvx = new GridPane();
+        nvx.setId("stat-grid");
+        nvx.setVgap(50);
+        nvx.setHgap(50);
+        nvx.setAlignment(Pos.CENTER);
         ArrayList<Members> membres;
+        ArrayList<Movies> movies;
         ArrayList<Integer> nbr = new ArrayList<>();
-        ArrayList<Integer> str = new ArrayList<>();
+        ArrayList<Double> amount = new ArrayList<>();
+        ArrayList<Integer> nbr_sess = new ArrayList<>();
         ArrayList<Session> sessions;
         PieChart piechart = new PieChart();
+        
         int senior = 0, children = 0, regular = 0;
+        
         Controller controller = new Controller("statistics","member");
         membres = controller.recolterMembre();
         sessions = controller.recolterSessions();
+        movies = controller.dispAllMovies();
         
-        for(int i=0;i<membres.size();i++){
-            if(membres.get(i).getAge()<18)
+        ///////////////////////////////////////////////////////////////////////
+        for (Members membre : membres) {
+            if (membre.getAge() < 18) {
                 children++;
-            else if(membres.get(i).getAge()>60)
+            } else if (membre.getAge() > 60) {
                 senior++;
-            else regular++;
+            } else {
+                regular++;
+            }
         }
         
         int total=senior+children+regular;
@@ -166,29 +184,27 @@ public class AutreMain{
         list.addAll(new PieChart.Data("Senior", senior*100/total),  
             new PieChart.Data("Children", children*100/total),new PieChart.Data("Regular",regular*100/total));
         piechart.setData(list);
-        nvx.addRow(0,piechart);
+        piechart.setTitle("Percentage of type of different pormotions");
+        /////////////////////////////////////////////////////////////////////////////////////////
         
-        boolean condi = false;
-        int j;
-        for(int i=0;i<sessions.size();i++){
-            for(j=0;j<nbr.size() && condi!=true;j++){
-                if(sessions.get(i).getMovie()==nbr.get(j)){
-                    condi=true;
+        for(int i=0;i<movies.size();i++){
+            nbr.add(0);
+            amount.add(0.0);
+            nbr_sess.add(0);
+            for (Session session : sessions) {
+                if (movies.get(i).getId() == session.getMovie()) {
+                    double tempo = amount.get(i);
+                    amount.set(i, tempo + session.getAmount());
+                    int temp = nbr.get(i);
+                    nbr.set(i, temp + session.getActual());
+                    int tempori = nbr_sess.get(i);
+                    nbr_sess.set(i,tempori++);
                 }
-            }
-            if(condi==true){
-                condi = false;
-                int temp = nbr.get(j);
-                nbr.set(j,temp++);
-            }
-            else{
-                nbr.add(0);
-                str.add(0);
             }
         }
         
         CategoryAxis xaxis= new CategoryAxis();  
-        NumberAxis yaxis = new NumberAxis(0.1,2,0.1);  
+        NumberAxis yaxis = new NumberAxis(0,500,10);  
         xaxis.setLabel("Movies' name");  
         yaxis.setLabel("Number of places bought");  
       
@@ -198,8 +214,199 @@ public class AutreMain{
         
         XYChart.Series<String,Float> series = new XYChart.Series<>();
         
+        for(int i=0;i<movies.size();i++){
+            series.getData().add(new XYChart.Data(movies.get(i).getTitle(),nbr.get(i)));
+        }
         
-        return nvx;
+        ArrayList<String> date = new ArrayList<>();
+        boolean condi=false;
+        for (Session session : sessions) {
+            for (String date1 : date) {
+                if (date1.equals(session.getDate().toString())) {
+                    condi = true;
+                }
+            }
+            if (condi==false) {
+                date.add(session.getDate().toString());
+            } else {
+                condi = false;
+            }
+        }
+        Collections.sort(date);
+        
+        ArrayList<Double> toto = new ArrayList<>();
+        for(int i=0;i<date.size();i++){
+            toto.add(0.0);
+            for (Session session : sessions) {
+                if (session.getDate().toString().equals(date.get(i))) {
+                    double temp = toto.get(i);
+                    toto.set(i, temp + session.getAmount());
+                }
+            }
+        }
+        
+        NumberAxis xaxe = new NumberAxis(0,date.size(),1);  
+        NumberAxis yaxe = new NumberAxis(0,1500,10);  
+          
+        //Defining Label for Axis   
+        xaxis.setLabel("Days");
+        yaxis.setLabel("Amount"); 
+        LineChart linechart = new LineChart(xaxe,yaxe);
+        XYChart.Series serie = new XYChart.Series();
+        serie.setName("Total amount per day"); 
+        
+        for(int i=0;i<date.size();i++){
+            serie.getData().add(new XYChart.Data(i,toto.get(i)));
+        }
+        
+        Button but = new Button();
+        Image img2;
+        img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view2 = new ImageView(img2);
+        view2.setFitHeight(90);
+        view2.setPreserveRatio(true);
+        but.setGraphic(view2);
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(homePage());
+            }
+        });
+        
+        linechart.setTitle("Revenue per day");
+        linechart.getData().add(serie);
+        bar.getData().add(series);
+        Separator separator = new Separator(Orientation.HORIZONTAL);
+        Separator separator2 = new Separator(Orientation.HORIZONTAL);
+        Separator separator4 = new Separator(Orientation.VERTICAL);
+        Separator separator5 = new Separator(Orientation.VERTICAL);
+        nvx.addRow(0,but);
+        nvx.add(piechart,0,1);
+        nvx.add(separator4,2,1);
+        nvx.add(linechart,4,1);
+        nvx.add(separator,0,3);
+        nvx.add(separator2,4,3);
+        nvx.add(totalTabStat(movies,sessions,nbr_sess,amount),0,4);
+        nvx.add(separator5,2,4);
+        nvx.add(bar,4,4);
+        scroll.setContent(nvx);
+        return scroll;
+    }
+    
+    public VBox totalTabStat(ArrayList<Movies> movies, ArrayList<Session> sessions,ArrayList<Integer> nbr_sess, ArrayList<Double> amount){
+        VBox box = new VBox();
+        box.setAlignment(Pos.CENTER);
+        final PieChart piechart2 = new PieChart();
+        ObservableList<Data> list2 = FXCollections.observableArrayList();
+        final PieChart piechart = new PieChart();
+        ObservableList<Data> list = FXCollections.observableArrayList();
+        final PieChart piechart3 = new PieChart();
+        ObservableList<Data> list3 = FXCollections.observableArrayList();
+        
+        double recette=0.0;
+        for (Double amount1 : amount) {
+            recette += amount1;
+        }
+        
+        for(int i=0;i<movies.size();i++){
+            list2.add(new PieChart.Data(movies.get(i).getTitle()+" : "+amount.get(i)*100/recette+"%", amount.get(i)*100/recette));
+        }
+        piechart2.setData(list2);
+        
+        final Tab tab1 = new Tab();
+        tab1.setContent(piechart2);
+        
+        double amount1=0,amount2=0,amount3=0,amount4=0,amount5=0;
+        
+        for(int i=0;i<movies.size();i++){
+            switch (movies.get(i).getType()) {
+            case "action":
+                {
+                    amount1+=amount.get(i);
+                    break;
+                }
+            case "horror":
+                {
+                    amount2+=amount.get(i);
+                    break;
+                }
+            case "comedia":
+                {
+                    amount3+=amount.get(i);
+                    break;
+                }
+            case "fantastic":
+                {
+                    amount4+=amount.get(i);
+                    break;
+                }
+            case "science-fiction" :
+                {
+                    amount5+=amount.get(i);
+                    break;
+                }
+            }
+        }
+        list.addAll(new PieChart.Data("Action",amount1*100/recette),new PieChart.Data("Horror",amount2*100/recette),new PieChart.Data("Comedia",amount3*100/recette),new PieChart.Data("Fantastica",amount4*100/recette),new PieChart.Data("Science-Fiction",amount5*100/recette));
+        piechart.setData(list);
+        
+        double before10=0,before14=0,before18=0;
+        
+        for (Session session : sessions) {
+            if (session.getHoraire().length() < 5) {
+                before10 += session.getAmount();
+            } else if (session.getHoraire().compareTo("14h00") < 0) {
+                before10 += session.getAmount();
+            } else if (session.getHoraire().compareTo("18h00") < 0) {
+                before14 += session.getAmount();
+            } else {
+                before18 += session.getAmount();
+            }
+        }
+        list3.addAll(new PieChart.Data("Before 14pm",before10*100/recette),new PieChart.Data("14pm to 18pm",before14*100/recette),new PieChart.Data("After 18pm",before18*100/recette));
+        piechart3.setData(list3);
+        
+        final Button button1 = new Button("Per Movies");
+        button1.setStyle("-fx-background-color : royalblue;");
+        final Button button2 = new Button("Per Types");
+        final Button button3 = new Button("Per Hours");
+        
+        button1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab1.setContent(piechart2);
+                button1.setStyle("-fx-background-color : royalblue;");
+                button2.setStyle("-fx-background-color : white;");
+                button3.setStyle("-fx-background-color : white;");
+            }
+        });
+        button2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab1.setContent(piechart);
+                button2.setStyle("-fx-background-color : royalblue;");
+                button1.setStyle("-fx-background-color : white;");
+                button3.setStyle("-fx-background-color : white;");
+            }
+        });
+        button3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab1.setContent(piechart3);
+                button3.setStyle("-fx-background-color : royalblue;");
+                button1.setStyle("-fx-background-color : white;");
+                button2.setStyle("-fx-background-color : white;");
+            }
+        });
+        
+        TabPane pane = new TabPane();
+        pane.getTabs().add(tab1);
+        HBox hbo = new HBox();
+        hbo.setAlignment(Pos.CENTER);
+        hbo.getChildren().addAll(button1,button2,button3);
+        box.getChildren().addAll(new Label("Account of revenue"),pane,hbo);
+        
+        return box;
     }
     
     public VBox changePromotion(){
@@ -243,7 +450,7 @@ public class AutreMain{
             public void changed(ObservableValue<? extends Toggle> ov,
                 Toggle toggle, Toggle new_toggle) {
                     if (new_toggle == null){
-                        System.out.println("ah oe");
+                        System.out.println("TOGGLE NULL");
                     }
                     else{
                         int temp = Integer.parseInt((String) group.getSelectedToggle().getUserData());
