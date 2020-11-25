@@ -34,7 +34,6 @@ import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Glow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -69,12 +68,14 @@ public class MainClass extends Application {
         tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
         tab1.setContent(getSPane());
+        
         tabPane.getTabs().add(tab1);
         tabPane.getTabs().add(tab2);
         tabPane.getTabs().add(tab3);
         tabPane.getTabs().add(tab4);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         VBox vbox = new VBox(20);
+        vbox.setStyle("-fx-background-color:black;");
         vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().add(header);
         vbox.getChildren().add(tabPane);
@@ -668,17 +669,23 @@ public class MainClass extends Application {
         return nvx;
     }
     
-    public GridPane getGridtab4(int condi){
-        GridPane root=new GridPane();
-        
-        Label Email = new Label("Your ID number :");  
+    public BorderPane getGridtab4(int condi){
+        BorderPane root=new BorderPane();
+        VBox temporaire = new VBox(20);
+        temporaire.setAlignment(Pos.CENTER);
+        Label Email = new Label("Username :");  
         Label Password = new Label("Password :");  
         Email.setId("label-tab4");
         Password.setId("label-tab4");
 //Adding text-field to the form   
         final TextField tf1=new TextField();
         final PasswordField tf2=new PasswordField(); 
-        
+        HBox txt1 = new HBox();
+        txt1.setAlignment(Pos.CENTER);
+        txt1.getChildren().add(tf1);
+        HBox txt2 = new HBox();
+        txt2.setAlignment(Pos.CENTER);
+        txt2.getChildren().add(tf2);
         tf1.setId("text-tab4");
         tf2.setId("text-tab4");
         tf1.setPromptText("Your username");
@@ -692,7 +699,7 @@ public class MainClass extends Application {
 //Creating reset button
 
 //Creating title   
-        Label title = new Label();  
+        Label title = new Label(); 
         title.setText("Sign Up"); 
         title.setUnderline(true);  
         title.setId("title-tab4");  
@@ -709,16 +716,10 @@ public class MainClass extends Application {
         final CheckBox c1 = new CheckBox("Check if you are an employee"); 
 //adding the the nodes to the GridPane's rows   
         
-        root.addRow(0, title);
-        root.addRow(1, Email);
-        root.addRow(2, tf1);
-        root.addRow(4, Password);
-        root.addRow(5, tf2);
-        root.addRow(6,error);
-        root.addRow(8, c1);
-        
-        root.addRow(14, submit, reset);
-        
+        HBox container = new HBox(30);
+        container.setAlignment(Pos.CENTER);
+        container.getChildren().addAll(submit, reset);
+        temporaire.getChildren().addAll(title,Email,txt1,Password,txt2,error,c1,container);
         submit.setOnAction(new EventHandler<ActionEvent>() {  
               
             @Override  
@@ -772,9 +773,9 @@ public class MainClass extends Application {
         });
   
 //setting horizontal and vertical gaps between the rows   
-        root.setHgap(10);  
-        root.setVgap(10);
+       
         root.setId("root-tab4");
+        root.setCenter(temporaire);
         return root;
     }
     
@@ -911,6 +912,8 @@ public class MainClass extends Application {
         second.setId("toptab1");
         Button third = new Button("See discount offers");
         Button but = new Button("Refresh");
+        third.setId("price-reduc");
+        but.setId("price-reduc");
         
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -947,6 +950,7 @@ public class MainClass extends Application {
         
         error.setText("");
         Button button = new Button("Remove my place");
+        button.setId("price-reduc");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -1182,13 +1186,14 @@ public class MainClass extends Application {
         HBox test = new HBox();
         test.setAlignment(Pos.CENTER);
         Button button = new Button("Sign-in/Sign-up");
-        button.setId("button-tab2");
-        button.setStyle("-fx-font: 22 arial; -fx-background-color : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);");
+        button.setId("price-reduc");
         test.getChildren().add(button);
         HBox bouton = new HBox(100);
+        bouton.setStyle("-fx-padding : 0.2em 0 0.5em 0; -fx-background-color : black;");
         bouton.setAlignment(Pos.CENTER);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
         Button but = new Button("Refresh Page");
+        but.setId("price-reduc");
         bouton.getChildren().addAll(but,button);
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override  
@@ -1226,7 +1231,7 @@ public class MainClass extends Application {
         titre.setId("titre-tab2");
         DropShadow drop = new DropShadow();  
         drop.setBlurType(BlurType.GAUSSIAN);  
-        drop.setColor(Color.BLACK);  
+        drop.setColor(Color.GOLD);  
         drop.setHeight(100);  
         drop.setWidth(150);  
         drop.setOffsetX(10);  
@@ -1239,7 +1244,7 @@ public class MainClass extends Application {
         discounts.setY(50);
         
         Rectangle infos = new Rectangle();
-        infos.setStrokeWidth(2);infos.setStroke(Color.BLACK);
+        infos.setStrokeWidth(2);infos.setStroke(Color.GOLD);
         infos.setX(90);infos.setY(50);infos.setWidth(630);infos.setHeight(200);infos.setArcHeight(50);infos.setArcWidth(50);infos.setFill(Color.WHITE);
         
         StackPane stack = new StackPane();

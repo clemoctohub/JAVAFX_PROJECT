@@ -15,7 +15,6 @@ import javafx.application.Application;
 public class JavaFXApplication1{
     
     public static void main(String[] args) {
-        MainClass nvx = new MainClass();
         Application.launch(MainClass.class, args);
     }
     

@@ -5,7 +5,9 @@
 #bande{
     -fx-alignment : center;
     -fx-font-size : 3em;
-    -fx-text-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 40%);
+    -fx-text-fill : white;
+    -fx-background-color: black;
+    -fx-font-family :  Impact;
 }
 
 .tab-pane {
@@ -17,13 +19,20 @@
 }
 
 .tab {
-  -fx-font-family : Arial;
-  -fx-font-size : 18;
-  -fx-background-color : white;
+  -fx-font-size : 20;
+  -fx-color: green;
+  -fx-font-family : courrier_new;
+  -fx-background-color : black;
+  -fx-border-radius : 0 0 0 0;
+  -fx-background-radius: 0 0 0 0,0 0 0 0,0 0 0 0;
+}
+.tab:hover{
+    -fx-background-color : #2f2f2f;
 }
 
 .tab:selected {
-    -fx-background-color : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 40%);
+    -fx-background-color: #F0C300;
+    -fx-color: white;
 }
 
 .scroll-pane{
@@ -33,7 +42,10 @@
 
 #root-tab4{
     -fx-alignment : center;
-    -fx-padding : 8em 0 0 5em;
+    -fx-padding : 8em 0 0 0;
+}
+#root-tab2{
+    -fx-background-color: #fff;
 }
 
 #text-tab4{
@@ -45,8 +57,7 @@
 }
 
 #title-tab4{
-    -fx-padding : 0 0 3em 6em;
-    -fx-font-size : 1.5em;
+    -fx-font-size : 1.8em;
 }
 
 #submit-tab4{
@@ -80,14 +91,14 @@
 }
 
 #titre-tab2{
-    -fx-font : 120px Tahoma;
-    -fx-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);  
+    -fx-font : 9em Tahoma;
+    -fx-fill : black;  
 }
 
 #discounts-tab2{
     -fx-padding : 5em 0 0 20em;
     -fx-font : 20px Tahoma;
-    -fx-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);
+    -fx-fill : black;
     -fx-stroke : black;
     -fx-stroke-width : 0.3;
 }
@@ -150,6 +161,8 @@
 #deletePlace{
     -fx-font-size : 1.2em;
     -fx-padding : 0 0.3em 0 0.3em;
+    -fx-font-family : Verdana;
+    -fx-font-weigth : bold;
 }
 #desc-sess{
     -fx-font-size : 1.2em;
@@ -159,7 +172,7 @@
 }
 #toptab1{
     -fx-font-size : 1.4em;
-    -fx-font-weight : bold
+    -fx-font-weight : bold;
 }
 #changepass{
     -fx-font-size : 1.2em;
@@ -172,4 +185,15 @@
 }
 #back-but:hover{
     -fx-background-color: whitesmoke;
+}
+#price-reduc{
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#price-reduc:hover{
+    -fx-background-radius: 2em;
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
 }
