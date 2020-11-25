@@ -63,6 +63,13 @@ public class MainClass extends Application {
         connected.setAlignment(Pos.CENTER_RIGHT);
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER);
+        HBox enter = new HBox(10);
+        
+        /*Image img;
+        img = new Image(getClass().getResourceAsStream("/images/logo.png"));
+        ImageView view = new ImageView(img);
+        view.setPreserveRatio(true);
+        enter.getChildren().addAll(view,bande);*/
         header.getChildren().addAll(bande,connected);
         tab2.setContent(getDiscount());
         tab3.setContent(searchTab(false,null));
@@ -589,7 +596,7 @@ public class MainClass extends Application {
         lab1.setId("lab-search");
         lab2.setId("lab-search");
         lab3.setId("lab-search");
-        split.setId("lab-search");
+        split.setId("split-search");
         
         
         final TextField time = new TextField();
@@ -654,8 +661,9 @@ public class MainClass extends Application {
     public HBox inscription(){
         HBox nvx = new HBox();
         Label str = new Label("Subscribe if you don't have an account yet : ");
+        str.setStyle("-fx-font-family:Tahoma; -fx-font-size:1.5em;");
         Hyperlink hyperlink = new Hyperlink("Subscibe here");
-        
+        hyperlink.setStyle("-fx-font-family:Impact;-fx-font-size:1.5em;");
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -674,10 +682,12 @@ public class MainClass extends Application {
         VBox temporaire = new VBox(20);
         temporaire.setAlignment(Pos.CENTER);
         Label Email = new Label("Username :");  
-        Label Password = new Label("Password :");  
+        Email.setStyle("-fx-font-weigth:bold;");
+        Label Password = new Label("Password :");
+        Password.setStyle("-fx-font-weigth:bold;");
         Email.setId("label-tab4");
         Password.setId("label-tab4");
-//Adding text-field to the form   
+//Adding text-field to the form
         final TextField tf1=new TextField();
         final PasswordField tf2=new PasswordField(); 
         HBox txt1 = new HBox();
@@ -700,7 +710,7 @@ public class MainClass extends Application {
 
 //Creating title   
         Label title = new Label(); 
-        title.setText("Sign Up"); 
+        title.setText("Sign In Here"); 
         title.setUnderline(true);  
         title.setId("title-tab4");  
         
@@ -713,7 +723,7 @@ public class MainClass extends Application {
             error.setText("");
         error.setTextFill(RED);
 //creating grid-pane  
-        final CheckBox c1 = new CheckBox("Check if you are an employee"); 
+        final CheckBox c1 = new CheckBox("Check if you are an employee");
 //adding the the nodes to the GridPane's rows   
         
         HBox container = new HBox(30);
@@ -790,6 +800,7 @@ public class MainClass extends Application {
     public VBox dispSessOfMemb(){
         VBox tot = new VBox(50);
         tot.setAlignment(Pos.CENTER);
+        tot.setStyle("-fx-background-color:#F0C300;");
         tot.setId("changepass");
         controller = new Controller("session_member_connected","tab4");
         ArrayList<Session> sess;
@@ -798,12 +809,14 @@ public class MainClass extends Application {
         tt = controller.getIdCustomerSess(actualMember.getLogin());
         
         Label title = new Label("Your reservations : ");
+        title.setStyle("-fx-font-weight:bold;");
         tot.getChildren().add(title);
         if(sess.isEmpty()){
             tot.getChildren().add(new Label("You don't have any reservation"));
         }
         for(int i=0;i<sess.size();i++){
             HBox tst = new HBox(20);
+            tst.setStyle("-fx-font-weight:bold;");
             tst.setAlignment(Pos.CENTER);
             Label lab1 = new Label((i+1)+")");
             Label lab2 = new Label(controller.getAMovie(sess.get(i).getMovie()));
@@ -820,34 +833,47 @@ public class MainClass extends Application {
     public VBox changeMdp(){
         VBox tot = new VBox(50);
         tot.setAlignment(Pos.CENTER);
+        final PasswordField txt0 = new PasswordField();
+        txt0.setPromptText("Old Password");
         final PasswordField txt1 = new PasswordField();
         txt1.setPromptText("New Password");
         final PasswordField txt2 = new PasswordField();
         txt2.setPromptText("Confirm Password");
         final Label txt3 = new Label();
-        txt3.setTextFill(RED);
         txt3.setText("");
+        txt0.setId("changepass");
         txt1.setId("changepass");
         txt2.setId("changepass");
         txt3.setId("changepass");
         Button txt4 = new Button("Change password");
+        txt4.setId("changepass-button");
         txt4.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
                 if(!txt1.getText().equals(txt2.getText())){
                     txt3.setText("Not same password");
+                    txt3.setTextFill(RED);
                 }
                 else if(txt1.getText().equals("")){
                     txt3.setText("Enter a password");
+                    txt3.setTextFill(RED);
+                }
+                else if(!txt0.getText().equals(actualMember.getPassword())){
+                    txt3.setText("Old password wrong");
+                    txt3.setTextFill(RED);
                 }
                 else{
                     controller = new Controller("changeMdp","tab4");
                     controller.changePassword(txt1.getText(),actualMember.getLogin());
                     txt3.setText("Changed !");
+                    txt3.setTextFill(GREEN);
+                    txt0.setText("");
+                    txt1.setText("");
+                    txt2.setText("");
                 }
             }
         });
-        tot.getChildren().addAll(txt1,txt2,txt3,txt4);
+        tot.getChildren().addAll(txt0,txt1,txt2,txt3,txt4);
         return tot;
     }
     
@@ -859,11 +885,12 @@ public class MainClass extends Application {
         Label lab3 = new Label("Last Name : "+actualMember.getLastName());
         Label lab4 = new Label("Login : "+actualMember.getLogin());
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/deco.jpg"));
+        img = new Image(getClass().getResourceAsStream("/images/deco.png"));
         ImageView view = new ImageView(img);
         view.setFitHeight(80);
         view.setPreserveRatio(true);
         Button deco = new Button();
+        deco.setId("buton-deco");
         deco.setPrefSize(80, 75);
         deco.setGraphic(view);
         lab1.setId("label-co");
@@ -950,7 +977,7 @@ public class MainClass extends Application {
         
         error.setText("");
         Button button = new Button("Remove my place");
-        button.setId("price-reduc");
+        button.setId("price-red");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -977,6 +1004,7 @@ public class MainClass extends Application {
     public HBox getGridtab1(Movies movies)
     {
         HBox tot = new HBox(50);
+        tot.setId("grid-tab1");
         tot.setAlignment(Pos.CENTER);
         GridPane gp = new GridPane();
         gp.setAlignment(Pos.CENTER);
@@ -1002,7 +1030,7 @@ public class MainClass extends Application {
         gp.setVgap(10);
         String desc = movies.getDescription();
         for(int i=0;i<desc.length();i++){
-            if(i%40==0 && i!=0){
+            if(i%100==0 && i!=0){
                 if(desc.charAt(i+1)==' ' || desc.charAt(i+1)=='.' || desc.charAt(i)==' ' || desc.charAt(i)=='.'){
                     desc = desc.substring(0,i) + "\n"+ desc.substring(i);
                 }
@@ -1029,6 +1057,7 @@ public class MainClass extends Application {
         for(int i=0; i<movies.size() ;i++)
         {
             tabButton.add(new Button());
+            tabButton.get(i).setId("img-dispAllMovie");
             HBox box = new HBox(20);
             String nomfilm = movies.get(i).getTitle();
             nomfilm = nomfilm.toLowerCase();
@@ -1162,7 +1191,8 @@ public class MainClass extends Application {
         HBox sub = new HBox();
         Label str = new Label("Login if you already have an account : ");
         Hyperlink hyperlink = new Hyperlink("Login here");
-        
+        str.setStyle("-fx-font-family:Tahoma; -fx-font-size:1.5em;");
+        hyperlink.setStyle("-fx-font-family:Impact;-fx-font-size:1.5em;");
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
  
             @Override
@@ -1186,14 +1216,14 @@ public class MainClass extends Application {
         HBox test = new HBox();
         test.setAlignment(Pos.CENTER);
         Button button = new Button("Sign-in/Sign-up");
-        button.setId("price-reduc");
+        button.setId("price-rd");
         test.getChildren().add(button);
         HBox bouton = new HBox(100);
         bouton.setStyle("-fx-padding : 0.2em 0 0.5em 0; -fx-background-color : black;");
         bouton.setAlignment(Pos.CENTER);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
         Button but = new Button("Refresh Page");
-        but.setId("price-reduc");
+        but.setId("price-rd");
         bouton.getChildren().addAll(but,button);
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override  

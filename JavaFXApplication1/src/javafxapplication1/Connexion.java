@@ -208,7 +208,7 @@ public class Connexion {
     }
     
     public void change_password(String password,String id) throws SQLException{
-        String sql = "update membre set password = ? where login = ?";
+        String sql = "update membre set mot_de_passe = ? where login = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setString(1, password);
         preparedStmt.setString(2,id);
