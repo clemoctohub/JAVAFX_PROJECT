@@ -26,11 +26,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -234,6 +236,12 @@ public class AutreMain implements Runnable{
             @Override
             public void handle(ActionEvent event){
                 //tab.setContent(homePage());
+                try 
+                {
+                    tab.setContent(acessSessionData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         but3.setOnAction(new EventHandler<ActionEvent>() {
@@ -333,6 +341,56 @@ public class AutreMain implements Runnable{
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        //liste des films sous forme de boutons
+               
+       return pane; 
+    }
+    
+    public BorderPane acessSessionData() throws SQLException, ClassNotFoundException, ParseException
+    {
+        final BorderPane pane = new BorderPane();
+
+        //Bouton back
+        Button back = new Button();
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(accessCinemaData());
+            }
+        }); 
+        HBox inter = new HBox(50);
+        inter.getChildren().add(back);
+        
+        //titre
+        Label title = new Label("Modify Movie DataBase");
+        title.setId("title-moviedata");
+        
+        try {
+            controller = new Controller("movie","MoviesData");
+            final ArrayList<Movies> movies = controller.dispAllMovies();
+            ArrayList<Button> movie = new ArrayList<>();
+            for(int i=0;i<movies.size();i++){
+                movie.add(new Button());
+                movie.get(i).setText(movies.get(i).getTitle());
+            }
+            VBox box = new VBox(20);
+            box.setAlignment(Pos.CENTER);
+            box.getChildren().addAll(inter,title);
+            for(int i=0;i<movie.size();i++){
+                box.getChildren().add(movie.get(i));
+            }
+            movie.get(0).setOnAction(new EventHandler<ActionEvent>(){
+                @Override
+                public void handle(ActionEvent event){
+                    pane.setCenter(ModifSess(movies.get(0),movies));
+                } 
+            });
        return pane; 
     }
     
@@ -372,6 +430,10 @@ public class AutreMain implements Runnable{
         Label rate = new Label("Rate : ");
         final TextField note = new TextField(Integer.toString(movie.getRate()));
         
+        pane.setCenter(box);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         //Bouton Validate
         Button validate = new Button("Validate");
@@ -548,6 +610,43 @@ public class AutreMain implements Runnable{
        return pane; 
     }
     
+        public BorderPane ModifSess(final Movies movie,final ArrayList<Movies> movies)
+    {
+        BorderPane tot = new BorderPane();
+        GridPane nvx = new GridPane();
+        nvx.setHgap(50);
+        ArrayList<Session> sess = new ArrayList<>();
+        controller = new Controller("session","tab3");
+        try{
+            sess = controller.getSessionMovie(movie.getId());
+        }
+        catch(SQLException | ClassNotFoundException | ParseException e){
+            System.out.println("ERROR");
+        }
+        Label date_txt = new Label("Date ");
+        Label heure_txt = new Label("Heure ");
+        Label nbr_txt = new Label("Number of places ");
+        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20);
+        node1.getChildren().add(date_txt);
+        node2.getChildren().add(heure_txt);
+        node3.getChildren().add(nbr_txt);
+        for(int i=0;i<sess.size();i++){
+            String temp = sess.get(i).getDate().toString();
+            TextField date = new TextField(temp);
+            TextField heure = new TextField(sess.get(i).getHoraire());
+            String nbrr = Integer.toString(sess.get(i).getNbr_places_max());
+            TextField np = new TextField(nbrr);
+            Label max = new Label("");
+            node1.getChildren().add(date);
+            node2.getChildren().add(heure);
+            node3.getChildren().add(np);
+        }
+        nvx.addColumn(0,node1);
+        nvx.addColumn(1,node2);
+        nvx.addColumn(2,node3);
+        tot.setCenter(nvx);
+        return tot;
+    }
     
     
     @Override
