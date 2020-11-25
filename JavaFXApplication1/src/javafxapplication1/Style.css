@@ -21,7 +21,7 @@
 .tab {
   -fx-font-size : 20;
   -fx-color: green;
-  -fx-font-family : Tahoma bolder;
+  -fx-font-family : Tahoma Bolder;
   -fx-background-color : black;
   -fx-border-radius : 0 0 0 0;
   -fx-background-radius: 0 0 0 0,0 0 0 0,0 0 0 0;
@@ -40,15 +40,9 @@
     -fx-border-color: #FFFFFF;
 }
 
-.check-box .box {
--fx-background-color: white;
--fx-border-color:#000000;
--fx-border-radius:3px; 
-
-}
-
 #root-tab4{
     -fx-alignment : center;
+    -fx-padding : 8em 0 0 0;
 }
 #root-tab2{
     -fx-background-color: #fff;
@@ -60,6 +54,7 @@
 
 #label-tab4{
     -fx-font-size : 1.2em;
+    -fx-font-weigth:bold;
 }
 
 #title-tab4{
@@ -83,9 +78,10 @@
     -fx-background-color: #000000;
     -fx-text-fill: #F0C300;
 }
+
 #HBox-tab4{
     -fx-alignment : center;
-    -fx-padding : 2em 0 0 2em;
+    -fx-padding : 6em 0 0 2em;
     -fx-font-size : 1.5em;
 }
 
@@ -101,6 +97,9 @@
     -fx-font-size : 1.4em;
 }
 
+#sub{
+    -fx-padding : 0 0 -2em 0;
+}
 
 #titre-tab2{
     -fx-font : 9em Tahoma;
@@ -116,6 +115,7 @@
 }
 
 #label-co{
+    -fx-font-size : 3em;
     -fx-font-size : 2em;
     -fx-font-family : Tahoma;
 }
@@ -139,15 +139,8 @@
     -fx-text-fill: #000000;
 }
 #but-search:hover{
-    -fx-background-radius: 2em;
     -fx-background-color: #000000;
     -fx-text-fill: #F0C300;
-}
-#split-search{
-    -fx-font-size : 2em;
-    -fx-background-radius: 2em;
-    -fx-background-color: #F0C300;
-    -fx-text-fill: #000000;
 }
 
 #disp-movie{
@@ -189,7 +182,7 @@
     -fx-font-size : 1.2em;
     -fx-padding : 0 0.3em 0 0.3em;
     -fx-font-family : Tahoma;
-    -fx-font-weigth : bolder;
+    -fx-font-weigth : bold;
 }
 #desc-sess{
     -fx-font-size : 1.2em;
@@ -203,7 +196,10 @@
 }
 #changepass{
     -fx-font-size : 1.2em;
-    -fx-padding : 0 0.5em 0.5em 0;
+    -fx-padding : 0.5em;
+    -fx-border-insets: 0.5em;
+    -fx-background-insets: 0.5em;
+    -fx-background-color:#F0C300;
 }
 #back-but{
     -fx-background-color: transparent;
@@ -215,24 +211,6 @@
     -fx-background-radius: 2em;
     -fx-background-color: #F0C300;
     -fx-text-fill: #000000;
-    -fx-font-size : 1.2em;
-}
-#price-red{
-    -fx-background-radius: 2em;
-    -fx-background-color: #F0C300;
-    -fx-text-fill: #000000;
-    -fx-font-size : 1em;
-}
-#price-rd{
-    -fx-background-radius: 2em;
-    -fx-background-color: #F0C300;
-    -fx-text-fill: #000000;
-    -fx-font-size : 1em;
-}
-#price-rd:hover{
-    -fx-background-radius: 2em;
-    -fx-background-color: #FFFFFF;
-    -fx-text-fill: #000000;
     -fx-font-size : 1em;
 }
 #price-reduc:hover{
@@ -240,25 +218,11 @@
     -fx-background-color: #000000;
     -fx-text-fill: #F0C300;
 }
-#price-red:hover{
+#split-search{
+    -fx-font-size : 2em;
     -fx-background-radius: 2em;
-    -fx-background-color: #000000;
-    -fx-text-fill: #F0C300;
-}
-#img-dispAllMovie{
-    -fx-background-color:transparent;
-}
-#img-dispAllMovie:hover{
-    -fx-background-color:#F5F5F5;
-}
-#grid-tab1{
-    -fx-font-size:1.1em;
-}
-#buton-deco{
-    -fx-background-color:transparent;
-}
-#buton-deco:hover{
-    -fx-background-color:#F5F5F5;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
 }
 #changepass-button{
     -fx-background-radius: 0em;
@@ -270,4 +234,44 @@
     -fx-background-radius: 1em;
     -fx-background-color: #000000;
     -fx-text-fill: #F0C300;
+}
+#buton-deco{
+    -fx-background-color:transparent;
+}
+#buton-deco:hover{
+    -fx-background-color:#F5F5F5;
+}
+#price-red{
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#price-red:hover{
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
+}
+#grid-tab1{
+    -fx-font-size:1.1em;
+}
+#img-dispAllMovie{
+    -fx-background-color:transparent;
+}
+#img-dispAllMovie:hover{
+    -fx-background-color:#F5F5F5;
+}
+#price-rd{
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#price-rd:hover{
+    -fx-background-color: #FFFFFF;
+}
+.check-box .box {
+-fx-background-color: white;
+-fx-border-color:#000000;
+-fx-border-radius:3px; 
+
 }
