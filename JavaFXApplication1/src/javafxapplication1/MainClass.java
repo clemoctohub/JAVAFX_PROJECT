@@ -65,12 +65,12 @@ public class MainClass extends Application {
         header.setAlignment(Pos.CENTER);
         HBox enter = new HBox(10);
         
-        /*Image img;
+        Image img;
         img = new Image(getClass().getResourceAsStream("/images/logo.png"));
         ImageView view = new ImageView(img);
         view.setPreserveRatio(true);
-        enter.getChildren().addAll(view,bande);*/
-        header.getChildren().addAll(bande,connected);
+        enter.getChildren().addAll(view,bande);
+        header.getChildren().addAll(enter,connected);
         tab2.setContent(getDiscount());
         tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
@@ -133,7 +133,7 @@ public class MainClass extends Application {
     
     public VBox dispMovieToBuy(final Movies movie,Session sess,final ArrayList<Movies> movies,final int tab){
         VBox tot = new VBox(50);
-        
+        tot.setId("movie-paypage");
         tot.setAlignment(Pos.CENTER);
         VBox node = new VBox(20);
         HBox detail = new HBox(20);
@@ -220,18 +220,21 @@ public class MainClass extends Application {
         ad.setAlignment(Pos.CENTER);
         final Button plus = new Button("+");
         Button moins = new Button("-");
+        plus.setId("button-choose-place");
+        moins.setId("button-choose-place");
         HBox email = new HBox(20);
         email.setAlignment(Pos.CENTER);
         Label ver = new Label("Please enter your mail (login if you are a member) before to click : ");
-        ver.setStyle("-fx-font-weigth: bold");
+        ver.setStyle("-fx-font-weigth: bold; -fx-font-posture: italic;");
         final TextField mail = new TextField();
         mail.setId("box-pay");
         mail.setPromptText("Enter your mail/login");
         email.getChildren().addAll(ver,mail);
         final Label nbr = new Label();
+        nbr.setId("payment-bold");
         nbr.setText("0");
         final Label disc = new Label();
-        disc.setId("button-pay");
+        disc.setId("payment-bold");
         disc.setText("Total : 0 $");
         
         plus.setOnAction(new EventHandler<ActionEvent>() {
@@ -295,10 +298,11 @@ public class MainClass extends Application {
         ad.getChildren().addAll(moins,nbr,plus);
         VBox intermediaire = new VBox(20);
         intermediaire.setAlignment(Pos.CENTER);
-        intermediaire.setId("button-pay");
         Label nbr_tick = new Label("Number of tickets : ");
+        nbr_tick.setId("payment-bold");
         intermediaire.getChildren().addAll(nbr_tick,ad);
-        VBox container = new VBox(80);
+        VBox container = new VBox(60);
+        container.setStyle("-fx-padding:1em 0 0 0;");
         container.setAlignment(Pos.CENTER);
         container.getChildren().addAll(nvx,input,intermediaire,email,disc,but);
         
@@ -308,19 +312,20 @@ public class MainClass extends Application {
     public VBox dispTicketCustomer(){
         VBox tot = new VBox(20);
         tot.setId("co-pay");
-        Label co = new Label("You are connected as : ");
+        final Label co = new Label("");
         co.setAlignment(Pos.CENTER);
         final Label nom = new Label();
         nom.setText("");
         if(!connected.getText().equals("")){
+            co.setText("You are connected as : ");
             nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
             nom.setAlignment(Pos.CENTER);
         }
         else{
-            nom.setText("A Customer");
-            nom.setAlignment(Pos.CENTER);
+            co.setText("You are not connected");
         }
         Button but = new Button();
+        but.setId("refresh");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/refresh.png"));
         ImageView view = new ImageView(img);
@@ -332,11 +337,13 @@ public class MainClass extends Application {
             @Override
             public void handle(ActionEvent event){
                 if(!connected.getText().equals("")){
+                    co.setText("You are connected as : ");
                     nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
                     nom.setAlignment(Pos.CENTER);
                 }
                 else if(connected.getText().equals("")){
-                    nom.setText("A Customer");
+                    co.setText("You are not connected");
+                    nom.setText("");
                 }
             }
         });
@@ -568,8 +575,7 @@ public class MainClass extends Application {
     }
     
     public VBox searchVbox(){
-        VBox nvx = new VBox(50);
-        //nvx.setAlignement(Pos.CENTER);
+        VBox nvx = new VBox(20);
         final TextField recherche;
         recherche = new TextField();
         recherche.setText("");
