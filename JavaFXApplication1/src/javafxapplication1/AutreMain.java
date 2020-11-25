@@ -23,11 +23,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
@@ -246,7 +248,8 @@ public class AutreMain implements Runnable{
     
     public BorderPane accesMoviesData() throws SQLException, ClassNotFoundException, ParseException{
         BorderPane pane = new BorderPane();
-
+        ScrollPane scroll = new ScrollPane();
+        
         //Bouton back
         Button back = new Button();
         back.setId("button-home2");
@@ -279,12 +282,15 @@ public class AutreMain implements Runnable{
             }
         }); 
         
-        HBox inter = new HBox(50);
-        inter.getChildren().addAll(back);
-        
         //titre
         Label title = new Label("Modify Movie DataBase");
         title.setId("title-moviedata");
+        
+        HBox inter = new HBox(50);
+        inter.getChildren().addAll(back,title,addMovie);
+        inter.setAlignment(Pos.CENTER);
+        
+       
         
         try {
             //liste des films sous forme de boutons
@@ -297,12 +303,10 @@ public class AutreMain implements Runnable{
             }
             VBox box = new VBox(20);
             box.setAlignment(Pos.CENTER);
-            box.getChildren().addAll(inter,title);
             for(int i=0;i<movie.size();i++){
                 box.getChildren().add(movie.get(i));
-            }
-            
-            box.getChildren().add(addMovie);
+            }      
+            //box.getChildren().add(addMovie);
             
             //Action sur les boutons
             for(int i=0;i<movies.size();i++){
@@ -316,8 +320,15 @@ public class AutreMain implements Runnable{
                     }
                 });
             }
-        
-            pane.setCenter(box);
+            
+            scroll.setContent(box);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            
+            scroll.setFitToHeight(true);
+            scroll.setFitToWidth(true);
+            
+            pane.setTop(inter);
+            pane.setCenter(scroll);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
         }
