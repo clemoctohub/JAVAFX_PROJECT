@@ -16,23 +16,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.chart.*;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -63,9 +48,10 @@ public class AutreMain{
         tab.setContent(homePage());
         tot.getTabs().add(tab);
         connected = new Label("Hello "+actual.getFirstName().substring(0,1).toUpperCase()+actual.getFirstName().substring(1)+" "+actual.getLastName().substring(0,1).toUpperCase()+actual.getLastName().substring(1)+" !");
-        connected.setStyle("-fx-font-size : 2em");
+        connected.setStyle("-fx-font-size : 2em; -fx-text-fill:#F5DEB3; -fx-font-weight : bold");
         
         VBox ad = new VBox(10);
+        ad.setStyle("-fx-background-color :#8B4513");
         ad.setAlignment(Pos.CENTER);
         ad.getChildren().addAll(connected,tot);
         
@@ -80,6 +66,7 @@ public class AutreMain{
     public BorderPane homePage(){
         BorderPane tot = new BorderPane();
         VBox nvx = new VBox(50);
+        nvx.setStyle("-fx-background-color:#8B4513");
         nvx.setAlignment(Pos.CENTER);
         Label lab1 = new Label("MENU");
         lab1.setId("labMenu");
@@ -147,6 +134,7 @@ public class AutreMain{
     
     public ScrollPane seeStatistics(){
         ScrollPane scroll = new ScrollPane();
+        scroll.setStyle("-fx-background-color:#8B4513");
         GridPane nvx = new GridPane();
         nvx.setId("stat-grid");
         nvx.setVgap(50);
@@ -260,6 +248,7 @@ public class AutreMain{
         }
         
         Button but = new Button();
+        but.setId("back-but");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view2 = new ImageView(img2);
@@ -409,10 +398,13 @@ public class AutreMain{
         return box;
     }
     
-    public VBox changePromotion(){
-        VBox tot = new VBox(30);
+    public BorderPane changePromotion(){
+        BorderPane toto=new BorderPane();
+        toto.setStyle("-fx-background-color:#8B4513");
+        VBox tot = new VBox(10);
         tot.setAlignment(Pos.CENTER);
         Label lab = new Label("Change actual offers : ");
+        lab.setStyle("-fx-font-size:1.2em; -fx-text-fill: #F5DEB3;");
         final ToggleGroup group = new ToggleGroup();
         RadioButton button1 = new RadioButton("Senior : ");
         RadioButton button2 = new RadioButton("Children : ");  
@@ -472,6 +464,20 @@ public class AutreMain{
                     }
             }
         });
+        Button but = new Button();
+        but.setId("back-but");
+        Image img2;
+        img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view2 = new ImageView(img2);
+        view2.setFitHeight(90);
+        view2.setPreserveRatio(true);
+        but.setGraphic(view2);
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(homePage());
+            }
+        });
         HBox box1 = new HBox(30);
         HBox box2 = new HBox(30);
         HBox box3 = new HBox(30);
@@ -490,6 +496,7 @@ public class AutreMain{
         box3.getChildren().addAll(button3,txt3);
         box4.getChildren().addAll(pwd);
         Button button = new Button("Change actual promotions");
+        button.setId("button-home");
         tot.getChildren().addAll(lab,box1,lab1,box2,lab2,box3,lab3,box4,lab4,button);
         
         button.setOnAction(new EventHandler<ActionEvent>() {     
@@ -535,13 +542,18 @@ public class AutreMain{
                 }
             }
         });
+        toto.setLeft(but);
+        toto.setRight(emptyRight(but.getWidth()));
+        toto.setCenter(tot);
         
-        return tot;
+        return toto;
     }
     
     public BorderPane accessMembEmploy(){
         BorderPane tot = new BorderPane();
+        tot.setStyle("-fx-background-color : #8B4513");
         Button but = new Button();
+        but.setId("back-but");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view2 = new ImageView(img2);
@@ -555,7 +567,7 @@ public class AutreMain{
             }
         });
         
-        VBox nvx = new VBox(50);
+        VBox nvx = new VBox(20);
         nvx.setAlignment(Pos.CENTER);
         
         HBox inter = new HBox(50);
@@ -567,7 +579,7 @@ public class AutreMain{
         Button but2 = new Button("Access Employee Data Base");
         but1.setId("button-home");
         but2.setId("button-home");
-        nvx.getChildren().addAll(inter,lab1,but1,but2);
+        nvx.getChildren().addAll(lab1,but1,but2);
         but1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -580,13 +592,17 @@ public class AutreMain{
                 //tab.setContent(homePage());
             }
         });
+        tot.setLeft(inter);
         tot.setCenter(nvx);
+        tot.setRight(emptyRight(but.getWidth()));
         return tot;
     }
     
     public BorderPane accessCinemaData(){
         BorderPane tot = new BorderPane();
+        tot.setStyle("-fx-background-color : #8B4513");
         Button but = new Button();
+        but.setId("back-but");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view2 = new ImageView(img2);
@@ -636,6 +652,15 @@ public class AutreMain{
         });
         tot.setCenter(nvx);
         return tot;
+    }
+    
+    public HBox emptyRight(double width){
+        HBox nvx = new HBox();
+        Button but = new Button();
+        but.setPrefWidth(width);
+        but.setId("back-but-hide");
+        nvx.getChildren().add(but);
+        return nvx;
     }
     
 }

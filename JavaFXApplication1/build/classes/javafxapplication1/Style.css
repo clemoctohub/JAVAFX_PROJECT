@@ -5,6 +5,7 @@
 #bande{
     -fx-alignment : center;
     -fx-font-size : 3em;
+    -fx-text-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 40%);
 }
 
 .tab-pane {
@@ -18,10 +19,16 @@
 .tab {
   -fx-font-family : Arial;
   -fx-font-size : 18;
+  -fx-background-color : white;
 }
 
 .tab:selected {
-    -fx-background-color : royalblue;
+    -fx-background-color : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 40%);
+}
+
+.scroll-pane{
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #FFFFFF;
 }
 
 #root-tab4{
@@ -30,7 +37,7 @@
 }
 
 #text-tab4{
-    -fx-font-size : 2.2em;
+    -fx-font-size : 1.5em;
 }
 
 #label-tab4{
@@ -159,4 +166,10 @@
     -fx-padding : 0.5em;
     -fx-border-insets: 0.5em;
     -fx-background-insets: 0.5em;
+}
+#back-but{
+    -fx-background-color: transparent;
+}
+#back-but:hover{
+    -fx-background-color: whitesmoke;
 }

@@ -32,6 +32,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -152,6 +155,7 @@ public class MainClass extends Application {
         
         
         Button but = new Button();
+        but.setId("back-but");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view2 = new ImageView(img2);
@@ -382,10 +386,9 @@ public class MainClass extends Application {
         
         int temp = movie.getRate()/2;
         Image img3;
-        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.JPG"));
+        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.jpg"));
         ImageView view3 = new ImageView(img3);
         view3.setPreserveRatio(true);
-        
         node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5,view3);
         
         tot.addColumn(0, view);
@@ -394,6 +397,7 @@ public class MainClass extends Application {
         
         
         Button but = new Button();
+        but.setId("back-but");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view2 = new ImageView(img2);
@@ -666,6 +670,7 @@ public class MainClass extends Application {
     
     public GridPane getGridtab4(int condi){
         GridPane root=new GridPane();
+        
         Label Email = new Label("Your ID number :");  
         Label Password = new Label("Password :");  
         Email.setId("label-tab4");
@@ -705,12 +710,12 @@ public class MainClass extends Application {
 //adding the the nodes to the GridPane's rows   
         
         root.addRow(0, title);
-        root.addRow(3, Email);
-        root.addRow(4, tf1);
-        root.addRow(6, Password);
-        root.addRow(7, tf2);
-        root.addRow(8,error);
-        root.addRow(10, c1);
+        root.addRow(1, Email);
+        root.addRow(2, tf1);
+        root.addRow(4, Password);
+        root.addRow(5, tf2);
+        root.addRow(6,error);
+        root.addRow(8, c1);
         
         root.addRow(14, submit, reset);
         
@@ -977,14 +982,19 @@ public class MainClass extends Application {
         Label RD = new Label("Release Date : "+movies.getDate());
         Label GT = new Label("Gender type : "+movies.getType());
         Label RT = new Label("Running Time : "+movies.getRunningTime());
-        Label Rate = new Label("Rating : "+movies.getRate());
+        
+        int temp = movies.getRate()/2;
+        Image img3;
+        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.jpg"));
+        ImageView view3 = new ImageView(img3);
+        view3.setPreserveRatio(true);
         
         gp.addRow(0 ,Titre);
         gp.addRow(1, Author);
         gp.addRow(2, RD);
         gp.addRow(3, GT);
         gp.addRow(4, RT);
-        gp.addRow(5, Rate);
+        gp.addRow(5, view3);
         gp.setVgap(10);
         String desc = movies.getDescription();
         for(int i=0;i<desc.length();i++){
@@ -997,14 +1007,14 @@ public class MainClass extends Application {
                 }
             }
         }
-        Label temp = new Label(desc);
-        tot.getChildren().addAll(gp,temp);
+        Label tempo = new Label(desc);
+        tot.getChildren().addAll(gp,tempo);
         
         return tot;
     }
     public FlowPane getPanetab1()
     {
-        ArrayList<Movies> movies = new ArrayList<>();
+        ArrayList<Movies> movies;
         controller = new Controller("movie","tab1");
         movies = controller.dispAllMovies();
         FlowPane pane = new FlowPane();
@@ -1173,7 +1183,7 @@ public class MainClass extends Application {
         test.setAlignment(Pos.CENTER);
         Button button = new Button("Sign-in/Sign-up");
         button.setId("button-tab2");
-        button.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        button.setStyle("-fx-font: 22 arial; -fx-background-color : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);");
         test.getChildren().add(button);
         HBox bouton = new HBox(100);
         bouton.setAlignment(Pos.CENTER);
@@ -1214,7 +1224,16 @@ public class MainClass extends Application {
         
         Text titre = new Text("The CinéPass");
         titre.setId("titre-tab2");
-        
+        DropShadow drop = new DropShadow();  
+        drop.setBlurType(BlurType.GAUSSIAN);  
+        drop.setColor(Color.BLACK);  
+        drop.setHeight(100);  
+        drop.setWidth(150);  
+        drop.setOffsetX(10);  
+        drop.setOffsetY(10);  
+        drop.setSpread(0.2);  
+        drop.setRadius(10);
+        titre.setEffect(drop);
         Text discounts = new Text(cine.getDescription());
         discounts.setId("discounts-tab2");
         discounts.setY(50);
@@ -1225,9 +1244,8 @@ public class MainClass extends Application {
         
         StackPane stack = new StackPane();
         stack.getChildren().addAll(infos,discounts);
-        stack.setLayoutX(50);
-        stack.setLayoutY(50);
-        
+        stack.setLayoutX(70);
+        stack.setLayoutY(60);
         
         Group rects = new Group();
         rects.getChildren().addAll(stack,view);        

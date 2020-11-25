@@ -57,7 +57,7 @@ public class Connexion {
        // String urlDatabase = "jdbc:mysql://localhost:3308/jps?characterEncoding=latin1";
 
         //création d'une connexion JDBC à la base 
-        conn = DriverManager.getConnection(urlDatabase, "root","");
+        conn = DriverManager.getConnection(urlDatabase, "root","root");
         
         // création d'un ordre SQL (statement)
         stmt = conn.createStatement(); 

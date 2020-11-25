@@ -27,7 +27,7 @@ public class Controller {
     public String getAMovie(int id){
         String nom="";
         try {
-            Connexion conn = new Connexion("movie", "root", "");
+            Connexion conn = new Connexion("movie", "root", "root");
             nom = conn.recolterSpecifikMovie(id);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,7 +40,7 @@ public class Controller {
         ArrayList<Session> other = new ArrayList<>();
         
         try {
-            Connexion conn = new Connexion("movie", "root", "");
+            Connexion conn = new Connexion("movie", "root", "root");
             nvx = conn.getSessionConnected(login);
             other = conn.recolterSessionMember(nvx);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
@@ -53,7 +53,7 @@ public class Controller {
     public ArrayList<Integer> getIdCustomerSess(String login){
         ArrayList<Integer> nvx = new ArrayList<>();
         try {
-            Connexion conn = new Connexion("movie", "root", "");
+            Connexion conn = new Connexion("movie", "root", "root");
             nvx = conn.getSessionConnectedID(login);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -75,7 +75,7 @@ public class Controller {
         if(num<0)
             return false;
         try {
-            Connexion conn = new Connexion("movie", "root", "");
+            Connexion conn = new Connexion("movie", "root", "root");
             num_sess = conn.getMovieFromCust(num,mail);
             condi = conn.delete_customer(num,mail);
             if(condi==true){
@@ -93,7 +93,7 @@ public class Controller {
     
     public void changePassword(String password, String id){
         try {
-            Connexion conn = new Connexion("movie", "root", "");
+            Connexion conn = new Connexion("movie", "root", "root");
             conn.change_password(password,id);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,7 +121,7 @@ public class Controller {
             mail = "noMailForThisUser@error";
         date = date.replaceAll("/", "-");
         try {
-            Connexion conn = new Connexion("movie", "root", "");
+            Connexion conn = new Connexion("movie", "root", "root");
             ArrayList<Members> nvx = conn.recolterChampsCustomer();
             for(int i=0;i<nvx.size();i++){
                 if(x==nvx.get(i).getId()){
@@ -142,13 +142,13 @@ public class Controller {
     
     public ArrayList<Session> getSessionMovie(int id) throws SQLException, ClassNotFoundException, ParseException{
         ArrayList<Session> nvx;
-        Connexion conn = new Connexion("movie", "root", "");
+        Connexion conn = new Connexion("movie", "root", "root");
         nvx = conn.recolterChampsSessionsMovie(id);
         return nvx;
     }
     
     public ArrayList<Movies> searchMovies(String name,String type,String time,String day, String month) throws SQLException, ClassNotFoundException, ParseException{
-        Connexion nvx = new Connexion("movie", "root", "");
+        Connexion nvx = new Connexion("movie", "root", "root");
         ArrayList<Movies> rep;
         int temps,jour,mois;
         try{
@@ -196,7 +196,7 @@ public class Controller {
     
     public Members getConnectedMember(String id, String pwd) throws SQLException, ClassNotFoundException, ParseException{
         Members test;
-        Connexion nvx = new Connexion("movie", "root", "");
+        Connexion nvx = new Connexion("movie", "root", "root");
         test = nvx.checkLoginMember(id,pwd);
         
         return test;
@@ -204,7 +204,7 @@ public class Controller {
     
     public Employees getConnectedEmployee(String id, String pwd) throws SQLException, ClassNotFoundException, ParseException{
         Employees test;
-        Connexion nvx = new Connexion("movie", "root", "");
+        Connexion nvx = new Connexion("movie", "root", "root");
         test = nvx.checkLoginEmployee(id, pwd);
         
         return test;
@@ -219,7 +219,7 @@ public class Controller {
         if(ag<0)
             return -1;
         int condi = 0;
-        Connexion nvx = new Connexion("movie", "root", "");
+        Connexion nvx = new Connexion("movie", "root", "root");
         ArrayList<Members> membre = nvx.recolterChampsMember();
         for(int i=0;i<membre.size();i++){
             
@@ -249,7 +249,7 @@ public class Controller {
         ArrayList<Movies> movies=null;
         Connexion nvx;
         try {
-            nvx = new Connexion("movie", "root", "");
+            nvx = new Connexion("movie", "root", "root");
             movies = nvx.recolterChampsMovies();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -311,7 +311,7 @@ public class Controller {
         }
         
         try {
-            Connexion nvx = new Connexion("movie","root","");
+            Connexion nvx = new Connexion("movie","root","root");
             nvx.changePromotions(i1,i2,i3);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -322,7 +322,7 @@ public class Controller {
     public ArrayList<Members> recolterMembre(){
         ArrayList<Members> nvx = new ArrayList<>();
         try {
-            Connexion conn = new Connexion("movie","root","");
+            Connexion conn = new Connexion("movie","root","root");
             nvx = conn.recolterChampsMember();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -332,7 +332,7 @@ public class Controller {
     public ArrayList<Session> recolterSessions(){
         ArrayList<Session> nvx = new ArrayList<>();
         try {
-            Connexion conn = new Connexion("movie","root","");
+            Connexion conn = new Connexion("movie","root","root");
             nvx = conn.recolterChampsSessions();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);

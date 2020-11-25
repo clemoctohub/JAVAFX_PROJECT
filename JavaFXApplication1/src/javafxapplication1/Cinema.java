@@ -43,7 +43,6 @@ public class Cinema {
         this.senior = promo[1];
         this.children = promo[2];
         this.regular = promo[0];
-        System.out.println(promo[0]+" "+senior);
     }
     
     public Cinema (ArrayList<Movies> movies,double senior,double children,double regular)
