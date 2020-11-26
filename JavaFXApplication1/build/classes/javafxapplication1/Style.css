@@ -148,6 +148,13 @@
 }
 #disp-button{
     -fx-font-size : 1.2em;
+    -fx-background-color : #F0C300;
+    -fx-text-fill : #000000;
+    -fx-background-radius : 2em;
+}
+#disp-button:hover{
+    -fx-background-color : #000000;
+    -fx-text-fill : #F0C300;
 }
 #search{
     -fx-padding : 2em 0 0 2em;
@@ -157,10 +164,19 @@
     -fx-font-size : 1.8em;
     -fx-alignment : center;
 }
-
 #button-session{
     -fx-font-size : 1.4em;
     -fx-alignment : center;
+}
+
+#button-reserv{
+    -fx-background-color : #F0C300;
+    -fx-text-fill : #000000;
+    -fx-background-radius : 2em;
+}
+#button-reserv:hover{
+    -fx-background-color : #000000;
+    -fx-text-fill : #F0C300;
 }
 
 #co-pay{
@@ -304,4 +320,14 @@
     -fx-font-weigth : bold;
     -fx-font-family : Tahoma;
     -fx-font-size : 1.2em;
+}
+#confirm-get-id-place{
+    -fx-background-radius: 0em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#confirm-get-id-place:hover{
+    -fx-background-color: #0000000;
+    -fx-text-fill: #F0C300;
 }

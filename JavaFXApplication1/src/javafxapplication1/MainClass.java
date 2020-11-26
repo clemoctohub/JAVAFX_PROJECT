@@ -25,6 +25,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.*;
@@ -32,6 +35,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
+import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
@@ -117,6 +123,7 @@ public class MainClass extends Application {
         Label war = new Label("Please keep it if you want to modify your place");
         
         Button but = new Button("OK");
+        but.setId("confirm-get-id-place");
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -433,8 +440,10 @@ public class MainClass extends Application {
         return border;
     }
     
+    
     public ScrollPane dispAllSess(final Movies movie,final ArrayList<Movies> movies, final int tab){
         ScrollPane tot = new ScrollPane();
+        tot.setStyle("-fx-padding : 0 0 0 1em;");
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
         ArrayList<Session> sess = new ArrayList<>();
@@ -458,21 +467,21 @@ public class MainClass extends Application {
         node3.setId("box-session");
         node4.setId("button-session");
         node5.setId("box-session");
-        reserver.setId("button-session");
-        node1.getChildren().add(date_txt);
-        node2.getChildren().add(heure_txt);
-        node3.getChildren().add(nbr_txt);
-        node4.getChildren().add(reserver);
-        node5.getChildren().add(new Label(""));
+        node1.getChildren().addAll(date_txt,new Separator(Orientation.HORIZONTAL));
+        node2.getChildren().addAll(heure_txt,new Separator(Orientation.HORIZONTAL));
+        node3.getChildren().addAll(nbr_txt,new Separator(Orientation.HORIZONTAL));
+        node4.getChildren().addAll(reserver,new Separator(Orientation.HORIZONTAL));
+        node5.getChildren().addAll(new Label("Actual Places"),new Separator(Orientation.HORIZONTAL));
         for(int i=0;i<sess.size();i++){
             String temp = sess.get(i).getDate().toString();
             Label date = new Label(temp);
             Label heure = new Label(sess.get(i).getHoraire());
             String nbrr = Integer.toString(sess.get(i).getNbr_places_max());
-            Label nbr = new Label("Number of places "+nbrr);
+            Label nbr = new Label(nbrr+" places");
             Label max = new Label("");
             
             button.add(new Button("Reserve"));
+            button.get(i).setId("button-reserv");
             node1.getChildren().add(date);
             node2.getChildren().add(heure);
             node3.getChildren().add(nbr);
@@ -481,8 +490,12 @@ public class MainClass extends Application {
                 max.setText("Full session");
                 max.setTextFill(RED);
             }
+            else if(sess.get(i).getActual()>=sess.get(i).getNbr_places_max()*0.9){
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits left");
+                max.setTextFill(ORANGE);
+            }
             else{
-                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" places left");
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits left");
                 max.setTextFill(GREEN);
             }
             node4.getChildren().add(button.get(i));
@@ -499,11 +512,20 @@ public class MainClass extends Application {
                 }
             });
         }
+        Separator separator1 = new Separator(Orientation.VERTICAL);
+        Separator separator2 = new Separator(Orientation.VERTICAL);
+        Separator separator3 = new Separator(Orientation.VERTICAL);
+        Separator separator4 = new Separator(Orientation.VERTICAL);
+        
         nvx.addColumn(0,node1);
-        nvx.addColumn(1,node2);
-        nvx.addColumn(2,node3);
-        nvx.addColumn(3,node4);
-        nvx.addColumn(4,node5);
+        nvx.addColumn(1,separator1);
+        nvx.addColumn(2,node2);
+        nvx.addColumn(3,separator2);
+        nvx.addColumn(4,node3);
+        nvx.addColumn(5,separator3);
+        nvx.addColumn(6,node5);
+        nvx.addColumn(7,separator4);
+        nvx.addColumn(8,node4);
         tot.setContent(nvx);
         return tot;
     }
@@ -528,9 +550,7 @@ public class MainClass extends Application {
     
     public ScrollPane resultMovies(final ArrayList<Movies> movies){
         ScrollPane bar = new ScrollPane();
-        
         GridPane tot = new GridPane();
-        
         tot.setAlignment(Pos.CENTER);
         VBox vbox = new VBox(30);
         ArrayList<Button> tabButton = new ArrayList<>(); 
@@ -1107,6 +1127,7 @@ public class MainClass extends Application {
         idi.setTextFill(RED);
         
         Button but = new Button("OK");
+        but.setId("confirm-get-id-place");
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
