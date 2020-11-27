@@ -9,6 +9,8 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -213,6 +215,7 @@ public class Connexion {
         preparedStmt.setString(1, password);
         preparedStmt.setString(2,id);
         preparedStmt.execute();
+        conn.close();
     }
     
     public void changeAll_(Movies movie) throws SQLException{
@@ -250,7 +253,7 @@ public class Connexion {
             preparedStmt.execute();
         }
         
-        
+        conn.close();
         
     }
     //Suppression d'un membre dans la base de donnees
@@ -530,7 +533,7 @@ public class Connexion {
             }
         }
         // Retourner l'ArrayList
-        
+        conn.close();
         return rep;
     }
     
@@ -627,7 +630,6 @@ public class Connexion {
                 return listeMem1;
             }
         }
-        conn.close();
         return null;        
     }
     public Employees checkLoginEmployee(String login, String mdp) throws SQLException{
@@ -638,7 +640,6 @@ public class Connexion {
                 return listeEmp1;
             }
         }
-        conn.close();
         return null;        
     }  
     
@@ -660,5 +661,13 @@ public class Connexion {
         }
         
         return promo;
+    }
+    
+    public void closeConn(){
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Connexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -26,8 +25,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.*;
@@ -35,9 +32,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
-import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
@@ -163,7 +158,13 @@ public class MainClass extends Application {
         nom = nom.toLowerCase();
         nom = nom.replaceAll(" ", "_");
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        try{
+            img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        }
+        catch(NullPointerException e){
+            img = new Image(getClass().getResourceAsStream("/images/default.png"));
+        }
+        
         ImageView view = new ImageView(img);
         view.setFitHeight(300);
         view.setPreserveRatio(true);
@@ -401,7 +402,12 @@ public class MainClass extends Application {
         nom = nom.toLowerCase();
         nom = nom.replaceAll(" ", "_");
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        try{
+            img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        }
+        catch(NullPointerException e){
+            img = new Image(getClass().getResourceAsStream("/images/default.png"));
+        }
         ImageView view = new ImageView(img);
         view.setFitHeight(300);
         view.setPreserveRatio(true);
@@ -560,7 +566,13 @@ public class MainClass extends Application {
             String nomfilm = movies.get(i).getTitle();
             nomfilm = nomfilm.toLowerCase();
             nomfilm = nomfilm.replaceAll(" ","_");
-            image = new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg"));
+            try{
+                image = new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg"));
+            }
+            catch(NullPointerException e){
+                image = new Image(getClass().getResourceAsStream("/images/default.png"));
+            }
+            
             view = new ImageView(image);
             view.setFitWidth(70);
             view.setPreserveRatio(true);
@@ -1088,7 +1100,13 @@ public class MainClass extends Application {
             String nomfilm = movies.get(i).getTitle();
             nomfilm = nomfilm.toLowerCase();
             nomfilm = nomfilm.replaceAll(" ","_");
-            image.add(new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg")));
+            try{
+                image.add(new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg")));
+            }
+            catch(NullPointerException e){
+                image.add(new Image(getClass().getResourceAsStream("/images/default.png")));
+            }
+            
             view.add(new ImageView(image.get(i)));
             view.get(i).setFitWidth(170);
             view.get(i).setPreserveRatio(true);

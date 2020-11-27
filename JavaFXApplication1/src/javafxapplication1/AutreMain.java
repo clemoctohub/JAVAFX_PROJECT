@@ -538,6 +538,7 @@ public class AutreMain{
                         txt1.setText("");
                         txt2.setText("");
                         txt3.setText("");
+                        pwd.setText("");
                     }
                 }
             }

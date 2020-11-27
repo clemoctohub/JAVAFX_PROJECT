@@ -29,6 +29,7 @@ public class Controller {
         try {
             Connexion conn = new Connexion("movie", "root", "root");
             nom = conn.recolterSpecifikMovie(id);
+            conn.closeConn();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -83,6 +84,9 @@ public class Controller {
                 double amount = nvx.getAmount()-4;
                 int nbr = nvx.getActual()-1;
                 conn.add_update_session(nbr, amount, num_sess);
+            }
+            else{
+                conn.closeConn();
             }
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -198,7 +202,7 @@ public class Controller {
         Members test;
         Connexion nvx = new Connexion("movie", "root", "root");
         test = nvx.checkLoginMember(id,pwd);
-        
+        nvx.closeConn();
         return test;
     }
     
@@ -206,7 +210,7 @@ public class Controller {
         Employees test;
         Connexion nvx = new Connexion("movie", "root", "root");
         test = nvx.checkLoginEmployee(id, pwd);
-        
+        nvx.closeConn();
         return test;
     }
     
@@ -251,6 +255,7 @@ public class Controller {
         try {
             nvx = new Connexion("movie", "root", "root");
             movies = nvx.recolterChampsMovies();
+            nvx.closeConn();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -269,14 +274,14 @@ public class Controller {
             return 0;
         }
         try{
-            if(!in1.equals(""))
+            if(!in2.equals(""))
                 i2 = Double.parseDouble(in2);
         }
         catch(NumberFormatException e){
             return 1;
         }
         try{
-            if(!in1.equals(""))
+            if(!in3.equals(""))
                 i3 = Double.parseDouble(in3);
         }
         catch(NumberFormatException e){
@@ -324,9 +329,11 @@ public class Controller {
         try {
             Connexion conn = new Connexion("movie","root","root");
             nvx = conn.recolterChampsMember();
+            conn.closeConn();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return nvx;
     }
     public ArrayList<Session> recolterSessions(){
