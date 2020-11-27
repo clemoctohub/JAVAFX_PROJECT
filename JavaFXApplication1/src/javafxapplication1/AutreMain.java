@@ -5,7 +5,6 @@
  */
 package javafxapplication1;
 
-import javafx.scene.control.TextField;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,9 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.*;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -30,14 +27,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import static javafx.scene.paint.Color.RED;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -248,7 +242,11 @@ public class AutreMain implements Runnable{
         but3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                //tab.setContent(homePage());
+                try {
+                    tab.setContent(accesCustomerData());
+                } catch (SQLException | ParseException | ClassNotFoundException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         tot.setCenter(nvx);
@@ -273,8 +271,7 @@ public class AutreMain implements Runnable{
             public void handle(ActionEvent event){
                 tab.setContent(accessCinemaData());
             }
-        }); 
-        
+        });         
         
         
         //Boutton Ajouter movie
@@ -315,7 +312,7 @@ public class AutreMain implements Runnable{
             for(int i=0;i<movie.size();i++){
                 box.getChildren().add(movie.get(i));
             }      
-            //box.getChildren().add(addMovie);
+
             
             //Action sur les boutons
             for(int i=0;i<movies.size();i++){
@@ -684,6 +681,89 @@ public class AutreMain implements Runnable{
         nvx.addColumn(2,node3);
         tot.setCenter(nvx);
         return tot;
+    }
+    
+    public BorderPane accesCustomerData() throws SQLException, ParseException, ClassNotFoundException{
+        BorderPane pane = new BorderPane();
+        ScrollPane scroll = new ScrollPane();
+        
+        //Bouton back
+        Button back = new Button();
+        back.setId("button-home2");
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(accessCinemaData());
+            }
+        });
+        
+        
+        //Boutton Ajouter Customer
+        Button addCustomer = new Button("(+) Add a customer");
+        addCustomer.setStyle("-fx-font-weight: bold;");
+        addCustomer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                //tab.setContent(AddCustomer());
+            }
+        }); 
+        
+        //titre
+        Label title = new Label("Delete a Customer from the DataBase");
+        title.setId("title-customerdata");
+        
+        HBox inter = new HBox(50);
+        inter.getChildren().addAll(back,title);
+        inter.setAlignment(Pos.CENTER);
+        
+        //Liste des Customer sous forme de boutons
+        controller = new Controller("","");
+        final ArrayList<Members> customers = controller.AllCustomers();
+        ArrayList<Button> cust = new ArrayList<>();
+        for(int i=0;i<customers.size();i++){
+            cust.add(new Button());
+            cust.get(i).setText("Delete customer : "+customers.get(i).getLogin()+ ", id : "+customers.get(i).getId());
+        }
+        VBox box = new VBox(20);
+        box.setAlignment(Pos.CENTER);
+        for(int i=0;i<cust.size();i++){
+            box.getChildren().add(cust.get(i));
+        }
+        
+        //Action sur les boutons : Suppression du customer
+            for(int i=0;i<customers.size();i++){
+                final Button but = cust.get(i);
+                final Members c = customers.get(i);
+                
+                but.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event){
+                        controller = new Controller("","");
+                        controller.delete_customer(c.getId(),c.getLogin());
+                        try {
+                            tab.setContent(accesMoviesData());
+                        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                            Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+            }
+        scroll.setContent(box);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            
+            scroll.setFitToHeight(true);
+            scroll.setFitToWidth(true);
+            
+            pane.setTop(inter);
+            pane.setCenter(scroll);
+        
+        return pane;
     }
     
     

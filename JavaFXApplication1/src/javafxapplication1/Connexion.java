@@ -395,7 +395,7 @@ public class Connexion {
         // récupération de l'ordre de la requete
         rset = stmt.executeQuery("select * from membre");
 
-        // creation d'une ArrayList d'Employees
+        // creation d'une ArrayList de Membre
         ArrayList<Members> liste;
         liste = new ArrayList<>();
         Members mem;
@@ -441,7 +441,8 @@ public class Connexion {
         }
         // Retourner l'ArrayList
         return liste;
-    }
+    }   
+    
     
     public String recolterSpecifikMovie(int id) throws SQLException{
         rset = stmt.executeQuery("select * from movie");

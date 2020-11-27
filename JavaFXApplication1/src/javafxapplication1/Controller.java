@@ -282,5 +282,21 @@ public class Controller {
         return movies;
     }
 
+    public ArrayList<Members> AllCustomers() throws SQLException, ParseException, ClassNotFoundException{
+        ArrayList<Members> customers = new ArrayList<>();
+        Connexion nvx = new Connexion("movie", "root", "");
+        customers = nvx.recolterChampsCustomer();
+        return customers;
+    }
+
+    public void delete_customer(int id, String e){
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.delete_customer(id,e);
+            
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
 
