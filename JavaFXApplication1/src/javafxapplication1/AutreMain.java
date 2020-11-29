@@ -74,18 +74,20 @@ public class AutreMain{
         Button but2 = new Button("Manage Cinema's Promotion");
         Button but3 = new Button("See cinema's statistics");
         Button but4 = new Button("Manage Employees/Members");
-        Button but5 = new Button("Log Out");
+        Button but5 = new Button("Change Password");
+        Button but6 = new Button("Log Out");
         but1.setId("button-home");
         but2.setId("button-home");
         but3.setId("button-home");
         but4.setId("button-home");
-        but5.setId("logout");
+        but5.setId("button-home");
+        but6.setId("logout");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/out.png"));
         ImageView view2 = new ImageView(img2);
         view2.setFitHeight(90);
         view2.setPreserveRatio(true);
-        but5.setGraphic(view2);
+        but6.setGraphic(view2);
         switch (actual.getAccess()) {
             case "C":
                 but2.setDisable(true);
@@ -97,7 +99,7 @@ public class AutreMain{
                 break;
         }
         
-        but5.setOnAction(new EventHandler<ActionEvent>() {     
+        but6.setOnAction(new EventHandler<ActionEvent>() {     
             @Override  
             public void handle(ActionEvent arg0) {
                 second.close();
@@ -127,8 +129,67 @@ public class AutreMain{
                 tab.setContent(accessMembEmploy());
             }
         });
-        nvx.getChildren().addAll(lab1,but1,but2,but3,but4,but5);
+        but5.setOnAction(new EventHandler<ActionEvent>() {     
+            @Override  
+            public void handle(ActionEvent arg0) {
+                tab.setContent(changePassword());
+            }
+        });
+        nvx.getChildren().addAll(lab1,but1,but2,but3,but4,but5,but6);
         tot.setCenter(nvx);
+        return tot;
+    }
+    
+    public HBox changePassword(){
+        HBox tot = new HBox();
+        tot.setAlignment(Pos.CENTER);
+        VBox nvx = new VBox(20);
+        nvx.setAlignment(Pos.CENTER);
+        final PasswordField txt0 = new PasswordField();
+        txt0.setPromptText("Old Password");
+        final PasswordField txt1 = new PasswordField();
+        txt1.setPromptText("New Password");
+        final PasswordField txt2 = new PasswordField();
+        txt2.setPromptText("Confirm Password");
+        final Label txt3 = new Label();
+        txt3.setText("");
+        Button txt4 = new Button("Change password");
+        Button txt5 = new Button("Go back");
+        HBox inter = new HBox(20);
+        inter.setAlignment(Pos.CENTER);
+        inter.getChildren().addAll(txt4,txt5);
+        txt4.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                if(!txt1.getText().equals(txt2.getText())){
+                    txt3.setText("Not same password");
+                    txt3.setTextFill(RED);
+                }
+                else if(txt1.getText().equals("")){
+                    txt3.setText("Enter a password");
+                    txt3.setTextFill(RED);
+                }
+                else if(!txt0.getText().equals(actual.getPassword())){
+                    txt3.setText("Old password wrong");
+                    txt3.setTextFill(RED);
+                }
+                else{
+                    Controller controller;
+                    controller = new Controller("changeMdp","tab4");
+                    controller.changePassword2(txt1.getText(),actual.getLogin());
+                    actual.setPassword(txt1.getText());
+                    tab.setContent(homePage());
+                }
+            }
+        });
+        txt5.setOnAction(new EventHandler<ActionEvent>() {     
+            @Override  
+            public void handle(ActionEvent arg0) {
+                tab.setContent(homePage());
+            }
+        });
+        nvx.getChildren().addAll(txt0,txt1,txt2,txt3,inter);
+        tot.getChildren().add(nvx);
         return tot;
     }
     
@@ -584,13 +645,13 @@ public class AutreMain{
         but1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                //tab.setContent(homePage());
+                tab.setContent(dispMember());
             }
         });
         but2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                //tab.setContent(homePage());
+                tab.setContent(dispEmployee());
             }
         });
         tot.setLeft(inter);
@@ -664,4 +725,226 @@ public class AutreMain{
         return nvx;
     }
     
+    public VBox dispEmployee(){
+        VBox nvx = new VBox(10);
+        Label uno = new Label("Click on one employee to delete");
+        nvx.setAlignment(Pos.CENTER);
+        GridPane tot = new GridPane();
+        tot.setHgap(20);
+        tot.setVgap(20);
+        tot.setAlignment(Pos.CENTER);
+        ArrayList<Employees> employees;
+        Controller controller = new Controller("&","&");
+        employees = controller.getAllEmployee();
+        Button butoo = new Button();
+        butoo.setId("back-but");
+        Image img2;
+        img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view2 = new ImageView(img2);
+        view2.setFitHeight(90);
+        view2.setPreserveRatio(true);
+        butoo.setGraphic(view2);
+        butoo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(accessMembEmploy());
+            }
+        });
+        for(int i=0;i<employees.size();i++){
+            final Button but = new Button("First Name : "+employees.get(i).getFirstName()+" - Last Name : "+employees.get(i).getLastName()+" - Login : "+employees.get(i).getLogin()+" - Access key : "+employees.get(i).getAccess());
+            final Employees temp = employees.get(i);
+            but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+                public void handle(ActionEvent event){
+                    if(!temp.getLogin().equals(actual.getLogin()))
+                        tab.setContent(deleteEmployee(temp));
+                }
+            });
+            tot.addRow(i,but);
+        }
+        Button buton = new Button("+ Add Employee");
+        buton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(addEmployee());
+            }
+        });
+        nvx.getChildren().addAll(butoo,uno,tot,buton);
+        return nvx;
+    }
+    
+    public VBox deleteEmployee(final Employees employee){
+        VBox nvx = new VBox();
+        nvx.setAlignment(Pos.CENTER);
+        Label lab1 = new Label("Are you sure you want to delete this employee :");
+        Label lab2 = new Label(employee.getFirstName()+" "+employee.getLastName());
+        Label lab3 = new Label("Your decision will be definitive");
+        Button but1 = new Button("Confirm delete employee");
+        Button but2 = new Button("Cancel");
+        but2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(dispEmployee());
+            }
+        });
+        but1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                Controller controller = new Controller("&","&");
+                controller.deleteEmployee(employee.getLogin());
+                tab.setContent(dispEmployee());
+            }
+        });
+        HBox inte = new HBox(20);
+        inte.getChildren().addAll(but1,but2);
+        nvx.getChildren().addAll(lab1,lab2,lab3,inte);
+        return nvx;
+    }
+    
+    public VBox addEmployee(){
+        VBox tot = new VBox(20);
+        tot.setAlignment(Pos.CENTER);
+        Label lab0 = new Label("Create new Employee");
+        Label lab1 = new Label("First Name of the employee : ");
+        Label lab2 = new Label("Last Name of the employee : ");
+        Label lab3 = new Label("Access key of the employee : ");
+        Label lab4 = new Label("Password is set by default, the employee will change it");
+        HBox box1 = new HBox(20);
+        HBox box2 = new HBox(20);
+        HBox box3 = new HBox(20);
+        HBox box4 = new HBox(20);
+        box1.setAlignment(Pos.CENTER);
+        box2.setAlignment(Pos.CENTER);
+        box3.setAlignment(Pos.CENTER);
+        box4.setAlignment(Pos.CENTER);
+        final TextField txt1 = new TextField();
+        txt1.setPromptText("First Name");
+        final TextField txt2 = new TextField();
+        txt2.setPromptText("Last Name");
+        final ChoiceBox txt3 = new ChoiceBox();
+        txt3.getItems().addAll("A","B","C");
+        Button cfr = new Button("Confirm");
+        Button can = new Button("Cancel");
+        box1.getChildren().addAll(lab1,txt1);
+        box2.getChildren().addAll(lab2,txt2);
+        box3.getChildren().addAll(lab3,txt3);
+        box4.getChildren().addAll(cfr,can);
+        can.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(dispEmployee());
+            }
+        });
+        cfr.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                Controller controller = new Controller("&","&");
+                controller.insert_employee(txt1.getText(),txt2.getText(),(String)txt3.getValue());
+                tab.setContent(dispEmployee());
+            }
+        });
+        
+        tot.getChildren().addAll(lab0,box1,box2,box3,lab4,box4);
+        return tot;
+    }
+    
+    public VBox dispMember(){
+        VBox nvx = new VBox(10);
+        Label uno = new Label("Click on one member to modify");
+        nvx.setAlignment(Pos.CENTER);
+        GridPane tot = new GridPane();
+        tot.setHgap(20);
+        tot.setVgap(20);
+        tot.setAlignment(Pos.CENTER);
+        ArrayList<Members> members;
+        Controller controller = new Controller("&","&");
+        members = controller.getAllMembers();
+        Button butoo = new Button();
+        butoo.setId("back-but");
+        Image img2;
+        img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view2 = new ImageView(img2);
+        view2.setFitHeight(90);
+        view2.setPreserveRatio(true);
+        butoo.setGraphic(view2);
+        butoo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(accessMembEmploy());
+            }
+        });
+        int j=0,k=0;
+        for(int i=0;i<members.size();i++){
+            if(i%3==0){
+                k=0;
+                j++;
+            }
+            final Button but = new Button(members.get(i).getFirstName()+" "+members.get(i).getLastName());
+            final Members temp = members.get(i);
+            but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+                public void handle(ActionEvent event){
+                    tab.setContent(modifyMembers(temp));
+                }
+            });
+            tot.add(but,k,j);
+            k++;
+        }
+        nvx.getChildren().addAll(butoo,uno,tot);
+        return nvx;
+    }
+    
+    public HBox modifyMembers(final Members memb){
+        VBox tot = new VBox(20);
+        tot.setAlignment(Pos.CENTER);
+        HBox toto = new HBox();
+        toto.setAlignment(Pos.CENTER);
+        Label lab1 = new Label("First Name : "+memb.getFirstName());
+        Label lab2 = new Label("Last Name : "+memb.getLastName());
+        Label lab3 = new Label("Login : "+memb.getLogin());
+        Label lab4 = new Label("Age : ");
+        final TextField txt = new TextField();
+        txt.setText(Integer.toString(memb.getAge()));
+        txt.setPromptText("Enter age");
+        HBox inter1 = new HBox(20);
+        inter1.getChildren().addAll(lab4,txt);
+        final Label lab5 = new Label();
+        lab5.setTextFill(RED);
+        Button but1 = new Button("Cancel");
+        Button but2 = new Button("Modify");
+        Button but3 = new Button("Delete");
+        HBox inter2 = new HBox(20);
+        but1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(dispMember());
+            }
+        });
+        but2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                Controller controller = new Controller("&","&");
+                boolean condi = controller.modifyMember(txt.getText(),memb.getLogin());
+                if(condi==false){
+                    lab5.setText("Enter good input please");
+                    txt.setText("");
+                } 
+                else
+                    tab.setContent(dispMember());
+            }
+        });
+        but3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                Controller controller = new Controller("&","&");
+                controller.deleteMember(memb.getLogin());
+                tab.setContent(dispMember());
+            }
+        });
+        
+        inter2.getChildren().addAll(but1,but2,but3);
+        tot.getChildren().addAll(lab1,lab2,lab3,inter1,lab5,inter2);
+        toto.getChildren().add(tot);
+        return toto;
+    }
 }

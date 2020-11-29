@@ -105,6 +105,16 @@ public class Controller {
         
     }
     
+    public void changePassword2(String password, String id){
+        try {
+            Connexion conn = new Connexion("movie", "root", "root");
+            conn.change_password2(password,id);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     public int addCustomerToSession(String num, String crypto, String mv, int id, String tot, String nbr,String date,String mail){
         int x=0;
         for(int i=0;i<num.length();i++){
@@ -345,6 +355,113 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
         return nvx;
+    }
+    
+    public ArrayList<Employees> getAllEmployee(){
+        ArrayList<Employees> nvx = new ArrayList<>();
+        Connexion conn;
+        try {
+            conn = new Connexion("movie","root","root");
+            nvx = conn.recolterChampsEmployee();
+            conn.closeConn();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return nvx;
+    }
+    
+    public ArrayList<Members> getAllMembers(){
+        ArrayList<Members> nvx = new ArrayList<>();
+        Connexion conn;
+        try {
+            conn = new Connexion("movie","root","root");
+            nvx = conn.recolterChampsMember();
+            conn.closeConn();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return nvx;
+    }
+    
+    public void deleteEmployee(String login){
+        Connexion conn;
+        try {
+            conn = new Connexion("movie","root","root");
+            conn.delete_employee(login);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void insert_employee(String i1,String i2,String i3){
+        i1 = i1.replaceAll(" ","_");
+        i2 = i2.replaceAll(" ","_");
+        
+        Connexion conn;
+        try {
+            conn = new Connexion("movie","root","root");
+            int condi = 0;
+            ArrayList<Employees> employee = conn.recolterChampsEmployee();
+            for(int i=0;i<employee.size();i++){
+                if(condi==0){
+                    if(employee.get(i).getLogin().equals(i1+"."+i2)){
+                        condi++;
+                        i=-1;
+                    }
+                }
+                else{
+                    if(employee.get(i).getLogin().equals(i1+Integer.toString(condi)+"."+i2)){
+                        condi++;
+                        i=-1;
+                    }
+                }   
+            }
+            if(condi==0)
+                conn.insert_employee(i1+"."+i2, "em1*", i1, i2, i3);
+            else
+                conn.insert_employee(i1+Integer.toString(condi)+"."+i2, "em1*", i1, i2, i3);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void deleteMember(String id){
+        try {
+            Connexion conn = new Connexion("movie", "root", "root");
+            conn.delete_member(id);
+            conn.closeConn();
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public boolean modifyMember(String age,String login){
+        if(age.charAt(0)=='-' || age.charAt(0)==' ')
+            return false;
+        else if(age.equals(""))
+            return false;
+        int ag;
+        try{
+            ag = Integer.parseInt(age);
+        }
+        catch(NumberFormatException e){
+            return false;
+        }
+        
+        if(ag>120)
+            return false;
+        
+        try {
+            Connexion conn = new Connexion("movie", "root", "root");
+            conn.update_member(ag,login);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
     }
 
 }

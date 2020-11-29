@@ -11,7 +11,7 @@ package javafxapplication1;
  */
 public class Employees implements Person{
     private final String login;
-    private final String password;
+    private String password;
     private final String firstName;
     private final String lastName;
     private final String access;
@@ -42,6 +42,10 @@ public class Employees implements Person{
     
     public String getAccess(){
         return access;
+    }
+    
+    public void setPassword(String mdp){
+        password = mdp;
     }
 
     @Override

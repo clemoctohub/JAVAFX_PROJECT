@@ -145,6 +145,17 @@ public class Connexion {
         ps.execute();
     }
     
+    public void insert_employee(String login,String mdp, String first, String last, String acc) throws SQLException{
+        String sql = " INSERT INTO employee(login, motDePasse, firstName, lastName, cle_access)"+" VALUES(?,?,?,?,?)";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, login);
+        ps.setString(2, mdp);
+        ps.setString(3, first);
+        ps.setString(4, last);
+        ps.setString(5, acc);
+        ps.execute();
+    }
+    
     public void update_seance(Session session,String changes) throws SQLException{
         switch (changes) {
             case "movie_id":
@@ -209,6 +220,15 @@ public class Connexion {
         preparedStmt.execute();
     }
     
+    public void update_member(int tot,String id) throws SQLException{
+        String sql = "update membre set age = ? where login = ?";
+        PreparedStatement preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setInt(1,tot);
+        preparedStmt.setString(2,id);
+        preparedStmt.execute();
+        conn.close();
+    }
+    
     public void change_password(String password,String id) throws SQLException{
         String sql = "update membre set mot_de_passe = ? where login = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -218,6 +238,14 @@ public class Connexion {
         conn.close();
     }
     
+    public void change_password2(String password,String id) throws SQLException{
+        String sql = "update employee set motDePasse = ? where login = ?";
+        PreparedStatement preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setString(1, password);
+        preparedStmt.setString(2,id);
+        preparedStmt.execute();
+        conn.close();
+    }
     public void changeAll_(Movies movie) throws SQLException{
         String sql = "update movie set titre = ?, auteur = ?, genre = ?, date = ?, runnningTime = ?, description = ? where id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -312,6 +340,20 @@ public class Connexion {
         return condi;
     }
     
+    public void delete_employee(String login) throws SQLException{
+        ArrayList<Employees> liste = recolterChampsEmployee();
+        
+        for (Employees listeEm : liste) {
+            if (listeEm.getLogin().equals(login)) {
+                String sql = " DELETE FROM employee WHERE `login` =?";
+                PreparedStatement psmt_ = conn.prepareStatement(sql);
+                psmt_.setString(1, login);
+                psmt_.executeUpdate();
+            }
+        }
+        conn.close();
+    }
+    
     public ArrayList<Integer> getSessionConnected(String login) throws SQLException{
         ArrayList<Integer> nvx = new ArrayList<>();
         rset = stmt.executeQuery("select * from customer");
@@ -399,7 +441,6 @@ public class Connexion {
             // ajouter l'Employees dans l'ArrayList
             liste.add(emp);
         }
-
         // Retourner l'ArrayList
         return liste;
     }
