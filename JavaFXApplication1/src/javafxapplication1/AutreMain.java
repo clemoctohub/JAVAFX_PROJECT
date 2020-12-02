@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -35,6 +36,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import static javafx.scene.paint.Color.RED;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -355,13 +357,14 @@ public class AutreMain implements Runnable{
             }
         }); 
         HBox inter = new HBox(50);
-        inter.getChildren().add(back);
+        inter.getChildren().addAll(back);
         
         //titre
-        Label title = new Label("Modify Movie DataBase");
-        title.setId("title-moviedata");
+        Label title = new Label("Modify Session DataBase");
+        title.setId("title-sessiondata");
         
-        try {
+        try
+        {
             controller = new Controller("movie","MoviesData");
             final ArrayList<Movies> movies = controller.dispAllMovies();
             ArrayList<Button> movie = new ArrayList<>();
@@ -375,12 +378,28 @@ public class AutreMain implements Runnable{
             for(int i=0;i<movie.size();i++){
                 box.getChildren().add(movie.get(i));
             }
-            movie.get(0).setOnAction(new EventHandler<ActionEvent>(){
-                @Override
-                public void handle(ActionEvent event){
-                    pane.setCenter(ModifSess(movies.get(0),movies));
-                } 
-            });
+            for(int i=0;i<movies.size();i++){
+                final Button but = movie.get(i);
+                final Movies mov = movies.get(i);
+                //sess = controller.getSessionMovie(movies.get(i).getId());
+                but.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event){
+                        ArrayList<Session> sess = new ArrayList<>();
+                            try {
+                                sess = controller.getSessionMovie(mov.getId());
+                                tab.setContent(ModifSess(sess,mov.getId()));
+                            } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                                Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                    }
+                });
+            }
+            pane.setCenter(box);
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
        return pane; 
     }
     
@@ -420,11 +439,7 @@ public class AutreMain implements Runnable{
         Label rate = new Label("Rate : ");
         final TextField note = new TextField(Integer.toString(movie.getRate()));
         
-        pane.setCenter(box);
-        } catch (SQLException | ClassNotFoundException | ParseException ex) {
-            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+
         //Bouton Validate
         Button validate = new Button("Validate");
         validate.setId("button-home");
@@ -600,44 +615,231 @@ public class AutreMain implements Runnable{
        return pane; 
     }
     
-        public BorderPane ModifSess(final Movies movie,final ArrayList<Movies> movies)
+    public BorderPane ModifSess(final ArrayList<Session> sess, final int id)
     {
         BorderPane tot = new BorderPane();
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
-        ArrayList<Session> sess = new ArrayList<>();
-        controller = new Controller("session","tab3");
-        try{
-            sess = controller.getSessionMovie(movie.getId());
-        }
-        catch(SQLException | ClassNotFoundException | ParseException e){
-            System.out.println("ERROR");
-        }
         Label date_txt = new Label("Date ");
         Label heure_txt = new Label("Heure ");
         Label nbr_txt = new Label("Number of places ");
-        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20);
+        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20), node5 = new VBox(20), node6= new VBox(20);
         node1.getChildren().add(date_txt);
         node2.getChildren().add(heure_txt);
         node3.getChildren().add(nbr_txt);
+        node4.getChildren().add(new Label("Click to validate the session"));
+        node5.getChildren().add(new Label("Delete the session"));
+        Button add = new Button("Add Session");
+        final Label error = new Label("");
+        error.setTextFill(RED);
         for(int i=0;i<sess.size();i++){
-            String temp = sess.get(i).getDate().toString();
-            TextField date = new TextField(temp);
-            TextField heure = new TextField(sess.get(i).getHoraire());
-            String nbrr = Integer.toString(sess.get(i).getNbr_places_max());
-            TextField np = new TextField(nbrr);
-            Label max = new Label("");
+            Button validate = new Button("Validate");
+            Button delete = new Button("Delete");
+            final Session session = sess.get(i);
+            String temp = session.getDate().toString();
+            final TextField date = new TextField(temp);
+            final TextField heure = new TextField(session.getHoraire());
+            final TextField np = new TextField(Integer.toString(session.getNbr_places_max()));
+            final Label max = new Label("");
             node1.getChildren().add(date);
             node2.getChildren().add(heure);
             node3.getChildren().add(np);
+            validate.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                try {
+                    
+                    if((np.getText().equals("") || date.getText().equals(""))||heure.getText().equals(""))
+                    {    error.setText("");
+                        error.setText("Please complete all data");}
+                    else if(checkDateFormat(date.getText())==0)
+                    {   error.setText("");
+                        error.setText("Wrong date format");
+                    }
+                    else if(checkHeureFormat(heure.getText())==0)
+                    {
+                        error.setText("");
+                        error.setText("Wrong hour format");
+                    }
+                    else if(EstUnNombre(np.getText())== 0)
+                    {
+                        error.setText("");  
+                        error.setText("Please enter a number");
+                    }
+                    else if(Integer.valueOf(np.getText()) < 0)
+                    {
+                        error.setText("");  
+                        error.setText("Please enter right number");
+                    }
+                    else
+                    {
+                        Up_Session(session,date,np,heure);
+                        tab.setContent(acessSessionData());
+                    }
+                   
+                } 
+                catch (ParseException | SQLException | ClassNotFoundException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            //Bouton Delete
+            delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                controller.delete_Session(session.getId());
+                try {
+                    tab.setContent(acessSessionData());
+                } 
+                catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            node4.getChildren().add(validate);
+            node5.getChildren().add(delete);
         }
+            add.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(AddSession(id));
+                }
+            });
+        node1.getChildren().add(error);
+        node6.getChildren().add(add);
         nvx.addColumn(0,node1);
         nvx.addColumn(1,node2);
         nvx.addColumn(2,node3);
+        nvx.addColumn(3,node4);
+        nvx.addColumn(4,node5);
+        nvx.addColumn(5,node6);
+        nvx.setAlignment(Pos.TOP_CENTER); 
         tot.setCenter(nvx);
         return tot;
     }
     
+    public void Up_Session(Session session,TextField date,TextField np, TextField heure) throws ParseException
+    {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsed = (Date) format.parse(date.getText());
+        final java.sql.Date sql = new java.sql.Date(parsed.getTime());
+        Session ses = new Session(session.getId(),session.getMovie(),sql,Integer.valueOf(np.getText()),session.getActual(),heure.getText(),session.getAmount());
+        controller.update_Session(ses);
+    }
+    
+    public BorderPane AddSession(final int idmov)
+    {
+        BorderPane pane = new BorderPane();
+        GridPane g = new GridPane();
+        //Bouton back
+        g.setHgap(50);
+        Button back = new Button();
+        back.setId("button-home2");
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                try {
+                    tab.setContent(acessSessionData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        Label date_txt = new Label("Date (yyyy-mm-dd)");
+        Label heure_txt = new Label("Heure ");
+        Label nbr_txt = new Label("Number of places ");
+        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20),node5 = new VBox(20);
+        node1.getChildren().add(date_txt);
+        node2.getChildren().add(heure_txt);
+        node3.getChildren().add(nbr_txt);
+        final TextField date = new TextField();
+        final TextField heure = new TextField();
+        final TextField max = new TextField();
+        Label id = new Label("Id ");
+        final TextField ID = new TextField();
+        node4.getChildren().add(id);
+        node1.getChildren().add(date);
+        node2.getChildren().add(heure);
+        node3.getChildren().add(max);
+        node4.getChildren().add(ID);
+        final Label error = new Label("");
+        error.setTextFill(RED);
+        //Bouton Ajout Session
+        Button add = new Button("Add Session");
+        add.setOnAction(new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent event) {
+            controller = new Controller("addsession","");
+            ArrayList<Session> session;
+            try {
+                    //conversion date
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date parsed = (Date) format.parse(date.getText());
+                final java.sql.Date sql = new java.sql.Date(parsed.getTime());
+                    if((max.getText().equals("") || date.getText().equals(""))||heure.getText().equals(""))
+                    {    error.setText("");
+                        error.setText("Please complete all data");}
+                    else if(checkDateFormat(date.getText())==0)
+                    {   error.setText("");
+                        error.setText("Wrong date format");
+                    }
+                    else if(checkHeureFormat(heure.getText())==0)
+                    {
+                        error.setText("");
+                        error.setText("Wrong hour format");
+                    }
+                    else if(EstUnNombre(max.getText())== 0)
+                    {
+                        error.setText("");  
+                        error.setText("Please enter a number");
+                    }
+                    else if(Integer.valueOf(max.getText()) < 0)
+                    {
+                        error.setText("");  
+                        error.setText("Please enter right number");
+                    }
+                    
+                    else    
+                    {   
+                        session = controller.getSessionMovie(idmov);
+                        ArrayList IDs = new ArrayList();
+                        for(int i=0;i<session.size();i++){
+                            IDs.add(session.get(i).getId());
+                        }
+                        if(!IDs.contains(Integer.valueOf( ID.getText())) ) {
+                        Session S = new Session(Integer.valueOf(ID.getText()),idmov,sql,Integer.valueOf(max.getText()),0,heure.getText(),0.0);
+                        controller.Add_Session(S,idmov);
+                        tab.setContent(acessSessionData());
+                        }
+                        else
+                        {
+                            error.setText("ID taken");
+                        }
+                    } 
+            }
+            catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+        });
+        node1.getChildren().add(error);
+        node5.getChildren().add(add);
+        g.addColumn(0,node1);
+        g.addColumn(1,node2);
+        g.addColumn(2,node3);
+        g.addColumn(3,node4);
+        g.addColumn(4,node5);
+        g.setAlignment(Pos.TOP_CENTER);
+        pane.setCenter(g);
+        return pane;
+    }
     
     @Override
     public void run() {
@@ -653,5 +855,52 @@ public class AutreMain implements Runnable{
        // interruption du thread courant, c'est-à-dire le nôtre
         Thread.currentThread().interrupt() ;
    }
+    
+    public int checkDateFormat(String date){
+        int condi = 0;
+        if(date.length()==10)
+        {
+            if(date.charAt(4)=='-' && date.charAt(7)=='-'){
+                String split[] = date.split("-", 3);
+                if(split[0].length()==4 && split[1].length()==2 && split[2].length()==2){
+                    if(Integer.valueOf(split[1])>0 && Integer.valueOf(split[1])<13 && Integer.valueOf(split[2])>0 && Integer.valueOf(split[2])<32)
+                        condi = 1;
+                }
+            }
+            else
+                condi = 0;
+        }
+        else{
+            condi = 0;
+        }
+        return condi;
+    }
+    
+    public int EstUnNombre(String nb)
+    {
+        int a = 1;
+        if(Pattern.matches("[a-zA-Z]+",nb)== true)
+            a = 0;
+        
+        return a;
+    }
+    
+    public int checkHeureFormat(String heure)
+    {
+        int condi = 0;
+        if(heure.length()==5)
+        {
+            if(heure.charAt(2)=='h')
+            {
+                String split[] = heure.split("h", 2);
+                if(split[0].length()==2&&split[1].length()==2)
+                    if(Integer.valueOf(split[0])>=0 && Integer.valueOf(split[0])<=24 && Integer.valueOf(split[1])>=0 && Integer.valueOf(split[1])<=59)
+                    {
+                        condi = 1;
+                    }
+            }else condi = 0;
+        }else condi =0;
+        return condi;
+    }
     
 }

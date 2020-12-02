@@ -282,5 +282,34 @@ public class Controller {
         return movies;
     }
 
+    public void update_Session(Session sess)
+    {
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.changeAll_seance(sess);           
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void Add_Session(Session sess, int id)
+    {
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.insert_seance(sess,id);           
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void delete_Session(int id)
+    {
+        try {
+            Connexion conn = new Connexion("movie", "root", "");
+            conn.delete_session(id);
+            
+        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
-

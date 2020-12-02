@@ -211,15 +211,15 @@ public class Connexion {
     }
     
     public void changeAll_seance(Session session) throws SQLException{
-        String sql = "update session set movie_id = ?, date = ?, max_place = ?, heure = ?, actual_place = ?, amount = ? where id = ?";
+        String sql = "UPDATE session SET movie_id = ?, date = ?, max_place = ?, heure = ?, actual_place = ?, amount = ? WHERE id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setInt(1,session.getMovie());
         preparedStmt.setDate(2,session.getDate());
         preparedStmt.setInt(3,session.getNbr_places_max());
-        preparedStmt.setInt(4, session.getId());
-        preparedStmt.setString(5, session.getHoraire());
-        preparedStmt.setInt(6, session.getActual());
-        preparedStmt.setDouble(7, session.getAmount());
+        preparedStmt.setInt(7, session.getId());
+        preparedStmt.setString(4, session.getHoraire());
+        preparedStmt.setInt(5, session.getActual());
+        preparedStmt.setDouble(6, session.getAmount());
         preparedStmt.execute();
     }
     
@@ -505,7 +505,6 @@ public class Connexion {
             double tot = rset.getDouble(7);
             liste.add(new Session(id,id_movie,date,max,act,heure,tot));
         }
-        conn.close();
         // Retourner l'ArrayList
         return liste;
     }
