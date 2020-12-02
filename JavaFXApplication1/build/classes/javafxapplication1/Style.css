@@ -4,7 +4,10 @@
 
 #bande{
     -fx-alignment : center;
-    -fx-font-size : 3em;
+    -fx-font-size : 3.5em;
+    -fx-text-fill : white;
+    -fx-background-color: black;
+    -fx-font-family : Impact;
 }
 
 .tab-pane {
@@ -16,38 +19,64 @@
 }
 
 .tab {
-  -fx-font-family : Arial;
-  -fx-font-size : 18;
+  -fx-font-size : 20;
+  -fx-color: green;
+  -fx-font-family : Tahoma Bolder;
+  -fx-background-color : black;
+  -fx-border-radius : 0 0 0 0;
+  -fx-background-radius: 0 0 0 0,0 0 0 0,0 0 0 0;
+}
+.tab:hover{
+    -fx-background-color : #2f2f2f;
 }
 
 .tab:selected {
-    -fx-background-color : royalblue;
+    -fx-background-color: #F0C300;
+    -fx-color: white;
+}
+
+.scroll-pane{
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #FFFFFF;
 }
 
 #root-tab4{
     -fx-alignment : center;
-    -fx-padding : 8em 0 0 5em;
+    -fx-padding : 8em 0 0 0;
+}
+#root-tab2{
+    -fx-background-color: #fff;
 }
 
 #text-tab4{
-    -fx-font-size : 2.2em;
+    -fx-font-size : 1.5em;
 }
 
 #label-tab4{
     -fx-font-size : 1.2em;
+    -fx-font-weigth:bold;
 }
 
 #title-tab4{
-    -fx-padding : 0 0 3em 6em;
-    -fx-font-size : 1.5em;
+    -fx-font-size : 1.8em;
+    -fx-background-color : #F0C300;
+    -fx-text-fill : #000000;
+    -fx-background-radius : 0.2em;
+    -fx-font-weigth : bolder;
 }
 
 #submit-tab4{
     -fx-font-size : 1.5em;
     -fx-font-family :courier_new;   
-    -fx-text-fill : White;  
-    -fx-border-color : Wheat; 
-    -fx-border-radius : 5;
+    -fx-text-fill : #000000;  
+    -fx-border-color : transparent; 
+    -fx-background-color: #F0C300;
+    -fx-background-radius : 0;
+}
+#submit-tab4:hover{
+    -fx-background-radius: 0.5em;
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
 }
 
 #HBox-tab4{
@@ -73,21 +102,22 @@
 }
 
 #titre-tab2{
-    -fx-font : 120px Tahoma;
-    -fx-fill : linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);  
+    -fx-font : 9em Tahoma;
+    -fx-fill : black;  
 }
 
 #discounts-tab2{
     -fx-padding : 5em 0 0 20em;
-
-    -fx-font: 20px Tahoma;
-    -fx-fill: linear-gradient(from 0% 0% to 150% 200%, repeat, yellow 0%, red 50%);
-    -fx-stroke: black;
-    -fx-stroke-width: 0.2;
+    -fx-font : 20px Tahoma;
+    -fx-fill : black;
+    -fx-stroke : black;
+    -fx-stroke-width : 0.3;
 }
 
 #label-co{
     -fx-font-size : 3em;
+    -fx-font-size : 2em;
+    -fx-font-family : Tahoma;
 }
 
 #lab-search{
@@ -104,6 +134,13 @@
 
 #but-search{
     -fx-font-size : 2em;
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+}
+#but-search:hover{
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
 }
 
 #disp-movie{
@@ -111,6 +148,13 @@
 }
 #disp-button{
     -fx-font-size : 1.2em;
+    -fx-background-color : #F0C300;
+    -fx-text-fill : #000000;
+    -fx-background-radius : 2em;
+}
+#disp-button:hover{
+    -fx-background-color : #000000;
+    -fx-text-fill : #F0C300;
 }
 #search{
     -fx-padding : 2em 0 0 2em;
@@ -120,10 +164,19 @@
     -fx-font-size : 1.8em;
     -fx-alignment : center;
 }
-
 #button-session{
     -fx-font-size : 1.4em;
     -fx-alignment : center;
+}
+
+#button-reserv{
+    -fx-background-color : #F0C300;
+    -fx-text-fill : #000000;
+    -fx-background-radius : 2em;
+}
+#button-reserv:hover{
+    -fx-background-color : #000000;
+    -fx-text-fill : #F0C300;
 }
 
 #co-pay{
@@ -137,6 +190,12 @@
 
 #button-pay{
     -fx-font-size : 1.4em;
+    -fx-background-color : #F0C300;
+    -fx-text-fill : #000000;
+}
+#button-pay:hover{
+    -fx-background-color : #000000;
+    -fx-text-fill : #F0C300;
 }
 #paid-page{
     -fx-font-size : 1.4em;
@@ -144,6 +203,8 @@
 #deletePlace{
     -fx-font-size : 1.2em;
     -fx-padding : 0 0.3em 0 0.3em;
+    -fx-font-family : Tahoma;
+    -fx-font-weigth : bold;
 }
 #desc-sess{
     -fx-font-size : 1.2em;
@@ -153,11 +214,120 @@
 }
 #toptab1{
     -fx-font-size : 1.4em;
-    -fx-font-weight : bold
+    -fx-font-weight : bold;
 }
 #changepass{
     -fx-font-size : 1.2em;
     -fx-padding : 0.5em;
     -fx-border-insets: 0.5em;
     -fx-background-insets: 0.5em;
+    -fx-background-color:#F0C300;
+}
+#back-but{
+    -fx-background-color: transparent;
+}
+#back-but:hover{
+    -fx-background-color: whitesmoke;
+}
+#price-reduc{
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#price-reduc:hover{
+    -fx-background-radius: 2em;
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
+}
+#split-search{
+    -fx-font-size : 2em;
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+}
+#changepass-button{
+    -fx-background-radius: 0em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1.2em;
+}
+#changepass-button:hover{
+    -fx-background-radius: 1em;
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
+}
+#buton-deco{
+    -fx-background-color:transparent;
+}
+#buton-deco:hover{
+    -fx-background-color:#F5F5F5;
+}
+#price-red{
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#price-red:hover{
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
+}
+#grid-tab1{
+    -fx-font-size:1.1em;
+}
+#img-dispAllMovie{
+    -fx-background-color:transparent;
+}
+#img-dispAllMovie:hover{
+    -fx-background-color:#F5F5F5;
+}
+#price-rd{
+    -fx-background-radius: 2em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#price-rd:hover{
+    -fx-background-color: #FFFFFF;
+}
+.check-box .box {
+-fx-background-color: white;
+-fx-border-color:#000000;
+-fx-border-radius:3px; 
+
+}
+#refresh{
+    -fx-background-color:transparent;
+}
+#refresh:hover{
+    -fx-background-color:whitesmoke;
+}
+#movie-paypage{
+    -fx-font-size:1.1em;
+    -fx-font-weigth : bold;
+    -fx-font-family : Arial;
+}
+#button-choose-place{
+    -fx-font-size : 1.2em;
+    -fx-background-color : #000000;
+    -fx-text-fill: #F0C300;
+}
+#button-choose-place:hover{
+    -fx-background-color : #2f2f2f;
+}
+#payment-bold{
+    -fx-font-weigth : bold;
+    -fx-font-family : Tahoma;
+    -fx-font-size : 1.2em;
+}
+#confirm-get-id-place{
+    -fx-background-radius: 0em;
+    -fx-background-color: #F0C300;
+    -fx-text-fill: #000000;
+    -fx-font-size : 1em;
+}
+#confirm-get-id-place:hover{
+    -fx-background-color: #000000;
+    -fx-text-fill: #F0C300;
 }

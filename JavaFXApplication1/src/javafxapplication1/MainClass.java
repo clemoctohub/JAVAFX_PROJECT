@@ -18,13 +18,13 @@ import java.io.FileNotFoundException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.*;
@@ -32,6 +32,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
+import javafx.geometry.Orientation;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -47,7 +50,6 @@ public class MainClass extends Application {
     private final TabPane tabPane = new TabPane();
     private Members actualMember;
     private Employees actualEmployee;
-    private final Cinema cine = new Cinema();
     private Controller controller;
     private Label connected;
     private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -62,24 +64,31 @@ public class MainClass extends Application {
         connected.setAlignment(Pos.CENTER_RIGHT);
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER);
-        header.getChildren().addAll(bande,connected);
+        HBox enter = new HBox(10);
+        
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/logo.png"));
+        ImageView view = new ImageView(img);
+        view.setPreserveRatio(true);
+        enter.getChildren().addAll(view,bande);
+        header.getChildren().addAll(enter,connected);
         tab2.setContent(getDiscount());
         tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
-        
         tab1.setContent(getSPane());
+        
         tabPane.getTabs().add(tab1);
         tabPane.getTabs().add(tab2);
         tabPane.getTabs().add(tab3);
         tabPane.getTabs().add(tab4);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         VBox vbox = new VBox(20);
+        vbox.setStyle("-fx-background-color:black;");
         vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().add(header);
         vbox.getChildren().add(tabPane);
         
         Scene scene = new Scene(vbox, 1900, 1000);
-        //scene.getStylesheets().add("Style.css");
         scene.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         primaryStage.setTitle("CINEMA");
         primaryStage.setScene(scene);
@@ -88,6 +97,7 @@ public class MainClass extends Application {
     }
     
     private double calculatePrice(int i){
+        Cinema cine = new Cinema();
         double j;
         if(!connected.getText().equals("")){
             j = cine.prixTicket(actualMember,i);
@@ -108,6 +118,7 @@ public class MainClass extends Application {
         Label war = new Label("Please keep it if you want to modify your place");
         
         Button but = new Button("OK");
+        but.setId("confirm-get-id-place");
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -124,7 +135,7 @@ public class MainClass extends Application {
     
     public VBox dispMovieToBuy(final Movies movie,Session sess,final ArrayList<Movies> movies,final int tab){
         VBox tot = new VBox(50);
-        
+        tot.setId("movie-paypage");
         tot.setAlignment(Pos.CENTER);
         VBox node = new VBox(20);
         HBox detail = new HBox(20);
@@ -147,13 +158,20 @@ public class MainClass extends Application {
         nom = nom.toLowerCase();
         nom = nom.replaceAll(" ", "_");
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        try{
+            img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        }
+        catch(NullPointerException e){
+            img = new Image(getClass().getResourceAsStream("/images/default.png"));
+        }
+        
         ImageView view = new ImageView(img);
         view.setFitHeight(300);
         view.setPreserveRatio(true);
         
         
         Button but = new Button();
+        but.setId("back-but");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view2 = new ImageView(img2);
@@ -210,18 +228,21 @@ public class MainClass extends Application {
         ad.setAlignment(Pos.CENTER);
         final Button plus = new Button("+");
         Button moins = new Button("-");
+        plus.setId("button-choose-place");
+        moins.setId("button-choose-place");
         HBox email = new HBox(20);
         email.setAlignment(Pos.CENTER);
         Label ver = new Label("Please enter your mail (login if you are a member) before to click : ");
-        ver.setStyle("-fx-font-weigth: bold");
+        ver.setStyle("-fx-font-weigth: bold; -fx-font-posture: italic;");
         final TextField mail = new TextField();
         mail.setId("box-pay");
         mail.setPromptText("Enter your mail/login");
         email.getChildren().addAll(ver,mail);
         final Label nbr = new Label();
+        nbr.setId("payment-bold");
         nbr.setText("0");
         final Label disc = new Label();
-        disc.setId("button-pay");
+        disc.setId("payment-bold");
         disc.setText("Total : 0 $");
         
         plus.setOnAction(new EventHandler<ActionEvent>() {
@@ -285,10 +306,11 @@ public class MainClass extends Application {
         ad.getChildren().addAll(moins,nbr,plus);
         VBox intermediaire = new VBox(20);
         intermediaire.setAlignment(Pos.CENTER);
-        intermediaire.setId("button-pay");
         Label nbr_tick = new Label("Number of tickets : ");
+        nbr_tick.setId("payment-bold");
         intermediaire.getChildren().addAll(nbr_tick,ad);
-        VBox container = new VBox(80);
+        VBox container = new VBox(60);
+        container.setStyle("-fx-padding:1em 0 0 0;");
         container.setAlignment(Pos.CENTER);
         container.getChildren().addAll(nvx,input,intermediaire,email,disc,but);
         
@@ -298,19 +320,20 @@ public class MainClass extends Application {
     public VBox dispTicketCustomer(){
         VBox tot = new VBox(20);
         tot.setId("co-pay");
-        Label co = new Label("You are connected as : ");
+        final Label co = new Label("");
         co.setAlignment(Pos.CENTER);
         final Label nom = new Label();
         nom.setText("");
         if(!connected.getText().equals("")){
+            co.setText("You are connected as : ");
             nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
             nom.setAlignment(Pos.CENTER);
         }
         else{
-            nom.setText("A Customer");
-            nom.setAlignment(Pos.CENTER);
+            co.setText("You are not connected");
         }
         Button but = new Button();
+        but.setId("refresh");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/refresh.png"));
         ImageView view = new ImageView(img);
@@ -322,11 +345,13 @@ public class MainClass extends Application {
             @Override
             public void handle(ActionEvent event){
                 if(!connected.getText().equals("")){
+                    co.setText("You are connected as : ");
                     nom.setText(actualMember.getFirstName()+" "+actualMember.getLastName());
                     nom.setAlignment(Pos.CENTER);
                 }
                 else if(connected.getText().equals("")){
-                    nom.setText("A Customer");
+                    co.setText("You are not connected");
+                    nom.setText("");
                 }
             }
         });
@@ -358,7 +383,7 @@ public class MainClass extends Application {
         Label lab4 = new Label("Type : "+movie.getType());
         Label lab5 = new Label("Runing time : "+movie.getRunningTime());
         
-        node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5);
+        
         String desc = movie.getDescription();
         for(int i=0;i<desc.length();i++){
             if(i%40==0 && i!=0){
@@ -377,16 +402,30 @@ public class MainClass extends Application {
         nom = nom.toLowerCase();
         nom = nom.replaceAll(" ", "_");
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        try{
+            img = new Image(getClass().getResourceAsStream("/images/"+nom+".jpg"));
+        }
+        catch(NullPointerException e){
+            img = new Image(getClass().getResourceAsStream("/images/default.png"));
+        }
         ImageView view = new ImageView(img);
         view.setFitHeight(300);
         view.setPreserveRatio(true);
+        
+        int temp = movie.getRate()/2;
+        Image img3;
+        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.jpg"));
+        ImageView view3 = new ImageView(img3);
+        view3.setPreserveRatio(true);
+        node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5,view3);
         
         tot.addColumn(0, view);
         tot.addColumn(1, description);
         tot.addColumn(2, node);
         
+        
         Button but = new Button();
+        but.setId("back-but");
         Image img2;
         img2 = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view2 = new ImageView(img2);
@@ -407,8 +446,10 @@ public class MainClass extends Application {
         return border;
     }
     
+    
     public ScrollPane dispAllSess(final Movies movie,final ArrayList<Movies> movies, final int tab){
         ScrollPane tot = new ScrollPane();
+        tot.setStyle("-fx-padding : 0 0 0 1em;");
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
         ArrayList<Session> sess = new ArrayList<>();
@@ -432,21 +473,21 @@ public class MainClass extends Application {
         node3.setId("box-session");
         node4.setId("button-session");
         node5.setId("box-session");
-        reserver.setId("button-session");
-        node1.getChildren().add(date_txt);
-        node2.getChildren().add(heure_txt);
-        node3.getChildren().add(nbr_txt);
-        node4.getChildren().add(reserver);
-        node5.getChildren().add(new Label(""));
+        node1.getChildren().addAll(date_txt,new Separator(Orientation.HORIZONTAL));
+        node2.getChildren().addAll(heure_txt,new Separator(Orientation.HORIZONTAL));
+        node3.getChildren().addAll(nbr_txt,new Separator(Orientation.HORIZONTAL));
+        node4.getChildren().addAll(reserver,new Separator(Orientation.HORIZONTAL));
+        node5.getChildren().addAll(new Label("Actual Places"),new Separator(Orientation.HORIZONTAL));
         for(int i=0;i<sess.size();i++){
             String temp = sess.get(i).getDate().toString();
             Label date = new Label(temp);
             Label heure = new Label(sess.get(i).getHoraire());
             String nbrr = Integer.toString(sess.get(i).getNbr_places_max());
-            Label nbr = new Label("Number of places "+nbrr);
+            Label nbr = new Label(nbrr+" places");
             Label max = new Label("");
             
             button.add(new Button("Reserve"));
+            button.get(i).setId("button-reserv");
             node1.getChildren().add(date);
             node2.getChildren().add(heure);
             node3.getChildren().add(nbr);
@@ -455,8 +496,12 @@ public class MainClass extends Application {
                 max.setText("Full session");
                 max.setTextFill(RED);
             }
+            else if(sess.get(i).getActual()>=sess.get(i).getNbr_places_max()*0.9){
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits left");
+                max.setTextFill(ORANGE);
+            }
             else{
-                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" places left");
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits left");
                 max.setTextFill(GREEN);
             }
             node4.getChildren().add(button.get(i));
@@ -473,11 +518,20 @@ public class MainClass extends Application {
                 }
             });
         }
+        Separator separator1 = new Separator(Orientation.VERTICAL);
+        Separator separator2 = new Separator(Orientation.VERTICAL);
+        Separator separator3 = new Separator(Orientation.VERTICAL);
+        Separator separator4 = new Separator(Orientation.VERTICAL);
+        
         nvx.addColumn(0,node1);
-        nvx.addColumn(1,node2);
-        nvx.addColumn(2,node3);
-        nvx.addColumn(3,node4);
-        nvx.addColumn(4,node5);
+        nvx.addColumn(1,separator1);
+        nvx.addColumn(2,node2);
+        nvx.addColumn(3,separator2);
+        nvx.addColumn(4,node3);
+        nvx.addColumn(5,separator3);
+        nvx.addColumn(6,node5);
+        nvx.addColumn(7,separator4);
+        nvx.addColumn(8,node4);
         tot.setContent(nvx);
         return tot;
     }
@@ -502,9 +556,7 @@ public class MainClass extends Application {
     
     public ScrollPane resultMovies(final ArrayList<Movies> movies){
         ScrollPane bar = new ScrollPane();
-        
         GridPane tot = new GridPane();
-        
         tot.setAlignment(Pos.CENTER);
         VBox vbox = new VBox(30);
         ArrayList<Button> tabButton = new ArrayList<>(); 
@@ -514,7 +566,13 @@ public class MainClass extends Application {
             String nomfilm = movies.get(i).getTitle();
             nomfilm = nomfilm.toLowerCase();
             nomfilm = nomfilm.replaceAll(" ","_");
-            image = new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg"));
+            try{
+                image = new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg"));
+            }
+            catch(NullPointerException e){
+                image = new Image(getClass().getResourceAsStream("/images/default.png"));
+            }
+            
             view = new ImageView(image);
             view.setFitWidth(70);
             view.setPreserveRatio(true);
@@ -549,8 +607,7 @@ public class MainClass extends Application {
     }
     
     public VBox searchVbox(){
-        VBox nvx = new VBox(50);
-        //nvx.setAlignement(Pos.CENTER);
+        VBox nvx = new VBox(20);
         final TextField recherche;
         recherche = new TextField();
         recherche.setText("");
@@ -577,7 +634,7 @@ public class MainClass extends Application {
         lab1.setId("lab-search");
         lab2.setId("lab-search");
         lab3.setId("lab-search");
-        split.setId("lab-search");
+        split.setId("split-search");
         
         
         final TextField time = new TextField();
@@ -642,8 +699,9 @@ public class MainClass extends Application {
     public HBox inscription(){
         HBox nvx = new HBox();
         Label str = new Label("Subscribe if you don't have an account yet : ");
-        Hyperlink hyperlink = new Hyperlink("Subscribe here");
-        
+        str.setStyle("-fx-font-family:Tahoma; -fx-font-size:1.5em;");
+        Hyperlink hyperlink = new Hyperlink("Subscibe here");
+        hyperlink.setStyle("-fx-font-family:Impact;-fx-font-size:1.5em;");
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -657,16 +715,25 @@ public class MainClass extends Application {
         return nvx;
     }
     
-    public GridPane getGridtab4(int condi){
-        GridPane root=new GridPane();
-        Label Email = new Label("Your ID number :");  
-        Label Password = new Label("Password :");  
+    public BorderPane getGridtab4(int condi){
+        BorderPane root=new BorderPane();
+        VBox temporaire = new VBox(20);
+        temporaire.setAlignment(Pos.CENTER);
+        Label Email = new Label("Username :");  
+        Email.setStyle("-fx-font-weigth:bold;");
+        Label Password = new Label("Password :");
+        Password.setStyle("-fx-font-weigth:bold;");
         Email.setId("label-tab4");
         Password.setId("label-tab4");
-//Adding text-field to the form   
+//Adding text-field to the form
         final TextField tf1=new TextField();
         final PasswordField tf2=new PasswordField(); 
-        
+        HBox txt1 = new HBox();
+        txt1.setAlignment(Pos.CENTER);
+        txt1.getChildren().add(tf1);
+        HBox txt2 = new HBox();
+        txt2.setAlignment(Pos.CENTER);
+        txt2.getChildren().add(tf2);
         tf1.setId("text-tab4");
         tf2.setId("text-tab4");
         tf1.setPromptText("Your username");
@@ -680,8 +747,8 @@ public class MainClass extends Application {
 //Creating reset button
 
 //Creating title   
-        Label title = new Label();  
-        title.setText("Sign Up"); 
+        Label title = new Label(); 
+        title.setText("Sign In Here"); 
         title.setUnderline(true);  
         title.setId("title-tab4");  
         
@@ -694,19 +761,13 @@ public class MainClass extends Application {
             error.setText("");
         error.setTextFill(RED);
 //creating grid-pane  
-        final CheckBox c1 = new CheckBox("Check if you are an employee"); 
+        final CheckBox c1 = new CheckBox("Check if you are an employee");
 //adding the the nodes to the GridPane's rows   
         
-        root.addRow(0, title);
-        root.addRow(3, Email);
-        root.addRow(4, tf1);
-        root.addRow(6, Password);
-        root.addRow(7, tf2);
-        root.addRow(8,error);
-        root.addRow(10, c1);
-        
-        root.addRow(14, submit, reset);
-        
+        HBox container = new HBox(30);
+        container.setAlignment(Pos.CENTER);
+        container.getChildren().addAll(submit, reset);
+        temporaire.getChildren().addAll(title,Email,txt1,Password,txt2,error,c1,container);
         submit.setOnAction(new EventHandler<ActionEvent>() {  
               
             @Override  
@@ -760,9 +821,9 @@ public class MainClass extends Application {
         });
   
 //setting horizontal and vertical gaps between the rows   
-        root.setHgap(10);  
-        root.setVgap(10);
+       
         root.setId("root-tab4");
+        root.setCenter(temporaire);
         return root;
     }
     
@@ -777,20 +838,23 @@ public class MainClass extends Application {
     public VBox dispSessOfMemb(){
         VBox tot = new VBox(50);
         tot.setAlignment(Pos.CENTER);
+        tot.setStyle("-fx-background-color:#F0C300;");
         tot.setId("changepass");
         controller = new Controller("session_member_connected","tab4");
-        ArrayList<Session> sess = new ArrayList<>();
-        ArrayList<Integer> tt = new ArrayList<>();
+        ArrayList<Session> sess;
+        ArrayList<Integer> tt;
         sess = controller.getSessionConnected(actualMember.getLogin());
         tt = controller.getIdCustomerSess(actualMember.getLogin());
         
         Label title = new Label("Your reservations : ");
+        title.setStyle("-fx-font-weight:bold;");
         tot.getChildren().add(title);
         if(sess.isEmpty()){
             tot.getChildren().add(new Label("You don't have any reservation"));
         }
         for(int i=0;i<sess.size();i++){
             HBox tst = new HBox(20);
+            tst.setStyle("-fx-font-weight:bold;");
             tst.setAlignment(Pos.CENTER);
             Label lab1 = new Label((i+1)+")");
             Label lab2 = new Label(controller.getAMovie(sess.get(i).getMovie()));
@@ -807,34 +871,47 @@ public class MainClass extends Application {
     public VBox changeMdp(){
         VBox tot = new VBox(50);
         tot.setAlignment(Pos.CENTER);
+        final PasswordField txt0 = new PasswordField();
+        txt0.setPromptText("Old Password");
         final PasswordField txt1 = new PasswordField();
         txt1.setPromptText("New Password");
         final PasswordField txt2 = new PasswordField();
         txt2.setPromptText("Confirm Password");
         final Label txt3 = new Label();
-        txt3.setTextFill(RED);
         txt3.setText("");
+        txt0.setId("changepass");
         txt1.setId("changepass");
         txt2.setId("changepass");
         txt3.setId("changepass");
         Button txt4 = new Button("Change password");
+        txt4.setId("changepass-button");
         txt4.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
                 if(!txt1.getText().equals(txt2.getText())){
                     txt3.setText("Not same password");
+                    txt3.setTextFill(RED);
                 }
                 else if(txt1.getText().equals("")){
                     txt3.setText("Enter a password");
+                    txt3.setTextFill(RED);
+                }
+                else if(!txt0.getText().equals(actualMember.getPassword())){
+                    txt3.setText("Old password wrong");
+                    txt3.setTextFill(RED);
                 }
                 else{
                     controller = new Controller("changeMdp","tab4");
                     controller.changePassword(txt1.getText(),actualMember.getLogin());
                     txt3.setText("Changed !");
+                    txt3.setTextFill(GREEN);
+                    txt0.setText("");
+                    txt1.setText("");
+                    txt2.setText("");
                 }
             }
         });
-        tot.getChildren().addAll(txt1,txt2,txt3,txt4);
+        tot.getChildren().addAll(txt0,txt1,txt2,txt3,txt4);
         return tot;
     }
     
@@ -846,11 +923,12 @@ public class MainClass extends Application {
         Label lab3 = new Label("Last Name : "+actualMember.getLastName());
         Label lab4 = new Label("Login : "+actualMember.getLogin());
         Image img;
-        img = new Image(getClass().getResourceAsStream("/images/deco.jpg"));
+        img = new Image(getClass().getResourceAsStream("/images/deco.png"));
         ImageView view = new ImageView(img);
         view.setFitHeight(80);
         view.setPreserveRatio(true);
         Button deco = new Button();
+        deco.setId("buton-deco");
         deco.setPrefSize(80, 75);
         deco.setGraphic(view);
         lab1.setId("label-co");
@@ -889,6 +967,7 @@ public class MainClass extends Application {
     }
     
     public HBox dispPriceReduc(){
+        Cinema cine = new Cinema();
         HBox nvx = new HBox(10);
         nvx.setAlignment(Pos.CENTER);
         nvx.setId("boxtoptab1");
@@ -897,6 +976,16 @@ public class MainClass extends Application {
         first.setId("toptab1");
         second.setId("toptab1");
         Button third = new Button("See discount offers");
+        Button but = new Button("Refresh");
+        third.setId("price-reduc");
+        but.setId("price-reduc");
+        
+        but.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab1.setContent(getSPane());
+            }
+        });
         
         third.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -905,7 +994,7 @@ public class MainClass extends Application {
             }
         });
         
-        nvx.getChildren().addAll(first,second,third);
+        nvx.getChildren().addAll(but,first,second,third);
         return nvx;
     }
     
@@ -915,7 +1004,7 @@ public class MainClass extends Application {
         nvx.setId("deletePlace");
         VBox inter = new VBox(20);
         Label txt = new Label("If you want to remove your place,");
-        Label txt2 = new Label("enter your id session here : ");
+        Label txt2 = new Label("enter your id session and email/login here : ");
         inter.getChildren().addAll(txt,txt2);
         
         final TextField id = new TextField();
@@ -926,6 +1015,7 @@ public class MainClass extends Application {
         
         error.setText("");
         Button button = new Button("Remove my place");
+        button.setId("price-red");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -952,6 +1042,7 @@ public class MainClass extends Application {
     public HBox getGridtab1(Movies movies)
     {
         HBox tot = new HBox(50);
+        tot.setId("grid-tab1");
         tot.setAlignment(Pos.CENTER);
         GridPane gp = new GridPane();
         gp.setAlignment(Pos.CENTER);
@@ -961,40 +1052,41 @@ public class MainClass extends Application {
         Label RD = new Label("Release Date : "+movies.getDate());
         Label GT = new Label("Gender type : "+movies.getType());
         Label RT = new Label("Running Time : "+movies.getRunningTime());
-        Label Rate = new Label("Rating : "+movies.getRate());
+        
+        int temp = movies.getRate()/2;
+        Image img3;
+        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.jpg"));
+        ImageView view3 = new ImageView(img3);
+        view3.setPreserveRatio(true);
         
         gp.addRow(0 ,Titre);
         gp.addRow(1, Author);
         gp.addRow(2, RD);
         gp.addRow(3, GT);
         gp.addRow(4, RT);
-        gp.addRow(5, Rate);
+        gp.addRow(5, view3);
         gp.setVgap(10);
         String desc = movies.getDescription();
         for(int i=0;i<desc.length();i++){
-            if(i%40==0 && i!=0){
+            if(i%100==0 && i!=0){
                 if(desc.charAt(i+1)==' ' || desc.charAt(i+1)=='.' || desc.charAt(i)==' ' || desc.charAt(i)=='.'){
                     desc = desc.substring(0,i) + "\n"+ desc.substring(i);
                 }
                 else{
                     desc = desc.substring(0,i) + "-\n"+ desc.substring(i);
                 }
-            } 
+            }
         }
-        Label temp = new Label(desc);
-        tot.getChildren().addAll(gp,temp);
+        Label tempo = new Label(desc);
+        tot.getChildren().addAll(gp,tempo);
         
         return tot;
     }
     public FlowPane getPanetab1()
     {
-        ArrayList<Movies> movies = new ArrayList<>();
-        try {
-            controller = new Controller("movie","tab1");
-            movies = controller.dispAllMovies();
-        } catch (SQLException | ClassNotFoundException | ParseException ex) {
-            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ArrayList<Movies> movies;
+        controller = new Controller("movie","tab1");
+        movies = controller.dispAllMovies();
         FlowPane pane = new FlowPane();
         GridPane gp = new GridPane();
         ArrayList<Button> tabButton = new ArrayList<>();
@@ -1003,11 +1095,18 @@ public class MainClass extends Application {
         for(int i=0; i<movies.size() ;i++)
         {
             tabButton.add(new Button());
+            tabButton.get(i).setId("img-dispAllMovie");
             HBox box = new HBox(20);
             String nomfilm = movies.get(i).getTitle();
             nomfilm = nomfilm.toLowerCase();
             nomfilm = nomfilm.replaceAll(" ","_");
-            image.add(new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg")));
+            try{
+                image.add(new Image(getClass().getResourceAsStream("/images/"+nomfilm+".jpg")));
+            }
+            catch(NullPointerException e){
+                image.add(new Image(getClass().getResourceAsStream("/images/default.png")));
+            }
+            
             view.add(new ImageView(image.get(i)));
             view.get(i).setFitWidth(170);
             view.get(i).setPreserveRatio(true);
@@ -1046,6 +1145,7 @@ public class MainClass extends Application {
         idi.setTextFill(RED);
         
         Button but = new Button("OK");
+        but.setId("confirm-get-id-place");
         but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -1136,7 +1236,8 @@ public class MainClass extends Application {
         HBox sub = new HBox();
         Label str = new Label("Login if you already have an account : ");
         Hyperlink hyperlink = new Hyperlink("Login here");
-        
+        str.setStyle("-fx-font-family:Tahoma; -fx-font-size:1.5em;");
+        hyperlink.setStyle("-fx-font-family:Impact;-fx-font-size:1.5em;");
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
  
             @Override
@@ -1160,28 +1261,35 @@ public class MainClass extends Application {
         HBox test = new HBox();
         test.setAlignment(Pos.CENTER);
         Button button = new Button("Sign-in/Sign-up");
-        button.setId("button-tab2");
-        button.setStyle("-fx-font: 22 arial; -fx-base: #b6e7c9;");
+        button.setId("price-rd");
         test.getChildren().add(button);
-        pane.setBottom(test);
+        HBox bouton = new HBox(100);
+        bouton.setStyle("-fx-padding : 0.2em 0 0.5em 0; -fx-background-color : black;");
+        bouton.setAlignment(Pos.CENTER);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
-        
-        button.setOnAction(new EventHandler<ActionEvent>() {  
-              
+        Button but = new Button("Refresh Page");
+        but.setId("price-rd");
+        bouton.getChildren().addAll(but,button);
+        but.setOnAction(new EventHandler<ActionEvent>() {
             @Override  
-            public void handle(ActionEvent arg0) {  
-                // TODO Auto-generated method stub
+            public void handle(ActionEvent arg0) {
+                tab2.setContent(getDiscount());
+            }
+        });  
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override  
+            public void handle(ActionEvent arg0) {
                 if(connected.getText().equals(""))
                     tab4.setContent(getSubscription(""));
                 tabPane.getSelectionModel().select(tab4);
             }
         });  
-
+        pane.setBottom(bouton);
         return pane;
     }
     
     public GridPane getGridtab2(){
-        
+        Cinema cine = new Cinema();
         GridPane root=new GridPane();
         root.setId("root-tab2");
         root.setAlignment(Pos.CENTER);
@@ -1196,25 +1304,28 @@ public class MainClass extends Application {
         
         Text titre = new Text("The CinéPass");
         titre.setId("titre-tab2");
-        
-        Text discounts = new Text(  "  Benefits all year round!!\n"
-                                   +"  Thanks to CinéPass, enjoy exclusive benefits\n"
-                                   +"  and offers throughout the year.\n"
-                                   +"  To make sure you don't miss out on anything,\n"
-                                   +"  receive our communications by newsletter.\n"
-                                   +"  Children : -30%    Regular : -15%    Senior : -20%");
+        DropShadow drop = new DropShadow();  
+        drop.setBlurType(BlurType.GAUSSIAN);  
+        drop.setColor(Color.GOLD);  
+        drop.setHeight(100);  
+        drop.setWidth(150);  
+        drop.setOffsetX(10);  
+        drop.setOffsetY(10);  
+        drop.setSpread(0.2);  
+        drop.setRadius(10);
+        titre.setEffect(drop);
+        Text discounts = new Text(cine.getDescription());
         discounts.setId("discounts-tab2");
         discounts.setY(50);
         
         Rectangle infos = new Rectangle();
-        infos.setStrokeWidth(2);infos.setStroke(Color.BLACK);
+        infos.setStrokeWidth(2);infos.setStroke(Color.GOLD);
         infos.setX(90);infos.setY(50);infos.setWidth(630);infos.setHeight(200);infos.setArcHeight(50);infos.setArcWidth(50);infos.setFill(Color.WHITE);
         
         StackPane stack = new StackPane();
         stack.getChildren().addAll(infos,discounts);
-        stack.setLayoutX(50);
-        stack.setLayoutY(50);
-        
+        stack.setLayoutX(70);
+        stack.setLayoutY(60);
         
         Group rects = new Group();
         rects.getChildren().addAll(stack,view);        

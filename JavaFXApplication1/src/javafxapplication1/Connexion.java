@@ -9,6 +9,8 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -57,7 +59,7 @@ public class Connexion {
        // String urlDatabase = "jdbc:mysql://localhost:3308/jps?characterEncoding=latin1";
 
         //création d'une connexion JDBC à la base 
-        conn = DriverManager.getConnection(urlDatabase, "root","");
+        conn = DriverManager.getConnection(urlDatabase, "root","root");
         
         // création d'un ordre SQL (statement)
         stmt = conn.createStatement(); 
@@ -159,6 +161,17 @@ public class Connexion {
         ps.execute();
     }
     
+    public void insert_employee(String login,String mdp, String first, String last, String acc) throws SQLException{
+        String sql = " INSERT INTO employee(login, motDePasse, firstName, lastName, cle_access)"+" VALUES(?,?,?,?,?)";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, login);
+        ps.setString(2, mdp);
+        ps.setString(3, first);
+        ps.setString(4, last);
+        ps.setString(5, acc);
+        ps.execute();
+    }
+    
     public void update_seance(Session session,String changes) throws SQLException{
         switch (changes) {
             case "movie_id":
@@ -223,14 +236,32 @@ public class Connexion {
         preparedStmt.execute();
     }
     
+    public void update_member(int tot,String id) throws SQLException{
+        String sql = "update membre set age = ? where login = ?";
+        PreparedStatement preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setInt(1,tot);
+        preparedStmt.setString(2,id);
+        preparedStmt.execute();
+        conn.close();
+    }
+    
     public void change_password(String password,String id) throws SQLException{
-        String sql = "update membre set password = ? where login = ?";
+        String sql = "update membre set mot_de_passe = ? where login = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setString(1, password);
         preparedStmt.setString(2,id);
         preparedStmt.execute();
+        conn.close();
     }
     
+    public void change_password2(String password,String id) throws SQLException{
+        String sql = "update employee set motDePasse = ? where login = ?";
+        PreparedStatement preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setString(1, password);
+        preparedStmt.setString(2,id);
+        preparedStmt.execute();
+        conn.close();
+    }
     public void changeAll_(Movies movie) throws SQLException{
         String sql = "UPDATE movie SET titre = ?, auteur = ?, genre = ?, date = ?, runningTime = ?, description = ?, note = ? WHERE id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -243,6 +274,33 @@ public class Connexion {
         preparedStmt.setInt(7,movie.getRate());
         preparedStmt.setInt(8,movie.getId());
         preparedStmt.executeUpdate();
+    }
+    
+    public void changePromotions(double i1,double i2, double i3) throws SQLException{
+        if(i1!=-1){
+            String sql = "update reduction set promo = ? where id = ?";
+            PreparedStatement preparedStmt = conn.prepareStatement(sql);
+            preparedStmt.setDouble(1, i1);
+            preparedStmt.setString(2, "senior");
+            preparedStmt.execute();
+        }
+        if(i2!=-1){
+            String sql = "update reduction set promo = ? where id = ?";
+            PreparedStatement preparedStmt = conn.prepareStatement(sql);
+            preparedStmt.setDouble(1, i2);
+            preparedStmt.setString(2, "children");
+            preparedStmt.execute();
+        }
+        if(i3!=-1){
+            String sql = "update reduction set promo = ? where id = ?";
+            PreparedStatement preparedStmt = conn.prepareStatement(sql);
+            preparedStmt.setDouble(1, i3);
+            preparedStmt.setString(2, "regular");
+            preparedStmt.execute();
+        }
+        
+        conn.close();
+        
     }
     //Suppression d'un membre dans la base de donnees
     public void delete_member(String login) throws SQLException{
@@ -298,6 +356,20 @@ public class Connexion {
             }
         }
         return condi;
+    }
+    
+    public void delete_employee(String login) throws SQLException{
+        ArrayList<Employees> liste = recolterChampsEmployee();
+        
+        for (Employees listeEm : liste) {
+            if (listeEm.getLogin().equals(login)) {
+                String sql = " DELETE FROM employee WHERE `login` =?";
+                PreparedStatement psmt_ = conn.prepareStatement(sql);
+                psmt_.setString(1, login);
+                psmt_.executeUpdate();
+            }
+        }
+        conn.close();
     }
     
     public ArrayList<Integer> getSessionConnected(String login) throws SQLException{
@@ -387,7 +459,6 @@ public class Connexion {
             // ajouter l'Employees dans l'ArrayList
             liste.add(emp);
         }
-
         // Retourner l'ArrayList
         return liste;
     }
@@ -511,7 +582,7 @@ public class Connexion {
     }
     
     public ArrayList<Session> recolterChampsSessionsMovie(int idmov) throws SQLException{
-        ArrayList<Session> sess = new ArrayList<>();
+        ArrayList<Session> sess;
         ArrayList<Session> rep = new ArrayList<>();
         sess = recolterChampsSessions();
         
@@ -521,7 +592,7 @@ public class Connexion {
             }
         }
         // Retourner l'ArrayList
-        
+        conn.close();
         return rep;
     }
     
@@ -567,7 +638,7 @@ public class Connexion {
     //Recherche du film parmi la liste de films disponibles
     public ArrayList<Movies> searchMovie(String name,String type,int time,String date)throws SQLException{
         ArrayList<Movies> liste = new ArrayList<>();
-        ArrayList<Movies> request = new ArrayList<>();
+        ArrayList<Movies> request;
         request = recolterChampsMovies();
         // tant qu'il reste une ligne
         boolean condi = false;
@@ -618,7 +689,6 @@ public class Connexion {
                 return listeMem1;
             }
         }
-        conn.close();
         return null;        
     }
     public Employees checkLoginEmployee(String login, String mdp) throws SQLException{
@@ -629,7 +699,34 @@ public class Connexion {
                 return listeEmp1;
             }
         }
-        conn.close();
         return null;        
     }  
+    
+    public double[] getReduc() throws SQLException{
+        double[] promo = new double[3];
+        
+        rset = stmt.executeQuery("select * from reduction");
+
+        // récupération du résultat de l'ordre
+        rsetMeta = rset.getMetaData();
+        
+        // tant qu'il reste une ligne 
+        int i=0;
+        while (rset.next()) {
+            String id = rset.getString(1);
+            double id2 = rset.getDouble(2);
+            promo[i] = id2;
+            i++;
+        }
+        
+        return promo;
+    }
+    
+    public void closeConn(){
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Connexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

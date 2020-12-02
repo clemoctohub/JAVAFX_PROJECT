@@ -9,6 +9,11 @@ and open the template in the editor.
 */
 #button-home{
     -fx-font-size : 1.7em;
+    -fx-background-color: #778899;
+}
+#button-home:hover{
+    -fx-font-size : 1.7em;
+    -fx-background-color: #B0C4DE;
 }
 
 #title-moviedata{
@@ -22,13 +27,41 @@ and open the template in the editor.
 #labMenu{
     -fx-font-size : 2em;
     -fx-font-weigth : bold;
+    -fx-text-fill:#F5DEB3;
 }
 #logout{
     -fx-font-size : 1.2em;
+    -fx-background-color: #778899;
+}
+#logout:hover{
+    -fx-font-size : 1.7em;
+    -fx-background-color: #B0C4DE;
 }
 .tab-pane {
        -fx-tab-max-height: 0 ;
 } 
 .tab-pane .tab-header-area {
        visibility: hidden ;
+}
+#dsgn-promo-txt{
+    -fx-font-size : 1.5em;
+    -fx-border-color: #A0522D;
+}
+#dsgn-promo-radio{
+    -fx-font-size : 1.2em;
+    -fx-border-color: #8B4513;
+    -fx-text-fill: #F5DEB3;
+}
+#stat-grid{
+    -fx-padding : 0 0 0 2em;
+    -fx-font-size : 1.5em;
+}
+#back-but{
+    -fx-background-color: transparent;
+}
+#back-but:hover{
+    -fx-background-color: #A0522D;
+}
+#back-but-hide{
+    -fx-background-color: transparent;
 }
