@@ -255,6 +255,89 @@ public class AutreMain implements Runnable{
         return tot;
     }
     
+    public BorderPane accesCustomerData() throws SQLException, ParseException, ClassNotFoundException{
+        BorderPane pane = new BorderPane();
+        ScrollPane scroll = new ScrollPane();
+        
+        //Bouton back
+        Button back = new Button();
+        back.setId("button-home2");
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                tab.setContent(accessCinemaData());
+            }
+        });
+        
+        
+        //Boutton Ajouter Customer
+        Button addCustomer = new Button("(+) Add a customer");
+        addCustomer.setStyle("-fx-font-weight: bold;");
+        addCustomer.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                //tab.setContent(AddCustomer());
+            }
+        }); 
+        
+        //titre
+        Label title = new Label("Delete a Customer from the DataBase");
+        title.setId("title-customerdata");
+        
+        HBox inter = new HBox(50);
+        inter.getChildren().addAll(back,title);
+        inter.setAlignment(Pos.CENTER);
+        
+        //Liste des Customer sous forme de boutons
+        controller = new Controller("","");
+        final ArrayList<Members> customers = controller.AllCustomers();
+        ArrayList<Button> cust = new ArrayList<>();
+        for(int i=0;i<customers.size();i++){
+            cust.add(new Button());
+            cust.get(i).setText("Delete customer : "+customers.get(i).getLogin()+ ", id : "+customers.get(i).getId());
+        }
+        VBox box = new VBox(20);
+        box.setAlignment(Pos.CENTER);
+        for(int i=0;i<cust.size();i++){
+            box.getChildren().add(cust.get(i));
+        }
+        
+        //Action sur les boutons : Suppression du customer
+            for(int i=0;i<customers.size();i++){
+                final Button but = cust.get(i);
+                final Members c = customers.get(i);
+                
+                but.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event){
+                        controller = new Controller("","");
+                        controller.delete_customer(c.getId(),c.getLogin());
+                        try {
+                            tab.setContent(accesMoviesData());
+                        } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                            Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+            }
+        scroll.setContent(box);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            
+            scroll.setFitToHeight(true);
+            scroll.setFitToWidth(true);
+            
+            pane.setTop(inter);
+            pane.setCenter(scroll);
+        
+        return pane;
+    }
+    
     public BorderPane accesMoviesData() throws SQLException, ClassNotFoundException, ParseException{
         BorderPane pane = new BorderPane();
         ScrollPane scroll = new ScrollPane();
@@ -349,7 +432,7 @@ public class AutreMain implements Runnable{
     public BorderPane acessSessionData() throws SQLException, ClassNotFoundException, ParseException
     {
         final BorderPane pane = new BorderPane();
-
+        ScrollPane scroll = new ScrollPane();
         //Bouton back
         Button back = new Button();
         Image img;
@@ -364,12 +447,13 @@ public class AutreMain implements Runnable{
                 tab.setContent(accessCinemaData());
             }
         }); 
-        HBox inter = new HBox(50);
-        inter.getChildren().addAll(back);
         
         //titre
         Label title = new Label("Modify Session DataBase");
         title.setId("title-sessiondata");
+        HBox inter = new HBox(50);
+        inter.getChildren().addAll(back,title);
+        inter.setAlignment(Pos.CENTER);
         
         try
         {
@@ -382,7 +466,6 @@ public class AutreMain implements Runnable{
             }
             VBox box = new VBox(20);
             box.setAlignment(Pos.CENTER);
-            box.getChildren().addAll(inter,title);
             for(int i=0;i<movie.size();i++){
                 box.getChildren().add(movie.get(i));
             }
@@ -404,10 +487,15 @@ public class AutreMain implements Runnable{
                     }
                 });
             }
-            pane.setCenter(box);
+            scroll.setContent(box);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
         }
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
+            scroll.setFitToHeight(true);
+            scroll.setFitToWidth(true);
+            pane.setTop(inter);
+            pane.setCenter(scroll);
        return pane; 
     }
     
@@ -649,6 +737,25 @@ public class AutreMain implements Runnable{
         BorderPane tot = new BorderPane();
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
+        
+        Button back = new Button();
+        back.setId("button-home2");
+        Image img;
+        img = new Image(getClass().getResourceAsStream("/images/back.png"));
+        ImageView view = new ImageView(img);
+        view.setFitHeight(90);
+        view.setPreserveRatio(true);
+        back.setGraphic(view);
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                try {
+                    tab.setContent(acessSessionData());
+                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
         Label date_txt = new Label("Date ");
         Label heure_txt = new Label("Heure ");
         Label nbr_txt = new Label("Number of places ");
@@ -736,12 +843,13 @@ public class AutreMain implements Runnable{
             });
         node1.getChildren().add(error);
         node6.getChildren().add(add);
-        nvx.addColumn(0,node1);
-        nvx.addColumn(1,node2);
-        nvx.addColumn(2,node3);
-        nvx.addColumn(3,node4);
-        nvx.addColumn(4,node5);
-        nvx.addColumn(5,node6);
+        nvx.addColumn(0,back);
+        nvx.addColumn(1,node1);
+        nvx.addColumn(2,node2);
+        nvx.addColumn(3,node3);
+        nvx.addColumn(4,node4);
+        nvx.addColumn(5,node5);
+        nvx.addColumn(6,node6);
         nvx.setAlignment(Pos.TOP_CENTER); 
         tot.setCenter(nvx);
         return tot;
@@ -761,7 +869,7 @@ public class AutreMain implements Runnable{
         BorderPane pane = new BorderPane();
         GridPane g = new GridPane();
         //Bouton back
-        g.setHgap(50);
+        g.setHgap(30);
         Button back = new Button();
         back.setId("button-home2");
         Image img;
@@ -784,7 +892,7 @@ public class AutreMain implements Runnable{
         Label date_txt = new Label("Date (yyyy-mm-dd)");
         Label heure_txt = new Label("Heure ");
         Label nbr_txt = new Label("Number of places ");
-        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20),node5 = new VBox(20);
+        VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20),node5 = new VBox(20), node0 = new VBox(20);
         node1.getChildren().add(date_txt);
         node2.getChildren().add(heure_txt);
         node3.getChildren().add(nbr_txt);
@@ -860,11 +968,12 @@ public class AutreMain implements Runnable{
         });
         node1.getChildren().add(error);
         node5.getChildren().add(add);
-        g.addColumn(0,node1);
-        g.addColumn(1,node2);
-        g.addColumn(2,node3);
-        g.addColumn(3,node4);
-        g.addColumn(4,node5);
+        g.addColumn(0,back);
+        g.addColumn(1,node1);
+        g.addColumn(2,node2);
+        g.addColumn(3,node3);
+        g.addColumn(4,node4);
+        g.addColumn(5,node5);
         g.setAlignment(Pos.TOP_CENTER);
         pane.setCenter(g);
         return pane;
