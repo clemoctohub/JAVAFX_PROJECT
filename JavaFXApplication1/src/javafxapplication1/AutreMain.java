@@ -5,7 +5,6 @@
  */
 package javafxapplication1;
 
-import javafx.scene.control.TextField;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,9 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.*;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -34,7 +31,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import static javafx.scene.paint.Color.RED;
 import javafx.scene.text.Text;
@@ -248,7 +244,11 @@ public class AutreMain implements Runnable{
         but3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                //tab.setContent(homePage());
+                try {
+                    tab.setContent(accesCustomerData());
+                } catch (SQLException | ParseException | ClassNotFoundException ex) {
+                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         tot.setCenter(nvx);
@@ -257,7 +257,8 @@ public class AutreMain implements Runnable{
     
     public BorderPane accesMoviesData() throws SQLException, ClassNotFoundException, ParseException{
         BorderPane pane = new BorderPane();
-
+        ScrollPane scroll = new ScrollPane();
+        
         //Bouton back
         Button back = new Button();
         back.setId("button-home2");
@@ -272,8 +273,7 @@ public class AutreMain implements Runnable{
             public void handle(ActionEvent event){
                 tab.setContent(accessCinemaData());
             }
-        }); 
-        
+        });         
         
         
         //Boutton Ajouter movie
@@ -290,12 +290,15 @@ public class AutreMain implements Runnable{
             }
         }); 
         
-        HBox inter = new HBox(50);
-        inter.getChildren().addAll(back);
-        
         //titre
         Label title = new Label("Modify Movie DataBase");
         title.setId("title-moviedata");
+        
+        HBox inter = new HBox(50);
+        inter.getChildren().addAll(back,title,addMovie);
+        inter.setAlignment(Pos.CENTER);
+        
+       
         
         try {
             //liste des films sous forme de boutons
@@ -308,12 +311,10 @@ public class AutreMain implements Runnable{
             }
             VBox box = new VBox(20);
             box.setAlignment(Pos.CENTER);
-            box.getChildren().addAll(inter,title);
             for(int i=0;i<movie.size();i++){
                 box.getChildren().add(movie.get(i));
-            }
-            
-            box.getChildren().add(addMovie);
+            }      
+
             
             //Action sur les boutons
             for(int i=0;i<movies.size();i++){
@@ -327,8 +328,15 @@ public class AutreMain implements Runnable{
                     }
                 });
             }
-        
-            pane.setCenter(box);
+            
+            scroll.setContent(box);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            
+            scroll.setFitToHeight(true);
+            scroll.setFitToWidth(true);
+            
+            pane.setTop(inter);
+            pane.setCenter(scroll);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -439,21 +447,28 @@ public class AutreMain implements Runnable{
         Label rate = new Label("Rate : ");
         final TextField note = new TextField(Integer.toString(movie.getRate()));
         
-
+        final Label error = new Label();
+        error.setAlignment(Pos.CENTER);
+        error.setTextFill(RED);
+        error.setText("");
+        
         //Bouton Validate
         Button validate = new Button("Validate");
         validate.setId("button-home");
         validate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                controller = new Controller("movie","MoviesData");
-                Movies mov = new Movies(titre.getText(),auteur.getText(),movie.getDate(),Integer.valueOf(note.getText()),genre.getText(),movie.getRunningTime(),movie.getId(),description.getText());
-                System.out.println("note "+Integer.valueOf(note.getText()));
-                controller.update_movie(mov);
-                try {                   
-                    tab.setContent(accesMoviesData());
-                } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                if(auteur.getText().equals("") || titre.getText().equals("") || description.getText().equals("") || genre.getText().equals("") || Integer.valueOf(note.getText())<0 || Integer.valueOf(note.getText())>10)
+                    error.setText("Please fill all the inputs or enter correct inputs");
+                else{
+                    controller = new Controller("movie","MoviesData");
+                    Movies mov = new Movies(titre.getText(),auteur.getText(),movie.getDate(),Integer.valueOf(note.getText()),genre.getText(),movie.getRunningTime(),movie.getId(),description.getText());
+                    controller.update_movie(mov);
+                    try {                   
+                        tab.setContent(accesMoviesData());
+                    } catch (SQLException | ClassNotFoundException | ParseException ex) {
                     Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -490,7 +505,8 @@ public class AutreMain implements Runnable{
         grid.add(rate,3,5);
         grid.add(note,4,5);       
         grid.add(back,1,1);
-        grid.add(validate,4,6);
+        grid.add(validate,3,7);
+        grid.add(error,4,6);
         grid.add(delete,4,7);
         
         grid.setAlignment(Pos.TOP_CENTER);          
@@ -535,7 +551,7 @@ public class AutreMain implements Runnable{
         genre.getItems().addAll("action","science-fiction","horror","fantastic","comedia");
         Label rate = new Label("Rate : ");
         final TextField note = new TextField();
-        Label date = new Label("Date (yyyy-MM-dd) : ");
+        final Label date = new Label("Date (yyyy-MM-dd) : ");
         final TextField dat = new TextField();
         Label runningTime = new Label("Running Time (minutes) : ");
         final TextField time = new TextField();
@@ -543,7 +559,10 @@ public class AutreMain implements Runnable{
         final TextField ID = new TextField();
         
         
-        
+        final Label error = new Label();
+        error.setAlignment(Pos.CENTER);
+        error.setTextFill(RED);
+        error.setText("");
 
         
         //Bouton Ajout Image
@@ -565,19 +584,28 @@ public class AutreMain implements Runnable{
                 controller = new Controller("addmovie","");
                 ArrayList<Movies> movies;
                 try {
-                    //conversion date
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date parsed = (Date) format.parse(dat.getText());
-        final java.sql.Date sql = new java.sql.Date(parsed.getTime());
+                    
                     movies = controller.dispAllMovies();
                     ArrayList IDs = new ArrayList();
                     for(int i=0;i<movies.size();i++){
                         IDs.add(movies.get(i).getId());
                     }
-                    if(!IDs.contains(Integer.valueOf( ID.getText())) ) {
-                        controller.addmovie(new Movies(titre.getText(),auteur.getText(),sql,Integer.valueOf( note.getText()),(String)genre.getValue(),Integer.valueOf( time.getText()),Integer.valueOf( ID.getText()),description.getText()));
-                        tab.setContent(accesMoviesData());
-                    }      
+                    if(ID.getText().equals("") || !IDs.contains(Integer.valueOf( ID.getText())) ) {
+                        if(auteur.getText().equals("") || titre.getText().equals("") || description.getText().equals("") || genre.getValue()==null || Integer.valueOf(note.getText())<0 || Integer.valueOf(note.getText())>10 && checkDateFormat(dat.getText())==0)
+                            error.setText("Please fill all the inputs or enter correct inputs");
+                        else if(checkDateFormat(dat.getText())==1) {
+                            //conversion date
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            Date parsed = (Date) format.parse(dat.getText());
+                            final java.sql.Date sql = new java.sql.Date(parsed.getTime());
+                            controller.addmovie(new Movies(titre.getText(),auteur.getText(),sql,Integer.valueOf( note.getText()),(String)genre.getValue(),Integer.valueOf( time.getText()),Integer.valueOf( ID.getText()),description.getText()));
+                            tab.setContent(accesMoviesData());
+                        }
+                        else 
+                           error.setText("Date format is incorrect"); 
+                    }
+                    else
+                        error.setText("This Id is incorrect, please choose another one");
                 } catch (SQLException | ClassNotFoundException | ParseException ex) {
                     Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -605,8 +633,9 @@ public class AutreMain implements Runnable{
         grid.add(time,4,7);
         grid.add(id,3,8);
         grid.add(ID,4,8);
-        grid.add(image,3,9);
-        grid.add(add,4,9);
+        grid.add(error,4,9);
+        grid.add(image,3,10);
+        grid.add(add,4,10);
         grid.add(back,1,1);
         
         grid.setAlignment(Pos.TOP_CENTER); 
