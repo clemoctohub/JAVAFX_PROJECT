@@ -32,8 +32,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
@@ -186,7 +184,6 @@ public class AutreMain{
                     txt3.setTextFill(RED);
                 }
                 else{
-                    Controller controller;
                     controller = new Controller("changeMdp","tab4");
                     controller.changePassword2(txt1.getText(),actual.getLogin());
                     actual.setPassword(txt1.getText());
@@ -222,8 +219,7 @@ public class AutreMain{
         PieChart piechart = new PieChart();
         
         int senior = 0, children = 0, regular = 0;
-        
-        Controller controller = new Controller("statistics","member");
+        controller = new Controller("statistics","member");
         membres = controller.recolterMembre();
         sessions = controller.recolterSessions();
         movies = controller.dispAllMovies();
@@ -575,13 +571,13 @@ public class AutreMain{
         button.setOnAction(new EventHandler<ActionEvent>() {     
             @Override  
             public void handle(ActionEvent arg0) {
-                int condi=-1;
+                int condi;
                 if(!pwd.getText().equals(actual.getPassword())){
                     lab4.setText("Wrong password");
                     lab4.setTextFill(RED);
                 }
                 else{
-                    Controller controller = new Controller("managePromotions","employeeTab");
+                    controller = new Controller("managePromotions","employeeTab");
                     condi = controller.changePromotion(txt1.getText(),txt2.getText(),txt3.getText());
                     if(condi==0){
                         lab1.setText("Wrong input here - Reduction can't be higher than 50% - please only enter the number");
@@ -792,8 +788,8 @@ public class AutreMain{
         }
         VBox box = new VBox(20);
         box.setAlignment(Pos.CENTER);
-        for(int i=0;i<cust.size();i++){
-            box.getChildren().add(cust.get(i));
+        for (Button cust1 : cust) {
+            box.getChildren().add(cust1);
         }
         
         //Action sur les boutons : Suppression du customer
@@ -871,46 +867,35 @@ public class AutreMain{
         
        
         
-        try {
-            //liste des films sous forme de boutons
-            controller = new Controller("movie","MoviesData");
-            final ArrayList<Movies> movies = controller.dispAllMovies();
-            ArrayList<Button> movie = new ArrayList<>();  
-            for(int i=0;i<movies.size();i++){
-                movie.add(new Button());
-                movie.get(i).setText(movies.get(i).getTitle());
-            }
-            VBox box = new VBox(20);
-            box.setAlignment(Pos.CENTER);
-            for(int i=0;i<movie.size();i++){
-                box.getChildren().add(movie.get(i));
-            }      
-
-            
-            //Action sur les boutons
-            for(int i=0;i<movies.size();i++){
-                final Button but = movie.get(i);
-                final Movies mov = movies.get(i);
-                
-                but.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event){
-                        tab.setContent(ModifMovie(mov));
-                    }
-                });
-            }
-            
-            scroll.setContent(box);
-            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            
-            scroll.setFitToHeight(true);
-            scroll.setFitToWidth(true);
-            
-            pane.setTop(inter);
-            pane.setCenter(scroll);
-        } catch (SQLException | ClassNotFoundException | ParseException ex) {
-            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        controller = new Controller("movie","MoviesData");
+        final ArrayList<Movies> movies = controller.dispAllMovies();
+        ArrayList<Button> movie = new ArrayList<>();
+        for(int i=0;i<movies.size();i++){
+            movie.add(new Button());
+            movie.get(i).setText(movies.get(i).getTitle());
         }
+        VBox box = new VBox(20);
+        box.setAlignment(Pos.CENTER);
+        for (Button movie1 : movie) {
+            box.getChildren().add(movie1);
+        }
+        for(int i=0;i<movies.size();i++){
+            final Button but = movie.get(i);
+            final Movies mov = movies.get(i);
+            
+            but.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event){
+                    tab.setContent(ModifMovie(mov));
+                }
+            });
+        }
+        scroll.setContent(box);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        pane.setTop(inter);
+        pane.setCenter(scroll);
         
         //liste des films sous forme de boutons
                
@@ -943,42 +928,37 @@ public class AutreMain{
         inter.getChildren().addAll(back,title);
         inter.setAlignment(Pos.CENTER);
         
-        try
-        {
-            controller = new Controller("movie","MoviesData");
-            final ArrayList<Movies> movies = controller.dispAllMovies();
-            ArrayList<Button> movie = new ArrayList<>();
-            for(int i=0;i<movies.size();i++){
-                movie.add(new Button());
-                movie.get(i).setText(movies.get(i).getTitle());
-            }
-            VBox box = new VBox(20);
-            box.setAlignment(Pos.CENTER);
-            for(int i=0;i<movie.size();i++){
-                box.getChildren().add(movie.get(i));
-            }
-            for(int i=0;i<movies.size();i++){
-                final Button but = movie.get(i);
-                final Movies mov = movies.get(i);
-                //sess = controller.getSessionMovie(movies.get(i).getId());
-                but.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event){
-                        ArrayList<Session> sess = new ArrayList<>();
-                            try {
-                                sess = controller.getSessionMovie(mov.getId());
-                                tab.setContent(ModifSess(sess,mov.getId()));
-                            } catch (SQLException | ClassNotFoundException | ParseException ex) {
-                                Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            
-                    }
-                });
-            }
-            scroll.setContent(box);
-        } catch (SQLException | ClassNotFoundException | ParseException ex) {
-            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        controller = new Controller("movie","MoviesData");
+        final ArrayList<Movies> movies = controller.dispAllMovies();
+        ArrayList<Button> movie = new ArrayList<>();
+        for(int i=0;i<movies.size();i++){
+            movie.add(new Button());
+            movie.get(i).setText(movies.get(i).getTitle());
         }
+        VBox box = new VBox(20);
+        box.setAlignment(Pos.CENTER);
+        for (Button movie1 : movie) {
+            box.getChildren().add(movie1);
+        }
+        for(int i=0;i<movies.size();i++){
+            final Button but = movie.get(i);
+            final Movies mov = movies.get(i);
+            //sess = controller.getSessionMovie(movies.get(i).getId());
+            but.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event){
+                    ArrayList<Session> sess;
+                    try {
+                        sess = controller.getSessionMovie(mov.getId());
+                        tab.setContent(ModifSess(sess,mov.getId()));
+                    } catch (SQLException | ClassNotFoundException | ParseException ex) {
+                        Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+            });
+        }
+        scroll.setContent(box);
             scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
             scroll.setFitToHeight(true);
             scroll.setFitToWidth(true);
@@ -1163,8 +1143,8 @@ public class AutreMain{
                     
                     movies = controller.dispAllMovies();
                     ArrayList IDs = new ArrayList();
-                    for(int i=0;i<movies.size();i++){
-                        IDs.add(movies.get(i).getId());
+                    for (Movies movie : movies) {
+                        IDs.add(movie.getId());
                     }
                     if(ID.getText().equals("") || !IDs.contains(Integer.valueOf( ID.getText())) ) {
                         if(auteur.getText().equals("") || titre.getText().equals("") || description.getText().equals("") || genre.getValue()==null || Integer.valueOf(note.getText())<0 || Integer.valueOf(note.getText())>10 && checkDateFormat(dat.getText())==0)
@@ -1256,10 +1236,10 @@ public class AutreMain{
         Button add = new Button("Add Session");
         final Label error = new Label("");
         error.setTextFill(RED);
-        for(int i=0;i<sess.size();i++){
+        for (Session ses : sess) {
             Button validate = new Button("Validate");
             Button delete = new Button("Delete");
-            final Session session = sess.get(i);
+            final Session session = ses;
             String temp = session.getDate().toString();
             final TextField date = new TextField(temp);
             final TextField heure = new TextField(session.getHoraire());
@@ -1269,54 +1249,54 @@ public class AutreMain{
             node2.getChildren().add(heure);
             node3.getChildren().add(np);
             validate.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event){
-                try {
-                    
-                    if((np.getText().equals("") || date.getText().equals(""))||heure.getText().equals(""))
-                    {    error.setText("");
+                @Override
+                public void handle(ActionEvent event){
+                    try {
+                        
+                        if((np.getText().equals("") || date.getText().equals(""))||heure.getText().equals(""))
+                        {    error.setText("");
                         error.setText("Please complete all data");}
-                    else if(checkDateFormat(date.getText())==0)
-                    {   error.setText("");
+                        else if(checkDateFormat(date.getText())==0)
+                        {   error.setText("");
                         error.setText("Wrong date format");
+                        }
+                        else if(checkHeureFormat(heure.getText())==0)
+                        {
+                            error.setText("");
+                            error.setText("Wrong hour format");
+                        }
+                        else if(EstUnNombre(np.getText())== 0)
+                        {
+                            error.setText("");
+                            error.setText("Please enter a number");
+                        }
+                        else if(Integer.valueOf(np.getText()) < 0)
+                        {
+                            error.setText("");
+                            error.setText("Please enter right number");
+                        }
+                        else
+                        {
+                            Up_Session(session,date,np,heure);
+                            tab.setContent(acessSessionData());
+                        }
+                        
                     }
-                    else if(checkHeureFormat(heure.getText())==0)
-                    {
-                        error.setText("");
-                        error.setText("Wrong hour format");
-                    }
-                    else if(EstUnNombre(np.getText())== 0)
-                    {
-                        error.setText("");  
-                        error.setText("Please enter a number");
-                    }
-                    else if(Integer.valueOf(np.getText()) < 0)
-                    {
-                        error.setText("");  
-                        error.setText("Please enter right number");
-                    }
-                    else
-                    {
-                        Up_Session(session,date,np,heure);
-                        tab.setContent(acessSessionData());
-                    }
-                   
-                } 
-                catch (ParseException | SQLException | ClassNotFoundException ex) {
-                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                    catch (ParseException | SQLException | ClassNotFoundException ex) {
+                        Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
             //Bouton Delete
             delete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event){
-                controller.delete_Session(session.getId());
-                try {
-                    tab.setContent(acessSessionData());
-                } 
-                catch (SQLException | ClassNotFoundException | ParseException ex) {
-                    Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
+                @Override
+                public void handle(ActionEvent event){
+                    controller.delete_Session(session.getId());
+                    try {
+                        tab.setContent(acessSessionData());
+                    }
+                    catch (SQLException | ClassNotFoundException | ParseException ex) {
+                        Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
@@ -1435,9 +1415,9 @@ public class AutreMain{
                     {   
                         session = controller.getSessionMovie(idmov);
                         ArrayList IDs = new ArrayList();
-                        for(int i=0;i<session.size();i++){
-                            IDs.add(session.get(i).getId());
-                        }
+                    for (Session session1 : session) {
+                        IDs.add(session1.getId());
+                    }
                         if(!IDs.contains(Integer.valueOf( ID.getText())) ) {
                         Session S = new Session(Integer.valueOf(ID.getText()),idmov,sql,Integer.valueOf(max.getText()),0,heure.getText(),0.0);
                         controller.Add_Session(S,idmov);
@@ -1465,6 +1445,8 @@ public class AutreMain{
         g.setAlignment(Pos.TOP_CENTER);
         pane.setCenter(g);
         return pane;
+    }
+    
     public HBox emptyRight(double width){
         HBox nvx = new HBox();
         Button but = new Button();
@@ -1483,7 +1465,7 @@ public class AutreMain{
         tot.setVgap(20);
         tot.setAlignment(Pos.CENTER);
         ArrayList<Employees> employees;
-        Controller controller = new Controller("&","&");
+        controller = new Controller("&","&");
         employees = controller.getAllEmployee();
         Button butoo = new Button();
         butoo.setId("back-but");
@@ -1569,7 +1551,6 @@ public class AutreMain{
         return condi;
     }
     
-}
     public VBox deleteEmployee(final Employees employee){
         VBox nvx = new VBox();
         nvx.setAlignment(Pos.CENTER);
@@ -1587,7 +1568,7 @@ public class AutreMain{
         but1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                Controller controller = new Controller("&","&");
+                controller = new Controller("&","&");
                 controller.deleteEmployee(employee.getLogin());
                 tab.setContent(dispEmployee());
             }
@@ -1635,7 +1616,7 @@ public class AutreMain{
         cfr.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                Controller controller = new Controller("&","&");
+                controller = new Controller("&","&");
                 controller.insert_employee(txt1.getText(),txt2.getText(),(String)txt3.getValue());
                 tab.setContent(dispEmployee());
             }
@@ -1654,7 +1635,7 @@ public class AutreMain{
         tot.setVgap(20);
         tot.setAlignment(Pos.CENTER);
         ArrayList<Members> members;
-        Controller controller = new Controller("&","&");
+        controller = new Controller("&","&");
         members = controller.getAllMembers();
         Button butoo = new Button();
         butoo.setId("back-but");
@@ -1720,7 +1701,7 @@ public class AutreMain{
         but2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                Controller controller = new Controller("&","&");
+                controller = new Controller("&","&");
                 boolean condi = controller.modifyMember(txt.getText(),memb.getLogin());
                 if(condi==false){
                     lab5.setText("Enter good input please");
@@ -1733,7 +1714,7 @@ public class AutreMain{
         but3.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                Controller controller = new Controller("&","&");
+                controller = new Controller("&","&");
                 controller.deleteMember(memb.getLogin());
                 tab.setContent(dispMember());
             }

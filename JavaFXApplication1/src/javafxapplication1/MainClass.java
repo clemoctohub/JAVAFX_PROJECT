@@ -414,7 +414,7 @@ public class MainClass extends Application {
         
         int temp = movie.getRate()/2;
         Image img3;
-        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.jpg"));
+        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.JPG"));
         ImageView view3 = new ImageView(img3);
         view3.setPreserveRatio(true);
         node.getChildren().addAll(lab1,lab2,lab3,lab4,lab5,view3);
@@ -1055,7 +1055,7 @@ public class MainClass extends Application {
         
         int temp = movies.getRate()/2;
         Image img3;
-        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.jpg"));
+        img3 = new Image(getClass().getResourceAsStream("/images/"+temp+"star.JPG"));
         ImageView view3 = new ImageView(img3);
         view3.setPreserveRatio(true);
         
