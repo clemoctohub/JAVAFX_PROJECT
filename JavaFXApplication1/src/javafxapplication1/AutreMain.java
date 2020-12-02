@@ -65,7 +65,7 @@ public class AutreMain{
         ad.setAlignment(Pos.CENTER);
         ad.getChildren().addAll(connected,tot);
         
-        Scene scene = new Scene(ad, 1500, 800);
+        Scene scene = new Scene(ad, 1700, 800);
         scene.getStylesheets().add(getClass().getResource("StyleAutre.css").toExternalForm());
         second.setTitle("Employee");
         second.setScene(scene);
@@ -152,6 +152,7 @@ public class AutreMain{
     
     public HBox changePassword(){
         HBox tot = new HBox();
+        tot.setId("setBack");
         tot.setAlignment(Pos.CENTER);
         VBox nvx = new VBox(20);
         nvx.setAlignment(Pos.CENTER);
@@ -163,8 +164,14 @@ public class AutreMain{
         txt2.setPromptText("Confirm Password");
         final Label txt3 = new Label();
         txt3.setText("");
+        txt0.setId("labEmpl");
+        txt1.setId("labEmpl");
+        txt2.setId("labEmpl");
+        txt3.setId("labEmpl");
         Button txt4 = new Button("Change password");
         Button txt5 = new Button("Go back");
+        txt4.setId("butEmpl");
+        txt5.setId("butEmpl");
         HBox inter = new HBox(20);
         inter.setAlignment(Pos.CENTER);
         inter.getChildren().addAll(txt4,txt5);
@@ -716,7 +723,6 @@ public class AutreMain{
         but2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                //tab.setContent(homePage());
                 try 
                 {
                     tab.setContent(acessSessionData());
@@ -741,11 +747,12 @@ public class AutreMain{
     
     public BorderPane accesCustomerData() throws SQLException, ParseException, ClassNotFoundException{
         BorderPane pane = new BorderPane();
+        pane.setId("setBack");
         ScrollPane scroll = new ScrollPane();
-        
+        scroll.setId("setBack");
         //Bouton back
         Button back = new Button();
-        back.setId("button-home2");
+        back.setId("back-but");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -758,11 +765,9 @@ public class AutreMain{
                 tab.setContent(accessCinemaData());
             }
         });
-        
-        
         //Boutton Ajouter Customer
         Button addCustomer = new Button("(+) Add a customer");
-        addCustomer.setStyle("-fx-font-weight: bold;");
+        addCustomer.setId("butMovie");
         addCustomer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -772,7 +777,7 @@ public class AutreMain{
         
         //titre
         Label title = new Label("Delete a Customer from the DataBase");
-        title.setId("title-customerdata");
+        title.setId("title-moviedata");
         
         HBox inter = new HBox(50);
         inter.getChildren().addAll(back,title);
@@ -784,6 +789,7 @@ public class AutreMain{
         ArrayList<Button> cust = new ArrayList<>();
         for(int i=0;i<customers.size();i++){
             cust.add(new Button());
+            cust.get(i).setId("butEmpl");
             cust.get(i).setText("Delete customer : "+customers.get(i).getLogin()+ ", id : "+customers.get(i).getId());
         }
         VBox box = new VBox(20);
@@ -811,13 +817,13 @@ public class AutreMain{
                 });
             }
         scroll.setContent(box);
-            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             
-            scroll.setFitToHeight(true);
-            scroll.setFitToWidth(true);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
             
-            pane.setTop(inter);
-            pane.setCenter(scroll);
+        pane.setTop(inter);
+        pane.setCenter(scroll);
         
         return pane;
     }
@@ -825,10 +831,10 @@ public class AutreMain{
     public BorderPane accesMoviesData() throws SQLException, ClassNotFoundException, ParseException{
         BorderPane pane = new BorderPane();
         ScrollPane scroll = new ScrollPane();
-        
+        pane.setId("setBack");
         //Bouton back
         Button back = new Button();
-        back.setId("button-home2");
+        back.setId("back-but");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -845,7 +851,7 @@ public class AutreMain{
         
         //Boutton Ajouter movie
         Button addMovie = new Button("(+) Add a movie");
-        addMovie.setStyle("-fx-font-weight: bold;");
+        addMovie.setId("butMovie");
         addMovie.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -859,7 +865,7 @@ public class AutreMain{
         
         //titre
         Label title = new Label("Modify Movie DataBase");
-        title.setId("title-moviedata");
+        title.setId("labEmpl");
         
         HBox inter = new HBox(50);
         inter.getChildren().addAll(back,title,addMovie);
@@ -872,6 +878,7 @@ public class AutreMain{
         ArrayList<Button> movie = new ArrayList<>();
         for(int i=0;i<movies.size();i++){
             movie.add(new Button());
+            movie.get(i).setId("butEmpl");
             movie.get(i).setText(movies.get(i).getTitle());
         }
         VBox box = new VBox(20);
@@ -882,7 +889,6 @@ public class AutreMain{
         for(int i=0;i<movies.size();i++){
             final Button but = movie.get(i);
             final Movies mov = movies.get(i);
-            
             but.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event){
@@ -905,9 +911,12 @@ public class AutreMain{
     public BorderPane acessSessionData() throws SQLException, ClassNotFoundException, ParseException
     {
         final BorderPane pane = new BorderPane();
+        pane.setId("setBack");
         ScrollPane scroll = new ScrollPane();
+        scroll.setId("setBack");
         //Bouton back
         Button back = new Button();
+        back.setId("back-but");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -923,7 +932,7 @@ public class AutreMain{
         
         //titre
         Label title = new Label("Modify Session DataBase");
-        title.setId("title-sessiondata");
+        title.setId("title-cine");
         HBox inter = new HBox(50);
         inter.getChildren().addAll(back,title);
         inter.setAlignment(Pos.CENTER);
@@ -933,6 +942,7 @@ public class AutreMain{
         ArrayList<Button> movie = new ArrayList<>();
         for(int i=0;i<movies.size();i++){
             movie.add(new Button());
+            movie.get(i).setId("butEmpl");
             movie.get(i).setText(movies.get(i).getTitle());
         }
         VBox box = new VBox(20);
@@ -959,20 +969,20 @@ public class AutreMain{
             });
         }
         scroll.setContent(box);
-            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
-            scroll.setFitToHeight(true);
-            scroll.setFitToWidth(true);
-            pane.setTop(inter);
-            pane.setCenter(scroll);
-       return pane; 
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        pane.setTop(inter);
+        pane.setCenter(scroll);
+        return pane; 
     }
     
     public BorderPane ModifMovie(final Movies movie){
         BorderPane pane = new BorderPane();
-        
+        pane.setId("setBack");
         //Bouton back
         Button back = new Button();
-        back.setId("button-home2");
+        back.setId("back-but");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -1002,6 +1012,16 @@ public class AutreMain{
         final TextField genre = new TextField(movie.getType());
         Label rate = new Label("Rate : ");
         final TextField note = new TextField(Integer.toString(movie.getRate()));
+        aut.setId("labEmpl");
+        auteur.setId("labEmpl");
+        tit.setId("labEmpl");
+        titre.setId("labEmpl");
+        desc.setId("labEmpl");
+        description.setId("labEmpl");
+        type.setId("labEmpl");
+        genre.setId("labEmpl");
+        rate.setId("labEmpl");
+        note.setId("labEmpl");
         
         final Label error = new Label();
         error.setAlignment(Pos.CENTER);
@@ -1010,7 +1030,7 @@ public class AutreMain{
         
         //Bouton Validate
         Button validate = new Button("Validate");
-        validate.setId("button-home");
+        validate.setId("butEmpl");
         validate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -1031,7 +1051,7 @@ public class AutreMain{
         
         //Bouton Delete
         Button delete = new Button("Delete");
-        delete.setId("button-home");
+        delete.setId("butEmpl");
         delete.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -1072,11 +1092,10 @@ public class AutreMain{
     
     public BorderPane AddMovie() throws ParseException{
         BorderPane pane = new BorderPane();
-         
-        
+        pane.setId("setBack");
         //Bouton back
         Button back = new Button();
-        back.setId("button-home2");
+        back.setId("back-but");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -1113,7 +1132,22 @@ public class AutreMain{
         final TextField time = new TextField();
         Label id = new Label("Id : ");
         final TextField ID = new TextField();
-        
+        aut.setId("labEmpl");
+        auteur.setId("labEmpl");
+        tit.setId("labEmpl");
+        titre.setId("labEmpl");
+        desc.setId("labEmpl");
+        description.setId("labEmpl");
+        type.setId("labEmpl");
+        genre.setId("butEmpl");
+        rate.setId("labEmpl");
+        note.setId("labEmpl");
+        date.setId("labEmpl");
+        dat.setId("labEmpl");
+        runningTime.setId("labEmpl");
+        time.setId("labEmpl");
+        id.setId("labEmpl");
+        ID.setId("labEmpl");
         
         final Label error = new Label();
         error.setAlignment(Pos.CENTER);
@@ -1123,6 +1157,7 @@ public class AutreMain{
         
         //Bouton Ajout Image
         Button image = new Button("Import Image");
+        image.setId("butEmpl");
         image.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1134,6 +1169,7 @@ public class AutreMain{
         
         //Bouton Ajout Film
         Button add = new Button("Add Movie");
+        add.setId("butEmpl");
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1203,11 +1239,12 @@ public class AutreMain{
     public BorderPane ModifSess(final ArrayList<Session> sess, final int id)
     {
         BorderPane tot = new BorderPane();
+        tot.setId("setBack");
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
         
         Button back = new Button();
-        back.setId("button-home2");
+        back.setId("back-but");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -1227,24 +1264,37 @@ public class AutreMain{
         Label date_txt = new Label("Date ");
         Label heure_txt = new Label("Heure ");
         Label nbr_txt = new Label("Number of places ");
+        date_txt.setId("labEmpl");
+        heure_txt.setId("labEmpl");
+        nbr_txt.setId("labEmpl");
         VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20), node5 = new VBox(20), node6= new VBox(20);
         node1.getChildren().add(date_txt);
         node2.getChildren().add(heure_txt);
         node3.getChildren().add(nbr_txt);
-        node4.getChildren().add(new Label("Click to validate the session"));
-        node5.getChildren().add(new Label("Delete the session"));
+        Label emp1 = new Label("Click to validate");
+        Label emp2 = new Label("Delete");
+        node4.getChildren().add(emp1);
+        emp1.setId("labEmpl");
+        node5.getChildren().add(emp2);
+        emp2.setId("labEmpl");
         Button add = new Button("Add Session");
+        add.setId("butEmpl");
+        add.setStyle("-fx-font-weight:bold");
         final Label error = new Label("");
         error.setTextFill(RED);
         for (Session ses : sess) {
             Button validate = new Button("Validate");
+            validate.setId("butEmpl2");
             Button delete = new Button("Delete");
+            delete.setId("butEmpl2");
             final Session session = ses;
             String temp = session.getDate().toString();
             final TextField date = new TextField(temp);
             final TextField heure = new TextField(session.getHoraire());
             final TextField np = new TextField(Integer.toString(session.getNbr_places_max()));
-            final Label max = new Label("");
+            date.setId("labEmpl");
+            heure.setId("labEmpl");
+            np.setId("labEmpl");
             node1.getChildren().add(date);
             node2.getChildren().add(heure);
             node3.getChildren().add(np);
@@ -1335,11 +1385,13 @@ public class AutreMain{
     public BorderPane AddSession(final int idmov)
     {
         BorderPane pane = new BorderPane();
+        pane.setId("setBack");
         GridPane g = new GridPane();
+        g.setId("setBack");
         //Bouton back
         g.setHgap(30);
         Button back = new Button();
-        back.setId("button-home2");
+        back.setId("back-but");
         Image img;
         img = new Image(getClass().getResourceAsStream("/images/back.png"));
         ImageView view = new ImageView(img);
@@ -1360,6 +1412,9 @@ public class AutreMain{
         Label date_txt = new Label("Date (yyyy-mm-dd)");
         Label heure_txt = new Label("Heure ");
         Label nbr_txt = new Label("Number of places ");
+        date_txt.setId("labEmpl");
+        heure_txt.setId("labEmpl");
+        nbr_txt.setId("labEmpl");
         VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20),node5 = new VBox(20), node0 = new VBox(20);
         node1.getChildren().add(date_txt);
         node2.getChildren().add(heure_txt);
@@ -1367,8 +1422,13 @@ public class AutreMain{
         final TextField date = new TextField();
         final TextField heure = new TextField();
         final TextField max = new TextField();
+        date.setId("labEmpl");
+        heure.setId("labEmpl");
+        max.setId("labEmpl");
         Label id = new Label("Id ");
+        id.setId("labEmpl");
         final TextField ID = new TextField();
+        ID.setId("labEmpl");
         node4.getChildren().add(id);
         node1.getChildren().add(date);
         node2.getChildren().add(heure);
@@ -1378,6 +1438,7 @@ public class AutreMain{
         error.setTextFill(RED);
         //Bouton Ajout Session
         Button add = new Button("Add Session");
+        add.setId("butEmpl");
         add.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
@@ -1458,7 +1519,9 @@ public class AutreMain{
     
     public VBox dispEmployee(){
         VBox nvx = new VBox(10);
+        nvx.setId("setBack");
         Label uno = new Label("Click on one employee to delete");
+        uno.setId("labEmpl");
         nvx.setAlignment(Pos.CENTER);
         GridPane tot = new GridPane();
         tot.setHgap(20);
@@ -1483,6 +1546,7 @@ public class AutreMain{
         });
         for(int i=0;i<employees.size();i++){
             final Button but = new Button("First Name : "+employees.get(i).getFirstName()+" - Last Name : "+employees.get(i).getLastName()+" - Login : "+employees.get(i).getLogin()+" - Access key : "+employees.get(i).getAccess());
+            but.setId("butEmpl");
             final Employees temp = employees.get(i);
             but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1494,6 +1558,7 @@ public class AutreMain{
             tot.addRow(i,but);
         }
         Button buton = new Button("+ Add Employee");
+        buton.setId("butEmpl");
         buton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -1552,13 +1617,19 @@ public class AutreMain{
     }
     
     public VBox deleteEmployee(final Employees employee){
-        VBox nvx = new VBox();
+        VBox nvx = new VBox(40);
+        nvx.setId("setBack");
         nvx.setAlignment(Pos.CENTER);
         Label lab1 = new Label("Are you sure you want to delete this employee :");
         Label lab2 = new Label(employee.getFirstName()+" "+employee.getLastName());
         Label lab3 = new Label("Your decision will be definitive");
+        lab1.setId("labEmpl");
+        lab2.setId("labEmpl");
+        lab3.setId("labEmpl");
         Button but1 = new Button("Confirm delete employee");
         Button but2 = new Button("Cancel");
+        but1.setId("butEmpl");
+        but2.setId("butEmpl");
         but2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
@@ -1574,6 +1645,7 @@ public class AutreMain{
             }
         });
         HBox inte = new HBox(20);
+        inte.setAlignment(Pos.CENTER);
         inte.getChildren().addAll(but1,but2);
         nvx.getChildren().addAll(lab1,lab2,lab3,inte);
         return nvx;
@@ -1581,12 +1653,18 @@ public class AutreMain{
     
     public VBox addEmployee(){
         VBox tot = new VBox(20);
+        tot.setId("setBack");
         tot.setAlignment(Pos.CENTER);
         Label lab0 = new Label("Create new Employee");
         Label lab1 = new Label("First Name of the employee : ");
         Label lab2 = new Label("Last Name of the employee : ");
         Label lab3 = new Label("Access key of the employee : ");
         Label lab4 = new Label("Password is set by default, the employee will change it");
+        lab0.setId("labEmpl");
+        lab1.setId("labEmpl");
+        lab2.setId("labEmpl");
+        lab3.setId("labEmpl");
+        lab4.setId("labEmpl");
         HBox box1 = new HBox(20);
         HBox box2 = new HBox(20);
         HBox box3 = new HBox(20);
@@ -1599,10 +1677,15 @@ public class AutreMain{
         txt1.setPromptText("First Name");
         final TextField txt2 = new TextField();
         txt2.setPromptText("Last Name");
+        txt1.setId("labEmpl");
+        txt2.setId("labEmpl");
         final ChoiceBox txt3 = new ChoiceBox();
         txt3.getItems().addAll("A","B","C");
+        txt3.setId("butEmpl");
         Button cfr = new Button("Confirm");
         Button can = new Button("Cancel");
+        can.setId("butEmpl");
+        cfr.setId("butEmpl");
         box1.getChildren().addAll(lab1,txt1);
         box2.getChildren().addAll(lab2,txt2);
         box3.getChildren().addAll(lab3,txt3);
@@ -1628,7 +1711,9 @@ public class AutreMain{
     
     public VBox dispMember(){
         VBox nvx = new VBox(10);
+        nvx.setId("setBack");
         Label uno = new Label("Click on one member to modify");
+        uno.setId("labEmpl");
         nvx.setAlignment(Pos.CENTER);
         GridPane tot = new GridPane();
         tot.setHgap(20);
@@ -1658,6 +1743,7 @@ public class AutreMain{
                 j++;
             }
             final Button but = new Button(members.get(i).getFirstName()+" "+members.get(i).getLastName());
+            but.setId("butEmpl");
             final Members temp = members.get(i);
             but.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1674,23 +1760,33 @@ public class AutreMain{
     
     public HBox modifyMembers(final Members memb){
         VBox tot = new VBox(20);
+        
         tot.setAlignment(Pos.CENTER);
         HBox toto = new HBox();
+        toto.setId("setBack");
         toto.setAlignment(Pos.CENTER);
         Label lab1 = new Label("First Name : "+memb.getFirstName());
         Label lab2 = new Label("Last Name : "+memb.getLastName());
         Label lab3 = new Label("Login : "+memb.getLogin());
         Label lab4 = new Label("Age : ");
+        lab1.setId("labEmpl");
+        lab2.setId("labEmpl");
+        lab3.setId("labEmpl");
+        lab4.setId("labEmpl");
         final TextField txt = new TextField();
         txt.setText(Integer.toString(memb.getAge()));
         txt.setPromptText("Enter age");
         HBox inter1 = new HBox(20);
         inter1.getChildren().addAll(lab4,txt);
         final Label lab5 = new Label();
+        lab5.setId("labEmpl");
         lab5.setTextFill(RED);
         Button but1 = new Button("Cancel");
         Button but2 = new Button("Modify");
         Button but3 = new Button("Delete");
+        but1.setId("butEmpl");
+        but2.setId("butEmpl");
+        but3.setId("butEmpl");
         HBox inter2 = new HBox(20);
         but1.setOnAction(new EventHandler<ActionEvent>() {
             @Override

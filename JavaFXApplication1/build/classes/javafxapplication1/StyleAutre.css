@@ -65,3 +65,35 @@ and open the template in the editor.
 #back-but-hide{
     -fx-background-color: transparent;
 }
+#setBack{
+    -fx-background-color:#8B4513;
+}
+#labEmpl{
+    -fx-border-color: #8B4513;
+    -fx-font-size : 1.3em;
+}
+#butEmpl{
+    -fx-background-color: #778899;
+    -fx-font-size : 1.1em;
+}
+#butEmpl:hover{
+    -fx-background-color: #B0C4DE;
+}
+#butMovie{
+    -fx-font-weight: bold; 
+    -fx-background-color: #778899;
+    -fx-font-size : 1.1em;
+}
+#butMovie:hover{
+    -fx-background-color: #B0C4DE;
+}
+#title-cine{
+    -fx-font-size : 3em;
+}
+#butEmpl2{
+    -fx-background-color: #778899;
+    -fx-font-size : 1.2em;
+}
+#butEmpl2:hover{
+    -fx-background-color: #B0C4DE;
+}
