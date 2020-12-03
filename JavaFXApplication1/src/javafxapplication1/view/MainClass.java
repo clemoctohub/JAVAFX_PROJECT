@@ -69,6 +69,7 @@ public class MainClass extends Application {
         connected.setId("bande");
         connected.setAlignment(Pos.CENTER_RIGHT);
         HBox header = new HBox();
+        header.setStyle("-fx-background-color:black;");
         header.setAlignment(Pos.CENTER);
         HBox enter = new HBox(10);
         
@@ -82,14 +83,13 @@ public class MainClass extends Application {
         tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
         tab1.setContent(getSPane());
-        
         tabPane.getTabs().add(tab1);
         tabPane.getTabs().add(tab2);
         tabPane.getTabs().add(tab3);
         tabPane.getTabs().add(tab4);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        VBox vbox = new VBox(20);
-        vbox.setStyle("-fx-background-color:black;");
+        VBox vbox = new VBox();
+        //vbox.setStyle("-fx-background-color:black;");
         vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().add(header);
         vbox.getChildren().add(tabPane);
