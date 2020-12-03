@@ -83,6 +83,7 @@
     -fx-alignment : center;
     -fx-padding : 6em 0 0 2em;
     -fx-font-size : 1.5em;
+    -fx-background-color: #fff;
 }
 
 #label-sub{
@@ -130,6 +131,7 @@
 
 #vbox-search{
     -fx-padding : 2em 0 0 0;
+    -fx-background-color: #fff;
 }
 
 #but-search{
@@ -199,18 +201,21 @@
 }
 #paid-page{
     -fx-font-size : 1.4em;
+    -fx-background-color: #fff;
 }
 #deletePlace{
     -fx-font-size : 1.2em;
     -fx-padding : 0 0.3em 0 0.3em;
     -fx-font-family : Tahoma;
     -fx-font-weigth : bold;
+    -fx-background-color: #fff;
 }
 #desc-sess{
     -fx-font-size : 1.2em;
 }
 #boxtoptab1{
     -fx-padding : 1em;
+    -fx-background-color: #fff;
 }
 #toptab1{
     -fx-font-size : 1.4em;

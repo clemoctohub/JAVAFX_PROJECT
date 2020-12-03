@@ -377,7 +377,7 @@ public class MainClass extends Application {
     public BorderPane dispMovie(Movies movie,final ArrayList<Movies> movies, final int tab){
         GridPane tot = new GridPane();
         BorderPane border = new BorderPane();
-        
+        border.setStyle("-fx-background-color: #fff;");
         tot.setHgap(100);
         tot.setAlignment(Pos.CENTER);
         VBox node = new VBox(20);
@@ -455,7 +455,7 @@ public class MainClass extends Application {
     
     public ScrollPane dispAllSess(final Movies movie,final ArrayList<Movies> movies, final int tab){
         ScrollPane tot = new ScrollPane();
-        tot.setStyle("-fx-padding : 0 0 0 1em;");
+        tot.setStyle("-fx-padding : 0 0 0 1em; -fx-background-color: #fff;");
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
         ArrayList<Session> sess = new ArrayList<>();
@@ -551,6 +551,7 @@ public class MainClass extends Application {
     
     public BorderPane searchTab(boolean condi,ArrayList<Movies> movies){
         BorderPane nvx = new BorderPane();
+        nvx.setStyle("-fx-background-color: #fff;");
         nvx.setTop(searchVbox());
         
         if(condi==true){
@@ -562,6 +563,7 @@ public class MainClass extends Application {
     
     public ScrollPane resultMovies(final ArrayList<Movies> movies){
         ScrollPane bar = new ScrollPane();
+        bar.setStyle("-fx-background-color: #fff;");
         GridPane tot = new GridPane();
         tot.setAlignment(Pos.CENTER);
         VBox vbox = new VBox(30);
@@ -1165,8 +1167,9 @@ public class MainClass extends Application {
     public BorderPane getSubscription(String message){
         
         BorderPane test = new BorderPane();
+        test.setStyle("-fx-background-color: #fff;");
         VBox nvx = new VBox(10);
-        
+        nvx.setStyle("-fx-background-color: #fff;");
         nvx.setMaxWidth(400);
         nvx.setAlignment(Pos.CENTER);
         //layout.prefWidthProperty().bind(window.widthProperty().multiply(0.80));
