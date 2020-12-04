@@ -97,3 +97,6 @@ and open the template in the editor.
 #butEmpl2:hover{
     -fx-background-color: #B0C4DE;
 }
+#cchart {
+    -fx-font-size: 0.5em; ;
+}

@@ -279,6 +279,7 @@ public class AutreMain{
       
     //Configuring BarChart   
         BarChart<String,Float> bar = new BarChart(xaxis,yaxis);
+        bar.setLegendVisible(false);
         bar.setTitle("Number of places according to the movie");
         
         XYChart.Series<String,Float> series = new XYChart.Series<>();
@@ -318,7 +319,7 @@ public class AutreMain{
         NumberAxis yaxe = new NumberAxis(0,1500,10);  
           
         //Defining Label for Axis   
-        xaxis.setLabel("Days");
+        xaxis.setLabel("Movies");
         yaxis.setLabel("Amount"); 
         LineChart linechart = new LineChart(xaxe,yaxe);
         XYChart.Series serie = new XYChart.Series();
@@ -367,6 +368,8 @@ public class AutreMain{
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         final PieChart piechart2 = new PieChart();
+        piechart2.setLegendVisible(false);
+        piechart2.setId("cchart");
         ObservableList<Data> list2 = FXCollections.observableArrayList();
         final PieChart piechart = new PieChart();
         ObservableList<Data> list = FXCollections.observableArrayList();
@@ -379,7 +382,7 @@ public class AutreMain{
         }
         
         for(int i=0;i<movies.size();i++){
-            list2.add(new PieChart.Data(movies.get(i).getTitle()+" : "+amount.get(i)*100/recette+"%", amount.get(i)*100/recette));
+            list2.add(new PieChart.Data(movies.get(i).getTitle()+" : "+Math.round(amount.get(i)*100/recette)+"%", amount.get(i)*100/recette));
         }
         piechart2.setData(list2);
         
@@ -440,6 +443,9 @@ public class AutreMain{
         button1.setStyle("-fx-background-color : royalblue;");
         final Button button2 = new Button("Per Types");
         final Button button3 = new Button("Per Hours");
+        button1.setStyle("-fx-background-color : royalblue;");
+        button2.setStyle("-fx-background-color : white;");
+        button3.setStyle("-fx-background-color : white;");
         
         button1.setOnAction(new EventHandler<ActionEvent>() {
             @Override

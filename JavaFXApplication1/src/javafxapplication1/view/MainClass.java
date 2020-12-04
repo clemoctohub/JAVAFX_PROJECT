@@ -61,7 +61,7 @@ public class MainClass extends Application {
     private static final DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
     
     @Override
-    public void start(Stage primaryStage) throws MalformedURLException, FileNotFoundException {
+    public void start(final Stage primaryStage) throws MalformedURLException, FileNotFoundException {
         
         Label bande = new Label("WELCOME TO OUR CINEMA");
         bande.setId("bande");
@@ -76,8 +76,16 @@ public class MainClass extends Application {
         img = new Image(getClass().getResourceAsStream("/images/logo.png"));
         ImageView view = new ImageView(img);
         view.setPreserveRatio(true);
+        Button deco = new Button("OUT");
+        deco.setId("out");
+        deco.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                primaryStage.close();
+            }
+        });
         enter.getChildren().addAll(view,bande);
-        header.getChildren().addAll(enter,connected);
+        header.getChildren().addAll(deco,enter,connected);
         tab2.setContent(getDiscount());
         tab3.setContent(searchTab(false,null));
         tab4.setContent(getPane(0));
