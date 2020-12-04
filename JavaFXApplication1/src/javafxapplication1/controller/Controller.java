@@ -119,6 +119,8 @@ public class Controller {
                 double amount = nvx.getAmount()-4;
                 int nbr = nvx.getActual()-1;
                 conn.add_update_session(nbr, amount, num_sess);
+                Members for_mail = new Members(0,mail);
+                for_mail.sendMessage(-1,mail);
             }
             else{
                 conn.closeConn();
@@ -160,8 +162,13 @@ public class Controller {
             if(crypto.charAt(i) < '0' || crypto.charAt(i)> '9' || crypto.length()>3)
                 return -1;
         }
-        if(mv.length()>5 || mv.charAt(2)!='/')
+        try{
+            if(mv.length()!=5 || mv.charAt(2)!='/')
+                return -1;
+        }
+        catch(StringIndexOutOfBoundsException e){
             return -1;
+        }
         tot = tot.replaceAll("Total : ","");
         tot = tot.substring(0,tot.length()-2);
         double amount = Double.parseDouble(tot);
@@ -187,14 +194,12 @@ public class Controller {
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(mail!=null)
-            for(int i=0;i<mail.length();i++){
-                if(mail.charAt(i)=='@'){
-                    Members for_mail = new Members(0,mail);
-                    for_mail.sendMessage(x,mail);
-                }
+        for(int i=0;i<mail.length();i++){
+            if(mail.charAt(i)=='@'){
+                Members for_mail = new Members(0,mail);
+                for_mail.sendMessage(x,mail);
             }
+        }
         return x;
     }
     
