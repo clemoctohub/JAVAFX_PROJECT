@@ -11,7 +11,7 @@ import java.sql.Date;
  *
  * @author Utilisateur
  */
-public class Session {
+public class Sessions {
     private final Date date;
     private final String horaire;
     private final int id;
@@ -20,7 +20,7 @@ public class Session {
     private final int actual_place;
     private final double amount;
     
-    public Session(int id,int movie,Date date,int max,int actual,String horaire,double amount)
+    public Sessions(int id,int movie,Date date,int max,int actual,String horaire,double amount)
     {
         this.movie=movie;
         this.id = id;

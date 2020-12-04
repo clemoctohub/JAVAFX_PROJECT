@@ -5,6 +5,14 @@
  */
 package javafxapplication1.model;
 
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 /**
  *
  * @author Utilisateur
@@ -46,5 +54,39 @@ public class Members extends Customers{
     
     public int getId(){
         return id;
+    }
+    
+    public void sendMessage(int x,String login){
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+        
+        
+        Session session = Session.getDefaultInstance(properties,
+            new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication(){
+                    return new PasswordAuthentication("monCinemaIsMyCine@gmail.com","cinecine");
+                }
+            }
+        );
+        
+        try{
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("monCinemaIsMyCine@gmail.com"));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(login));
+            message.setSubject("TEST");
+            message.setText("Hello You !\n Thank you to buy a place in our Cinema !\n We hope you will enjoy the session."
+                    + " If you want to delete your session, just go to our site and enter your email and place Id on the Home Page.\n"
+                    + " You will receive an email to get 4$ back !\n "
+                    + "Here is your ID session : "+x+"\n\n Thank you and enojoy your session.\n You can ask questions by this mail");
+            Transport.send(message);
+        }
+        catch(MessagingException e){
+            System.out.println(e);
+        }
+        
     }
 }

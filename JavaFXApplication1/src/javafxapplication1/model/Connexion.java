@@ -55,11 +55,11 @@ public class Connexion {
         // chargement driver "com.mysql.jdbc.Driver"
         Class.forName("com.mysql.jdbc.Driver");
         
-        String urlDatabase = "jdbc:mysql://localhost:3306/movie";
+        String urlDatabase = "jdbc:mysql://localhost:3308/movie";
        // String urlDatabase = "jdbc:mysql://localhost:3308/jps?characterEncoding=latin1";
 
         //création d'une connexion JDBC à la base 
-        conn = DriverManager.getConnection(urlDatabase, "root","");
+        conn = DriverManager.getConnection(urlDatabase, "root","root");
         
         // création d'un ordre SQL (statement)
         stmt = conn.createStatement(); 
@@ -89,7 +89,7 @@ public class Connexion {
         conn.close();
     }
     //Ajout d'un nouveau film dans la base de donnees 
-    public void insert_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, ArrayList<Session> sessions, String description) throws SQLException{
+    public void insert_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, ArrayList<Sessions> sessions, String description) throws SQLException{
         String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note, description)"+" VALUES(?,?,?,?,?,?,?,?)";
         
         PreparedStatement nn = conn.prepareStatement(sql);
@@ -122,10 +122,10 @@ public class Connexion {
     }
     
     
-    public void insert_seance(ArrayList<Session> sessions,int id) throws SQLException{
+    public void insert_seance(ArrayList<Sessions> sessions,int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
         PreparedStatement mt = conn.prepareStatement(sql);
-        for (Session session : sessions) {
+        for (Sessions session : sessions) {
             mt.setInt(1, session.getId());
             mt.setInt(2, id);
             mt.setDate(3, session.getDate());
@@ -137,7 +137,7 @@ public class Connexion {
         }
     }
     
-    public void insert_seance(Session session, int id) throws SQLException{
+    public void insert_seance(Sessions session, int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
         PreparedStatement pstm = conn.prepareStatement(sql);
         pstm.setInt(1, session.getId());
@@ -172,7 +172,7 @@ public class Connexion {
         ps.execute();
     }
     
-    public void update_seance(Session session,String changes) throws SQLException{
+    public void update_seance(Sessions session,String changes) throws SQLException{
         switch (changes) {
             case "movie_id":
                 {
@@ -223,7 +223,7 @@ public class Connexion {
         conn.close();
     }
     
-    public void changeAll_seance(Session session) throws SQLException{
+    public void changeAll_seance(Sessions session) throws SQLException{
         String sql = "UPDATE session SET movie_id = ?, date = ?, max_place = ?, heure = ?, actual_place = ?, amount = ? WHERE id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
         preparedStmt.setInt(1,session.getMovie());
@@ -331,9 +331,9 @@ public class Connexion {
     }
     
     public void delete_session(int id) throws SQLException{
-        ArrayList<Session> listeSess = recolterChampsSessions();
+        ArrayList<Sessions> listeSess = recolterChampsSessions();
         
-        for (Session listeSes : listeSess) {
+        for (Sessions listeSes : listeSess) {
             if (listeSes.getId() == id) {
                 String sql = " DELETE FROM session WHERE `id` =?";
                 PreparedStatement psmt_ = conn.prepareStatement(sql);
@@ -397,8 +397,8 @@ public class Connexion {
         return nvx;
     }
     
-    public ArrayList<Session> recolterSessionMember(ArrayList<Integer> nvx) throws SQLException{
-        ArrayList<Session> other = new ArrayList<>();
+    public ArrayList<Sessions> recolterSessionMember(ArrayList<Integer> nvx) throws SQLException{
+        ArrayList<Sessions> other = new ArrayList<>();
         rset = stmt.executeQuery("select * from session");
         
         while (rset.next()) {
@@ -411,7 +411,7 @@ public class Connexion {
             double tot = rset.getDouble(7);
             for (Integer nvx1 : nvx) {
                 if (nvx1 == id_) {
-                    other.add(new Session(id_,id_movie,date,max,act,heure,tot));
+                    other.add(new Sessions(id_,id_movie,date,max,act,heure,tot));
                 }
             }
         }
@@ -419,7 +419,7 @@ public class Connexion {
         return other;
     }
     
-    public Session recolterAmountSession(int id) throws SQLException{
+    public Sessions recolterAmountSession(int id) throws SQLException{
         rset = stmt.executeQuery("select * from session");
         
         // tant qu'il reste une ligne 
@@ -432,7 +432,7 @@ public class Connexion {
             int act = rset.getInt(6);
             double tot = rset.getDouble(7);
             if(id_==id)
-                return new Session(id,id_movie,date,max,act,heure,tot);
+                return new Sessions(id,id_movie,date,max,act,heure,tot);
         }
         // Retourner l'ArrayList
         return null;
@@ -558,13 +558,13 @@ public class Connexion {
         return -1;
     }
     
-    public ArrayList<Session> recolterChampsSessions() throws SQLException{
+    public ArrayList<Sessions> recolterChampsSessions() throws SQLException{
         rset = stmt.executeQuery("select * from session");
 
         // récupération du résultat de l'ordre
         rsetMeta = rset.getMetaData();
         // creation d'une ArrayList d'Employees
-        ArrayList<Session> liste = new ArrayList<>();
+        ArrayList<Sessions> liste = new ArrayList<>();
         
         // tant qu'il reste une ligne 
         while (rset.next()) {
@@ -575,18 +575,18 @@ public class Connexion {
             String heure = rset.getString(5);
             int act = rset.getInt(6);
             double tot = rset.getDouble(7);
-            liste.add(new Session(id,id_movie,date,max,act,heure,tot));
+            liste.add(new Sessions(id,id_movie,date,max,act,heure,tot));
         }
         // Retourner l'ArrayList
         return liste;
     }
     
-    public ArrayList<Session> recolterChampsSessionsMovie(int idmov) throws SQLException{
-        ArrayList<Session> sess;
-        ArrayList<Session> rep = new ArrayList<>();
+    public ArrayList<Sessions> recolterChampsSessionsMovie(int idmov) throws SQLException{
+        ArrayList<Sessions> sess;
+        ArrayList<Sessions> rep = new ArrayList<>();
         sess = recolterChampsSessions();
         
-        for (Session ses : sess) {
+        for (Sessions ses : sess) {
             if (ses.getMovie() == idmov) {
                 rep.add(ses);
             }

@@ -41,7 +41,7 @@ import javafxapplication1.controller.Controller;
 import javafxapplication1.model.Employees;
 import javafxapplication1.model.Members;
 import javafxapplication1.model.Movies;
-import javafxapplication1.model.Session;
+import javafxapplication1.model.Sessions;
 
 /**
  *
@@ -227,7 +227,7 @@ public class AutreMain{
         ArrayList<Integer> nbr = new ArrayList<>();
         ArrayList<Double> amount = new ArrayList<>();
         ArrayList<Integer> nbr_sess = new ArrayList<>();
-        ArrayList<Session> sessions;
+        ArrayList<Sessions> sessions;
         PieChart piechart = new PieChart();
         
         int senior = 0, children = 0, regular = 0;
@@ -260,7 +260,7 @@ public class AutreMain{
             nbr.add(0);
             amount.add(0.0);
             nbr_sess.add(0);
-            for (Session session : sessions) {
+            for (Sessions session : sessions) {
                 if (movies.get(i).getId() == session.getMovie()) {
                     double tempo = amount.get(i);
                     amount.set(i, tempo + session.getAmount());
@@ -289,7 +289,7 @@ public class AutreMain{
         
         ArrayList<String> date = new ArrayList<>();
         boolean condi=false;
-        for (Session session : sessions) {
+        for (Sessions session : sessions) {
             for (String date1 : date) {
                 if (date1.equals(session.getDate().toString())) {
                     condi = true;
@@ -306,7 +306,7 @@ public class AutreMain{
         ArrayList<Double> toto = new ArrayList<>();
         for(int i=0;i<date.size();i++){
             toto.add(0.0);
-            for (Session session : sessions) {
+            for (Sessions session : sessions) {
                 if (session.getDate().toString().equals(date.get(i))) {
                     double temp = toto.get(i);
                     toto.set(i, temp + session.getAmount());
@@ -363,7 +363,7 @@ public class AutreMain{
         return scroll;
     }
     
-    public VBox totalTabStat(ArrayList<Movies> movies, ArrayList<Session> sessions,ArrayList<Integer> nbr_sess, ArrayList<Double> amount){
+    public VBox totalTabStat(ArrayList<Movies> movies, ArrayList<Sessions> sessions,ArrayList<Integer> nbr_sess, ArrayList<Double> amount){
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         final PieChart piechart2 = new PieChart();
@@ -422,7 +422,7 @@ public class AutreMain{
         
         double before10=0,before14=0,before18=0;
         
-        for (Session session : sessions) {
+        for (Sessions session : sessions) {
             if (session.getHoraire().length() < 5) {
                 before10 += session.getAmount();
             } else if (session.getHoraire().compareTo("14h00") < 0) {
@@ -962,7 +962,7 @@ public class AutreMain{
             but.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event){
-                    ArrayList<Session> sess;
+                    ArrayList<Sessions> sess;
                     try {
                         sess = controller.getSessionMovie(mov.getId());
                         tab.setContent(ModifSess(sess,mov.getId()));
@@ -1241,7 +1241,7 @@ public class AutreMain{
        return pane; 
     }
     
-    public BorderPane ModifSess(final ArrayList<Session> sess, final int id)
+    public BorderPane ModifSess(final ArrayList<Sessions> sess, final int id)
     {
         BorderPane tot = new BorderPane();
         tot.setId("setBack");
@@ -1287,12 +1287,12 @@ public class AutreMain{
         add.setStyle("-fx-font-weight:bold");
         final Label error = new Label("");
         error.setTextFill(RED);
-        for (Session ses : sess) {
+        for (Sessions ses : sess) {
             Button validate = new Button("Validate");
             validate.setId("butEmpl2");
             Button delete = new Button("Delete");
             delete.setId("butEmpl2");
-            final Session session = ses;
+            final Sessions session = ses;
             String temp = session.getDate().toString();
             final TextField date = new TextField(temp);
             final TextField heure = new TextField(session.getHoraire());
@@ -1378,12 +1378,12 @@ public class AutreMain{
         return tot;
     }
     
-    public void Up_Session(Session session,TextField date,TextField np, TextField heure) throws ParseException
+    public void Up_Session(Sessions session,TextField date,TextField np, TextField heure) throws ParseException
     {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date parsed = (Date) format.parse(date.getText());
         final java.sql.Date sql = new java.sql.Date(parsed.getTime());
-        Session ses = new Session(session.getId(),session.getMovie(),sql,Integer.valueOf(np.getText()),session.getActual(),heure.getText(),session.getAmount());
+        Sessions ses = new Sessions(session.getId(),session.getMovie(),sql,Integer.valueOf(np.getText()),session.getActual(),heure.getText(),session.getAmount());
         controller.update_Session(ses);
     }
     
@@ -1448,7 +1448,7 @@ public class AutreMain{
         @Override
         public void handle(ActionEvent event) {
             controller = new Controller("addsession","");
-            ArrayList<Session> session;
+            ArrayList<Sessions> session;
             try {
                     //conversion date
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -1481,11 +1481,11 @@ public class AutreMain{
                     {   
                         session = controller.getSessionMovie(idmov);
                         ArrayList IDs = new ArrayList();
-                    for (Session session1 : session) {
+                    for (Sessions session1 : session) {
                         IDs.add(session1.getId());
                     }
                         if(!IDs.contains(Integer.valueOf( ID.getText())) ) {
-                        Session S = new Session(Integer.valueOf(ID.getText()),idmov,sql,Integer.valueOf(max.getText()),0,heure.getText(),0.0);
+                        Sessions S = new Sessions(Integer.valueOf(ID.getText()),idmov,sql,Integer.valueOf(max.getText()),0,heure.getText(),0.0);
                         controller.Add_Session(S,idmov);
                         tab.setContent(acessSessionData());
                         }

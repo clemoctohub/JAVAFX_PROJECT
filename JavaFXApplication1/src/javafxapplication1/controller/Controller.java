@@ -14,7 +14,7 @@ import javafxapplication1.model.Connexion;
 import javafxapplication1.model.Employees;
 import javafxapplication1.model.Members;
 import javafxapplication1.model.Movies;
-import javafxapplication1.model.Session;
+import javafxapplication1.model.Sessions;
 
 /**
  *
@@ -41,9 +41,9 @@ public class Controller {
         return nom;
     }
     
-    public ArrayList<Session> getSessionConnected(String login){
+    public ArrayList<Sessions> getSessionConnected(String login){
         ArrayList<Integer> nvx;
-        ArrayList<Session> other = new ArrayList<>();
+        ArrayList<Sessions> other = new ArrayList<>();
         
         try {
             Connexion conn = new Connexion("movie", "root", "root");
@@ -115,7 +115,7 @@ public class Controller {
             num_sess = conn.getMovieFromCust(num,mail);
             condi = conn.delete_customer(num,mail);
             if(condi==true){
-                Session nvx = conn.recolterAmountSession(num_sess);
+                Sessions nvx = conn.recolterAmountSession(num_sess);
                 double amount = nvx.getAmount()-4;
                 int nbr = nvx.getActual()-1;
                 conn.add_update_session(nbr, amount, num_sess);
@@ -166,6 +166,7 @@ public class Controller {
         tot = tot.substring(0,tot.length()-2);
         double amount = Double.parseDouble(tot);
         int nombre = Integer.parseInt(nbr);
+        
         if(mail==null || mail.equals(""))
             mail = "noMailForThisUser@error";
         date = date.replaceAll("/", "-");
@@ -179,18 +180,26 @@ public class Controller {
                 }
             }
             conn.insert_customer(id, x,date,mail);
-            Session sess = conn.recolterAmountSession(id);
+            Sessions sess = conn.recolterAmountSession(id);
             amount += sess.getAmount();
             nombre += sess.getActual();
             conn.add_update_session(nombre, amount, id);
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        if(mail!=null)
+            for(int i=0;i<mail.length();i++){
+                if(mail.charAt(i)=='@'){
+                    Members for_mail = new Members(0,mail);
+                    for_mail.sendMessage(x,mail);
+                }
+            }
         return x;
     }
     
-    public ArrayList<Session> getSessionMovie(int id) throws SQLException, ClassNotFoundException, ParseException{
-        ArrayList<Session> nvx;
+    public ArrayList<Sessions> getSessionMovie(int id) throws SQLException, ClassNotFoundException, ParseException{
+        ArrayList<Sessions> nvx;
         Connexion conn = new Connexion("movie", "root", "root");
         nvx = conn.recolterChampsSessionsMovie(id);
         return nvx;
@@ -381,8 +390,8 @@ public class Controller {
         
         return nvx;
     }
-    public ArrayList<Session> recolterSessions(){
-        ArrayList<Session> nvx = new ArrayList<>();
+    public ArrayList<Sessions> recolterSessions(){
+        ArrayList<Sessions> nvx = new ArrayList<>();
         try {
             Connexion conn = new Connexion("movie","root","root");
             nvx = conn.recolterChampsSessions();
@@ -499,7 +508,7 @@ public class Controller {
         return true;
     }
 
-    public void update_Session(Session sess)
+    public void update_Session(Sessions sess)
     {
         try {
             Connexion conn = new Connexion("movie", "root", "");
@@ -509,7 +518,7 @@ public class Controller {
         }
     }
     
-    public void Add_Session(Session sess, int id)
+    public void Add_Session(Sessions sess, int id)
     {
         try {
             Connexion conn = new Connexion("movie", "root", "");

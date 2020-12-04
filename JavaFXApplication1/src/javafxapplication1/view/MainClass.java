@@ -44,7 +44,7 @@ import javafxapplication1.model.Cinema;
 import javafxapplication1.model.Employees;
 import javafxapplication1.model.Members;
 import javafxapplication1.model.Movies;
-import javafxapplication1.model.Session;
+import javafxapplication1.model.Sessions;
 
 /**
  *
@@ -69,7 +69,6 @@ public class MainClass extends Application {
         connected.setId("bande");
         connected.setAlignment(Pos.CENTER_RIGHT);
         HBox header = new HBox();
-        header.setStyle("-fx-background-color:black;");
         header.setAlignment(Pos.CENTER);
         HBox enter = new HBox(10);
         
@@ -89,7 +88,7 @@ public class MainClass extends Application {
         tabPane.getTabs().add(tab4);
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         VBox vbox = new VBox();
-        //vbox.setStyle("-fx-background-color:black;");
+        vbox.setStyle("-fx-background-color:black;");
         vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().add(header);
         vbox.getChildren().add(tabPane);
@@ -139,7 +138,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public VBox dispMovieToBuy(final Movies movie,Session sess,final ArrayList<Movies> movies,final int tab){
+    public VBox dispMovieToBuy(final Movies movie,Sessions sess,final ArrayList<Movies> movies,final int tab){
         VBox tot = new VBox(50);
         tot.setId("movie-paypage");
         tot.setAlignment(Pos.CENTER);
@@ -198,7 +197,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public VBox dispPaiCustomer(final Session sess,final int tab){
+    public VBox dispPaiCustomer(final Sessions sess,final int tab){
         HBox nvx = new HBox(20);
         nvx.setAlignment(Pos.CENTER);
         Image[] img = new Image[4];
@@ -365,7 +364,7 @@ public class MainClass extends Application {
         return tot;
     }
     
-    public BorderPane paymentPage(Movies movie,Session sess,final ArrayList<Movies> movies,int tab){
+    public BorderPane paymentPage(Movies movie,Sessions sess,final ArrayList<Movies> movies,int tab){
         BorderPane tot = new BorderPane();
         tot.setLeft(dispMovieToBuy(movie,sess,movies,tab));
         tot.setCenter(dispPaiCustomer(sess,tab));
@@ -458,7 +457,7 @@ public class MainClass extends Application {
         tot.setStyle("-fx-padding : 0 0 0 1em; -fx-background-color: #fff;");
         GridPane nvx = new GridPane();
         nvx.setHgap(50);
-        ArrayList<Session> sess = new ArrayList<>();
+        ArrayList<Sessions> sess = new ArrayList<>();
         controller = new Controller("session","tab3");
         try{
             sess = controller.getSessionMovie(movie.getId());
@@ -513,7 +512,7 @@ public class MainClass extends Application {
             node4.getChildren().add(button.get(i));
             node5.getChildren().add(max);
             final Button mybut = button.get(i);
-            final Session session = sess.get(i);
+            final Sessions session = sess.get(i);
             mybut.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event){
@@ -709,7 +708,7 @@ public class MainClass extends Application {
         Label str = new Label("Subscribe if you don't have an account yet : ");
         str.setStyle("-fx-font-family:Tahoma; -fx-font-size:1.5em;");
         Hyperlink hyperlink = new Hyperlink("Subscibe here");
-        hyperlink.setStyle("-fx-font-family:Impact;-fx-font-size:1.5em;");
+        hyperlink.setStyle("-fx-font-family:Impact;-fx-font-size:1.5em;-fx-text-fill:#000000;");
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -849,7 +848,7 @@ public class MainClass extends Application {
         tot.setStyle("-fx-background-color:#F0C300;");
         tot.setId("changepass");
         controller = new Controller("session_member_connected","tab4");
-        ArrayList<Session> sess;
+        ArrayList<Sessions> sess;
         ArrayList<Integer> tt;
         sess = controller.getSessionConnected(actualMember.getLogin());
         tt = controller.getIdCustomerSess(actualMember.getLogin());
