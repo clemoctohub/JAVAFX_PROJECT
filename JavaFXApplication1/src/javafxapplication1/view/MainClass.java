@@ -32,6 +32,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import static javafx.scene.paint.Color.*;
 import java.net.MalformedURLException;
+import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -39,6 +40,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.WindowEvent;
 import javafxapplication1.controller.Controller;
 import javafxapplication1.model.Cinema;
 import javafxapplication1.model.Employees;
@@ -107,6 +109,13 @@ public class MainClass extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                Platform.exit();
+            }
+
+        });
     }
     
     private double calculatePrice(int i){
@@ -972,8 +981,8 @@ public class MainClass extends Application {
     public BorderPane getSPane()
     {   
         BorderPane pane = new BorderPane();
-        ScrollPane scroll = new ScrollPane();
-        scroll.setContent(getPanetab1());
+        final ScrollPane scroll = new ScrollPane();
+        scroll.setContent(getPanetab1()); 
         scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
         pane.setCenter(scroll);
         pane.setRight(deletePlace());
@@ -1102,6 +1111,7 @@ public class MainClass extends Application {
         ArrayList<Movies> movies;
         controller = new Controller("movie","tab1");
         movies = controller.dispAllMovies();
+        
         FlowPane pane = new FlowPane();
         GridPane gp = new GridPane();
         ArrayList<Button> tabButton = new ArrayList<>();
@@ -1283,15 +1293,30 @@ public class MainClass extends Application {
         bouton.setStyle("-fx-padding : 0.2em 0 0.5em 0; -fx-background-color : black;");
         bouton.setAlignment(Pos.CENTER);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
-        Button but = new Button("Refresh Page");
-        but.setId("price-rd");
-        bouton.getChildren().addAll(but,button);
-        but.setOnAction(new EventHandler<ActionEvent>() {
-            @Override  
-            public void handle(ActionEvent arg0) {
-                tab2.setContent(getDiscount());
+        bouton.getChildren().add(button);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        tab2.setContent(getDiscount());
+                    }
+                };
+
+                while (true) {
+                    try {
+                        Thread.sleep(15000);
+                    } catch (InterruptedException ex) {
+                    }
+
+                    Platform.runLater(updater);
+                }
             }
-        });  
+        });
+        thread.setDaemon(true);
+        thread.start();
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override  
             public void handle(ActionEvent arg0) {

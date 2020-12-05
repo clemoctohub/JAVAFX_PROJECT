@@ -37,6 +37,8 @@ import static javafx.scene.paint.Color.GREEN;
 import static javafx.scene.paint.Color.RED;
 import javafx.stage.Stage;
 import java.util.Collections;
+import javafx.application.Platform;
+import javafx.stage.WindowEvent;
 import javafxapplication1.controller.Controller;
 import javafxapplication1.model.Employees;
 import javafxapplication1.model.Members;
@@ -76,6 +78,13 @@ public class AutreMain{
         second.setScene(scene);
         second.setResizable(true);
         second.show();
+        second.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                Platform.exit();
+            }
+
+        });
     }
     
     public BorderPane homePage(){
@@ -215,6 +224,32 @@ public class AutreMain{
     }
     
     public ScrollPane seeStatistics(){
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        tab.setContent(seeStatistics());
+                    }
+                };
+
+                while (true) {
+                    try {
+                        Thread.sleep(30000);
+                    } catch (InterruptedException ex) {
+                    }
+                    // UI update is run on the Application thread
+                    Platform.runLater(updater);
+                }
+            }
+
+        });
+        // don't let thread prevent JVM shutdown
+        thread.setDaemon(true);
+        thread.start();
         ScrollPane scroll = new ScrollPane();
         scroll.setStyle("-fx-background-color:#8B4513");
         GridPane nvx = new GridPane();
@@ -428,9 +463,9 @@ public class AutreMain{
         for (Sessions session : sessions) {
             if (session.getHoraire().length() < 5) {
                 before10 += session.getAmount();
-            } else if (session.getHoraire().compareTo("14h00") < 0) {
+            } else if (session.getHoraire().compareTo("14h00") < 0){
                 before10 += session.getAmount();
-            } else if (session.getHoraire().compareTo("18h00") < 0) {
+            } else if (session.getHoraire().compareTo("18h00") < 0){
                 before14 += session.getAmount();
             } else {
                 before18 += session.getAmount();
@@ -776,15 +811,6 @@ public class AutreMain{
                 tab.setContent(accessCinemaData());
             }
         });
-        //Boutton Ajouter Customer
-        Button addCustomer = new Button("(+) Add a customer");
-        addCustomer.setId("butMovie");
-        addCustomer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event){
-                //tab.setContent(AddCustomer());
-            }
-        }); 
         
         //titre
         Label title = new Label("Delete a Customer from the DataBase");
@@ -819,11 +845,7 @@ public class AutreMain{
                     public void handle(ActionEvent event){
                         controller = new Controller("","");
                         controller.delete_customer(c.getId(),c.getLogin());
-                        try {
-                            tab.setContent(accesMoviesData());
-                        } catch (SQLException | ClassNotFoundException | ParseException ex) {
-                            Logger.getLogger(AutreMain.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        tab.setContent(accessCinemaData());
                     }
                 });
             }
