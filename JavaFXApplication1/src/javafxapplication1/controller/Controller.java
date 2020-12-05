@@ -400,6 +400,7 @@ public class Controller {
         try {
             Connexion conn = new Connexion("movie","root","root");
             nvx = conn.recolterChampsSessions();
+            conn.closeConn();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -546,6 +547,7 @@ public class Controller {
         ArrayList<Members> customers;
         Connexion nvx = new Connexion("movie", "root", "");
         customers = nvx.recolterChampsCustomer();
+        nvx.closeConn();
         return customers;
     }
 
@@ -553,7 +555,7 @@ public class Controller {
         try {
             Connexion conn = new Connexion("movie", "root", "");
             conn.delete_customer(id,e);
-            
+            conn.closeConn();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }

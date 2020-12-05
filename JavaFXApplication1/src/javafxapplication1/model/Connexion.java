@@ -25,21 +25,9 @@ public class Connexion {
     private final Connection conn;
     private final Statement stmt;
     private ResultSet rset;
-    private ResultSetMetaData rsetMeta;
     /**
      * ArrayList public pour les tables
      */
-    public ArrayList<String> tables = new ArrayList<>();
-    /**
-     * ArrayList public pour les requêtes de sélection
-     */
-    public ArrayList<String> requetes = new ArrayList<>();
-    /**
-     * ArrayList public pour les requêtes de MAJ
-     */
-    public ArrayList<String> requetesMaj = new ArrayList<>();
-    private Object java;
-    private Object pstmt;
 
     /**
      * Constructeur avec 3 paramètres : nom, login et password de la BDD locale
@@ -88,23 +76,6 @@ public class Connexion {
         
         conn.close();
     }
-    //Ajout d'un nouveau film dans la base de donnees 
-    public void insert_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, ArrayList<Sessions> sessions, String description) throws SQLException{
-        String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note, description)"+" VALUES(?,?,?,?,?,?,?,?)";
-        
-        PreparedStatement nn = conn.prepareStatement(sql);
-        nn.setInt(1, id);
-        nn.setString(2, title);
-        nn.setString(3, author);
-        nn.setString(4, type);
-        nn.setDate(5, date);
-        nn.setInt(6, runningTime);
-        nn.setInt(7, rate);
-        nn.setString(8, description);
-        nn.execute(); 
-        
-        insert_seance(sessions,id);
-    }
     
     public void add_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, String description)throws SQLException{
         String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note, description)"+" VALUES(?,?,?,?,?,?,?,?)";
@@ -119,8 +90,8 @@ public class Connexion {
         nn.setInt(7, rate);
         nn.setString(8, description);
         nn.execute();
+        conn.close();
     }
-    
     
     public void insert_seance(ArrayList<Sessions> sessions,int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
@@ -148,6 +119,7 @@ public class Connexion {
         pstm.setInt(6, session.getActual());
         pstm.setDouble(7, session.getAmount());
         pstm.execute();
+        conn.close();
     }
     
     public void insert_customer(int session_id, int id, String date,String mail) throws SQLException, ParseException{
@@ -170,47 +142,7 @@ public class Connexion {
         ps.setString(4, last);
         ps.setString(5, acc);
         ps.execute();
-    }
-    
-    public void update_seance(Sessions session,String changes) throws SQLException{
-        switch (changes) {
-            case "movie_id":
-                {
-                    String sql = "update session set movie_id = ? where id = ?";
-                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
-                    preparedStmt.setInt(1,session.getMovie());
-                    preparedStmt.setInt(2, session.getId());
-                    preparedStmt.execute();
-                    break;
-                }
-            case "number_places":
-                {
-                    String sql = "update session set max_place = ? where id = ?";
-                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
-                    preparedStmt.setInt(1,session.getNbr_places_max());
-                    preparedStmt.setInt(2, session.getId());
-                    preparedStmt.execute();
-                    break;
-                }
-            case "date":
-                {
-                    String sql = "update session set date = ? where id = ?";
-                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
-                    preparedStmt.setDate(1,session.getDate());
-                    preparedStmt.setInt(2, session.getId());
-                    preparedStmt.execute();
-                    break;
-                }
-            case "horaire":
-                {
-                    String sql = "update session set heure = ? where id = ?";
-                    PreparedStatement preparedStmt = conn.prepareStatement(sql);
-                    preparedStmt.setString(1,session.getHoraire());
-                    preparedStmt.setInt(2, session.getId());
-                    preparedStmt.execute();
-                    break;
-                }
-        }
+        conn.close();
     }
     
     public void add_update_session(int tot,double amount,int id) throws SQLException{
@@ -234,6 +166,7 @@ public class Connexion {
         preparedStmt.setInt(5, session.getActual());
         preparedStmt.setDouble(6, session.getAmount());
         preparedStmt.execute();
+        conn.close();
     }
     
     public void update_member(int tot,String id) throws SQLException{
@@ -274,6 +207,7 @@ public class Connexion {
         preparedStmt.setInt(7,movie.getRate());
         preparedStmt.setInt(8,movie.getId());
         preparedStmt.executeUpdate();
+        conn.close();
     }
     
     public void changePromotions(double i1,double i2, double i3) throws SQLException{
@@ -300,7 +234,6 @@ public class Connexion {
         }
         
         conn.close();
-        
     }
     //Suppression d'un membre dans la base de donnees
     public void delete_member(String login) throws SQLException{
@@ -327,7 +260,7 @@ public class Connexion {
                 pst.executeUpdate();
             }
         }  
-        
+        conn.close();
     }
     
     public void delete_session(int id) throws SQLException{
@@ -340,7 +273,8 @@ public class Connexion {
                 psmt_.setInt(1, id);
                 psmt_.executeUpdate();
             }
-        }  
+        }
+        conn.close();
     }
     
     public boolean delete_customer(int id,String e) throws SQLException{
@@ -488,9 +422,6 @@ public class Connexion {
         // récupération de l'ordre de la requete
         rset = stmt.executeQuery("select * from movie");
 
-        // récupération du résultat de l'ordre
-        rsetMeta = rset.getMetaData();
-
 
         // creation d'une ArrayList d'Employees
         ArrayList<Movies> liste;
@@ -543,8 +474,6 @@ public class Connexion {
     public int getMovieFromCust(int id,String e) throws SQLException{
         rset = stmt.executeQuery("select * from customer");
 
-        // récupération du résultat de l'ordre
-        rsetMeta = rset.getMetaData();
         // creation d'une ArrayList d'Employees
         
         // tant qu'il reste une ligne 
@@ -561,8 +490,6 @@ public class Connexion {
     public ArrayList<Sessions> recolterChampsSessions() throws SQLException{
         rset = stmt.executeQuery("select * from session");
 
-        // récupération du résultat de l'ordre
-        rsetMeta = rset.getMetaData();
         // creation d'une ArrayList d'Employees
         ArrayList<Sessions> liste = new ArrayList<>();
         
@@ -599,8 +526,6 @@ public class Connexion {
     public ArrayList<Customers> recolterChampsCustomer(int id_movie) throws SQLException{
         rset = stmt.executeQuery("select * from customer");
 
-        // récupération du résultat de l'ordre
-        rsetMeta = rset.getMetaData();
         // creation d'une ArrayList d'Employees
         ArrayList<Customers> liste = new ArrayList<>();
         
@@ -619,8 +544,6 @@ public class Connexion {
     public ArrayList<Members> recolterChampsCustomer() throws SQLException{
         rset = stmt.executeQuery("select * from customer");
 
-        // récupération du résultat de l'ordre
-        rsetMeta = rset.getMetaData();
         // creation d'une ArrayList d'Employees
         ArrayList<Members> liste = new ArrayList<>();
         
@@ -666,20 +589,6 @@ public class Connexion {
         return liste;
     }
     
-    //Affichage console des Films et des Employés
-    public void afficherMovies()throws SQLException{
-        ArrayList<Movies> listeMov = recolterChampsMovies();
-        for (Movies listeMov1 : listeMov) {
-            System.out.println("title " + listeMov1.getTitle() + " date " + listeMov1.getDate());
-        }
-    }
-    public void afficherEmployees() throws SQLException{
-        ArrayList<Employees> listeEmp = recolterChampsEmployee();
-        for (Employees listeEmp1 : listeEmp) {
-            System.out.println(listeEmp1.getFirstName() + " " + listeEmp1.getLastName() + " " + listeEmp1.getLogin() + " " + listeEmp1.getPassword());
-        }
-    }
-    
     //Check des logins et mot de passe pour les membres et les employés
     public Members checkLoginMember(String login, String mdp) throws SQLException{
         ArrayList<Members> listeMem = recolterChampsMember();
@@ -706,9 +615,6 @@ public class Connexion {
         double[] promo = new double[3];
         
         rset = stmt.executeQuery("select * from reduction");
-
-        // récupération du résultat de l'ordre
-        rsetMeta = rset.getMetaData();
         
         // tant qu'il reste une ligne 
         int i=0;
