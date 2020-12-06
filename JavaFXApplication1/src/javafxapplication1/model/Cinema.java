@@ -20,7 +20,7 @@ public class Cinema {
     final double PRIX = 8;
     private double regular,senior,children;
     private String description;
-
+    private final String password_cine = "root";
     public void setRegular(double regular) {
         this.regular = regular;
     }
@@ -35,7 +35,7 @@ public class Cinema {
     public Cinema(){
         double[] promo = new double[3];
         try {
-            Connexion nvx = new Connexion("movie", "root", "");
+            Connexion nvx = new Connexion("movie", "root", password_cine);
             promo = nvx.getReduc();
         } catch (SQLException | ClassNotFoundException | ParseException ex) {
             Logger.getLogger(Cinema.class.getName()).log(Level.SEVERE, null, ex);

@@ -91,7 +91,7 @@ public class Members extends Customers{
             Transport.send(message);
         }
         catch(MessagingException e){
-            System.out.println(e);
+            System.out.println("Mail not send");
         }
         
     }

@@ -1341,7 +1341,6 @@ public class MainClass extends Application {
                     public void run() {
                         Cinema cinema = new Cinema();
                         discounts.setText(cinema.getDescription());
-                        System.out.println("la");
                     }
                 };
 
