@@ -224,32 +224,6 @@ public class AutreMain{
     }
     
     public ScrollPane seeStatistics(){
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        tab.setContent(seeStatistics());
-                    }
-                };
-
-                while (true) {
-                    try {
-                        Thread.sleep(30000);
-                    } catch (InterruptedException ex) {
-                    }
-                    // UI update is run on the Application thread
-                    Platform.runLater(updater);
-                }
-            }
-
-        });
-        // don't let thread prevent JVM shutdown
-        thread.setDaemon(true);
-        thread.start();
         ScrollPane scroll = new ScrollPane();
         scroll.setStyle("-fx-background-color:#8B4513");
         GridPane nvx = new GridPane();
@@ -1507,7 +1481,7 @@ public class AutreMain{
                     
                     else    
                     {   
-                        session = controller.getSessionMovie(idmov);
+                        session = controller.recolterSessions();
                         ArrayList IDs = new ArrayList();
                     for (Sessions session1 : session) {
                         IDs.add(session1.getId());

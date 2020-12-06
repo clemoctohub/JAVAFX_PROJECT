@@ -519,11 +519,11 @@ public class MainClass extends Application {
                 max.setTextFill(RED);
             }
             else if(sess.get(i).getActual()>=sess.get(i).getNbr_places_max()*0.9){
-                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits left");
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits taken");
                 max.setTextFill(ORANGE);
             }
             else{
-                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits left");
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits taken");
                 max.setTextFill(GREEN);
             }
             node4.getChildren().add(button.get(i));
@@ -724,7 +724,7 @@ public class MainClass extends Application {
         HBox nvx = new HBox();
         Label str = new Label("Subscribe if you don't have an account yet : ");
         str.setStyle("-fx-font-family:Tahoma; -fx-font-size:1.5em;");
-        Hyperlink hyperlink = new Hyperlink("Subscibe here");
+        Hyperlink hyperlink = new Hyperlink("Subscribe here");
         hyperlink.setStyle("-fx-font-family:Impact;-fx-font-size:1.5em;-fx-text-fill:#000000;");
         hyperlink.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -1294,29 +1294,6 @@ public class MainClass extends Application {
         bouton.setAlignment(Pos.CENTER);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
         bouton.getChildren().add(button);
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        tab2.setContent(getDiscount());
-                    }
-                };
-
-                while (true) {
-                    try {
-                        Thread.sleep(15000);
-                    } catch (InterruptedException ex) {
-                    }
-
-                    Platform.runLater(updater);
-                }
-            }
-        });
-        thread.setDaemon(true);
-        thread.start();
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override  
             public void handle(ActionEvent arg0) {
@@ -1330,7 +1307,7 @@ public class MainClass extends Application {
     }
     
     public GridPane getGridtab2(){
-        Cinema cine = new Cinema();
+        final Cinema cine = new Cinema();
         GridPane root=new GridPane();
         root.setId("root-tab2");
         root.setAlignment(Pos.CENTER);
@@ -1355,7 +1332,31 @@ public class MainClass extends Application {
         drop.setSpread(0.2);  
         drop.setRadius(10);
         titre.setEffect(drop);
-        Text discounts = new Text(cine.getDescription());
+        final Text discounts = new Text(cine.getDescription());
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+                    @Override
+                    public void run() {
+                        Cinema cinema = new Cinema();
+                        discounts.setText(cinema.getDescription());
+                        System.out.println("la");
+                    }
+                };
+
+                while (true) {
+                    try {
+                        Thread.sleep(15000);
+                    } catch (InterruptedException ex) {
+                    }
+
+                    Platform.runLater(updater);
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
         discounts.setId("discounts-tab2");
         discounts.setY(50);
         
