@@ -486,7 +486,7 @@ public class MainClass extends Application {
         Label date_txt = new Label("Date ");
         Label heure_txt = new Label("Heure ");
         Label nbr_txt = new Label("Number of places ");
-        Label reserver = new Label("Click to reserve a place");
+        Label reserver = new Label("Click to book a place");
         
         ArrayList<Button> button = new ArrayList<>();
         VBox node1 = new VBox(20),node2 = new VBox(20),node3 = new VBox(20),node4 = new VBox(20),node5 = new VBox(20);
@@ -508,22 +508,22 @@ public class MainClass extends Application {
             Label nbr = new Label(nbrr+" places");
             Label max = new Label("");
             
-            button.add(new Button("Reserve"));
+            button.add(new Button("Book"));
             button.get(i).setId("button-reserv");
             node1.getChildren().add(date);
             node2.getChildren().add(heure);
             node3.getChildren().add(nbr);
             if(sess.get(i).getActual()>=sess.get(i).getNbr_places_max()){
                 button.get(i).setDisable(true);
-                max.setText("Full session");
+                max.setText("House full");
                 max.setTextFill(RED);
             }
             else if(sess.get(i).getActual()>=sess.get(i).getNbr_places_max()*0.9){
-                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits taken");
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" seats taken");
                 max.setTextFill(ORANGE);
             }
             else{
-                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" sits taken");
+                max.setText(sess.get(i).getActual()+" / "+sess.get(i).getNbr_places_max()+" seats taken");
                 max.setTextFill(GREEN);
             }
             node4.getChildren().add(button.get(i));
@@ -604,11 +604,11 @@ public class MainClass extends Application {
             Label nom = new Label("Title : "+maString+" ");
             Label auteur = new Label("Author : "+movies.get(i).getAuthor()+" ");
             Label date = new Label("Date : "+movies.get(i).getDate()+" ");
-            tabButton.add(new Button("Reserve"));
+            tabButton.add(new Button("Booking"));
             HBox hbo = new HBox(20);
             hbo.setAlignment(Pos.CENTER_LEFT);
             hbo.setId("disp-movie");
-            tabButton.add(new Button("Reserve"));
+            tabButton.add(new Button("Book"));
             tabButton.get(i).setId("disp-button");
             hbo.getChildren().addAll(view,nom,auteur,date,tabButton.get(i));
             vbox.getChildren().add(hbo);

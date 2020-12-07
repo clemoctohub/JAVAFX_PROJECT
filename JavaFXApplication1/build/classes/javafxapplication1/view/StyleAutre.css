@@ -27,7 +27,7 @@ and open the template in the editor.
 #labMenu{
     -fx-font-size : 2em;
     -fx-font-weigth : bold;
-    -fx-text-fill:#F5DEB3;
+    -fx-text-fill:#B0C4DE;
 }
 #logout{
     -fx-font-size : 1.2em;
@@ -49,7 +49,7 @@ and open the template in the editor.
 }
 #dsgn-promo-radio{
     -fx-font-size : 1.2em;
-    -fx-border-color: #8B4513;
+    -fx-border-color: #DADFE1;
     -fx-text-fill: #F5DEB3;
 }
 #stat-grid{
@@ -60,16 +60,16 @@ and open the template in the editor.
     -fx-background-color: transparent;
 }
 #back-but:hover{
-    -fx-background-color: #A0522D;
+    -fx-background-color: #D2D7D3;
 }
 #back-but-hide{
     -fx-background-color: transparent;
 }
 #setBack{
-    -fx-background-color:#8B4513;
+    -fx-background-color:#DADFE1;
 }
 #labEmpl{
-    -fx-border-color: #8B4513;
+    -fx-border-color: #DADFE1;
     -fx-font-size : 1.3em;
 }
 #butEmpl{

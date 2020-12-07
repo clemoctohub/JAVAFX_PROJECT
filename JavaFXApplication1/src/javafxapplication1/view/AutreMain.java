@@ -65,10 +65,10 @@ public class AutreMain{
         tab.setContent(homePage());
         tot.getTabs().add(tab);
         connected = new Label("Hello "+actual.getFirstName().substring(0,1).toUpperCase()+actual.getFirstName().substring(1)+" "+actual.getLastName().substring(0,1).toUpperCase()+actual.getLastName().substring(1)+" !");
-        connected.setStyle("-fx-font-size : 2em; -fx-text-fill:#F5DEB3; -fx-font-weight : bold");
+        connected.setStyle("-fx-font-size : 2em; -fx-text-fill:#6C7A89; -fx-font-weight : bold");
         
         VBox ad = new VBox(10);
-        ad.setStyle("-fx-background-color :#8B4513");
+        ad.setStyle("-fx-background-color :#DADFE1");
         ad.setAlignment(Pos.CENTER);
         ad.getChildren().addAll(connected,tot);
         
@@ -90,7 +90,7 @@ public class AutreMain{
     public BorderPane homePage(){
         BorderPane tot = new BorderPane();
         VBox nvx = new VBox(50);
-        nvx.setStyle("-fx-background-color:#8B4513");
+        nvx.setStyle("-fx-background-color:#DADFE1");
         nvx.setAlignment(Pos.CENTER);
         Label lab1 = new Label("MENU");
         lab1.setId("labMenu");
@@ -225,7 +225,7 @@ public class AutreMain{
     
     public ScrollPane seeStatistics(){
         ScrollPane scroll = new ScrollPane();
-        scroll.setStyle("-fx-background-color:#8B4513");
+        scroll.setStyle("-fx-background-color:#DADFE1");
         GridPane nvx = new GridPane();
         nvx.setId("stat-grid");
         nvx.setVgap(50);
@@ -496,7 +496,7 @@ public class AutreMain{
     
     public BorderPane changePromotion(){
         BorderPane toto=new BorderPane();
-        toto.setStyle("-fx-background-color:#8B4513");
+        toto.setStyle("-fx-background-color:#DADFE1");
         VBox tot = new VBox(10);
         tot.setAlignment(Pos.CENTER);
         Label lab = new Label("Change actual offers : ");
@@ -648,7 +648,7 @@ public class AutreMain{
     
     public BorderPane accessMembEmploy(){
         BorderPane tot = new BorderPane();
-        tot.setStyle("-fx-background-color : #8B4513");
+        tot.setStyle("-fx-background-color : #DADFE1");
         Button but = new Button();
         but.setId("back-but");
         Image img2;
@@ -697,7 +697,7 @@ public class AutreMain{
     
     public BorderPane accessCinemaData(){
         BorderPane tot = new BorderPane();
-        tot.setStyle("-fx-background-color : #8B4513");
+        tot.setStyle("-fx-background-color : #DADFE1");
         Button but = new Button();
         but.setId("back-but");
         Image img2;
