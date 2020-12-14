@@ -242,6 +242,7 @@ public class AutreMain{
      * sous forme de graphics 
      */
     public ScrollPane seeStatistics(){
+
         ScrollPane scroll = new ScrollPane();
         scroll.setStyle("-fx-background-color:#DADFE1");
         GridPane nvx = new GridPane();
@@ -530,7 +531,7 @@ public class AutreMain{
         VBox tot = new VBox(10);
         tot.setAlignment(Pos.CENTER);
         Label lab = new Label("Change actual offers : ");
-        lab.setStyle("-fx-font-size:1.2em; -fx-text-fill: #F5DEB3;");
+        lab.setStyle("-fx-font-size:1.2em; -fx-text-fill: black;");
         final ToggleGroup group = new ToggleGroup();
         RadioButton button1 = new RadioButton("Senior : ");
         RadioButton button2 = new RadioButton("Children : ");  
@@ -1099,7 +1100,8 @@ public class AutreMain{
         validate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event){
-                if(auteur.getText().equals("") || titre.getText().equals("") || description.getText().equals("") || genre.getText().equals("") || Integer.valueOf(note.getText())<0 || Integer.valueOf(note.getText())>10)
+                error.setText("");
+                if(auteur.getText().equals("") || titre.getText().equals("") || description.getText().equals("") || genre.getText().equals("") || Integer.valueOf(note.getText())<0 || Integer.valueOf(note.getText())>10 || note.getText().equals(""))
                     error.setText("Please fill all the inputs or enter correct inputs");
                 else{
                     controller = new Controller("movie","MoviesData");
@@ -1253,7 +1255,7 @@ public class AutreMain{
                         IDs.add(movie.getId());
                     }
                     if(ID.getText().equals("") || !IDs.contains(Integer.valueOf( ID.getText())) ) {
-                        if(auteur.getText().equals("") || titre.getText().equals("") || description.getText().equals("") || genre.getValue()==null || Integer.valueOf(note.getText())<0 || Integer.valueOf(note.getText())>10 && checkDateFormat(dat.getText())==0)
+                        if(auteur.getText().equals("") || titre.getText().equals("") || description.getText().equals("") || genre.getValue()==null || Integer.valueOf(note.getText())<0 || Integer.valueOf(note.getText())>10 || checkDateFormat(dat.getText())==0)
                             error.setText("Please fill all the inputs or enter correct inputs");
                         else if(checkDateFormat(dat.getText())==1) {
                             //conversion date

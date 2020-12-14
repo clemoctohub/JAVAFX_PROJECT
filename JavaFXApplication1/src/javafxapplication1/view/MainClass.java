@@ -117,7 +117,11 @@ public class MainClass extends Application {
 
         });
     }
-    
+/**
+ * Calcul du prix du ticket selon le client
+ * @param i
+ * @return 
+ */
     private double calculatePrice(int i){
         Cinema cine = new Cinema();
         double j;
@@ -128,7 +132,11 @@ public class MainClass extends Application {
         else
             return i*cine.getPrix();
     }
-    
+/**
+ * PAge de validation du paiement
+ * @param id
+ * @return 
+ */    
     public VBox buyItemsPage(int id){
         VBox tot = new VBox(50);
         tot.setId("paid-page");
@@ -154,7 +162,14 @@ public class MainClass extends Application {
         tot.getChildren().addAll(ok,dac,idi,war,but);
         return tot;
     }
-    
+/**
+ * Affichage des films avec poster et decription
+ * @param movie
+ * @param sess
+ * @param movies
+ * @param tab
+ * @return 
+ */    
     public VBox dispMovieToBuy(final Movies movie,Sessions sess,final ArrayList<Movies> movies,final int tab){
         VBox tot = new VBox(50);
         tot.setId("movie-paypage");
@@ -213,7 +228,12 @@ public class MainClass extends Application {
         
         return tot;
     }
-    
+/**
+ * Page de paiement
+ * @param sess
+ * @param tab
+ * @return 
+ */    
     public VBox dispPaiCustomer(final Sessions sess,final int tab){
         HBox nvx = new HBox(20);
         nvx.setAlignment(Pos.CENTER);
@@ -338,7 +358,10 @@ public class MainClass extends Application {
         
         return container;
     }
-    
+/**
+ * Page une fois connecte en tant que client
+ * @return 
+ */    
     public VBox dispTicketCustomer(){
         VBox tot = new VBox(20);
         tot.setId("co-pay");
@@ -380,7 +403,14 @@ public class MainClass extends Application {
         tot.getChildren().addAll(co,nom,but);
         return tot;
     }
-    
+/**
+ * Page de paiement qui reunit les "sous-pages"
+ * @param movie
+ * @param sess
+ * @param movies
+ * @param tab
+ * @return 
+ */    
     public BorderPane paymentPage(Movies movie,Sessions sess,final ArrayList<Movies> movies,int tab){
         BorderPane tot = new BorderPane();
         tot.setLeft(dispMovieToBuy(movie,sess,movies,tab));
@@ -389,7 +419,13 @@ public class MainClass extends Application {
         //tot.setAlignment(Pos.CENTER);
         return tot;
     }
-    
+/**
+ * Affichage d'un film en detail
+ * @param movie
+ * @param movies
+ * @param tab
+ * @return 
+ */    
     public BorderPane dispMovie(Movies movie,final ArrayList<Movies> movies, final int tab){
         GridPane tot = new GridPane();
         BorderPane border = new BorderPane();
@@ -468,7 +504,13 @@ public class MainClass extends Application {
         return border;
     }
     
-    
+/**
+ * Affichage des sessions dispo du film
+ * @param movie
+ * @param movies
+ * @param tab
+ * @return 
+ */    
     public ScrollPane dispAllSess(final Movies movie,final ArrayList<Movies> movies, final int tab){
         ScrollPane tot = new ScrollPane();
         tot.setStyle("-fx-padding : 0 0 0 1em; -fx-background-color: #fff;");
@@ -557,14 +599,25 @@ public class MainClass extends Application {
         tot.setContent(nvx);
         return tot;
     }
-    
+/**
+ * Page qui affiche les seances d'un film
+ * @param movie
+ * @param movies
+ * @param tab
+ * @return 
+ */    
     public BorderPane dispSeance(Movies movie,ArrayList<Movies> movies, int tab){
         BorderPane tot = new BorderPane();
         tot.setTop(dispMovie(movie,movies,tab));
         tot.setCenter(dispAllSess(movie,movies,tab));
         return tot;
     }
-    
+/**
+ * Onglet de recherche de film
+ * @param condi
+ * @param movies
+ * @return 
+ */    
     public BorderPane searchTab(boolean condi,ArrayList<Movies> movies){
         BorderPane nvx = new BorderPane();
         nvx.setStyle("-fx-background-color: #fff;");
@@ -576,7 +629,11 @@ public class MainClass extends Application {
         
         return nvx;
     }
-    
+/**
+ * Affichage des films qui correspondent a la recherche
+ * @param movies
+ * @return 
+ */    
     public ScrollPane resultMovies(final ArrayList<Movies> movies){
         ScrollPane bar = new ScrollPane();
         bar.setStyle("-fx-background-color: #fff;");
@@ -629,7 +686,10 @@ public class MainClass extends Application {
         bar.setVbarPolicy(ScrollBarPolicy.ALWAYS);
         return bar;
     }
-    
+/**
+ * Elements de l'onglet recherche de film 
+ * @return 
+ */    
     public VBox searchVbox(){
         VBox nvx = new VBox(20);
         final TextField recherche;
@@ -711,7 +771,11 @@ public class MainClass extends Application {
         return nvx;
         
     }
-    
+/**
+ * Page d'inscripion
+ * @param condi
+ * @return 
+ */    
     public BorderPane getPane(int condi){
         BorderPane pane = new BorderPane();
         
@@ -719,7 +783,10 @@ public class MainClass extends Application {
         pane.setBottom(inscription());
         return pane;
     }
-    
+/**
+ * Elements de la page d'incription
+ * @return 
+ */    
     public HBox inscription(){
         HBox nvx = new HBox();
         Label str = new Label("Subscribe if you don't have an account yet : ");
@@ -738,7 +805,11 @@ public class MainClass extends Application {
         nvx.setId("HBox-tab4");
         return nvx;
     }
-    
+/**
+ * Onglet de connection/Inscription avec les saisies
+ * @param condi
+ * @return 
+ */    
     public BorderPane getGridtab4(int condi){
         BorderPane root=new BorderPane();
         VBox temporaire = new VBox(20);
@@ -850,7 +921,10 @@ public class MainClass extends Application {
         root.setCenter(temporaire);
         return root;
     }
-    
+/**
+ * Page qui s'affiche une fois connecté a la place de l'inscription
+ * @return 
+ */    
     public BorderPane connectedOK(){
         BorderPane pane = new BorderPane();
         pane.setRight(changeMdp());
@@ -858,7 +932,10 @@ public class MainClass extends Application {
         pane.setLeft(dispSessOfMemb());
         return pane;
     }
-    
+/**
+ * Affichage des session reserve par le client connecte sur son onglet client
+ * @return 
+ */    
     public VBox dispSessOfMemb(){
         VBox tot = new VBox(50);
         tot.setAlignment(Pos.CENTER);
@@ -891,7 +968,10 @@ public class MainClass extends Application {
         
         return tot;
     }
-    
+/**
+ * Changement du mot de passe pour client
+ * @return 
+ */    
     public VBox changeMdp(){
         VBox tot = new VBox(50);
         tot.setAlignment(Pos.CENTER);
@@ -938,7 +1018,10 @@ public class MainClass extends Application {
         tot.getChildren().addAll(txt0,txt1,txt2,txt3,txt4);
         return tot;
     }
-    
+/**
+ * Page sur laquelle on peut se deconnecter et qui affiche les infos du client
+ * @return 
+ */    
     public VBox membConnecte(){
         VBox nvx = new VBox(10);
         nvx.setAlignment(Pos.CENTER);
@@ -977,13 +1060,17 @@ public class MainClass extends Application {
         
         return nvx;
     }
-
+/**
+ * Affichage de la page d'accueil avce tout ses elements
+ * @return 
+ */
     public BorderPane getSPane()
     {   
         BorderPane pane = new BorderPane();
         final ScrollPane scroll = new ScrollPane();
         scroll.setContent(getPanetab1()); 
         scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        scroll.setStyle("-fx-background-color:#FFFFFF;");
         pane.setCenter(scroll);
         pane.setRight(deletePlace());
         pane.setTop(dispPriceReduc());
@@ -1294,6 +1381,7 @@ public class MainClass extends Application {
         bouton.setAlignment(Pos.CENTER);
         BorderPane.setMargin(button,new Insets(10,0,0,550));
         bouton.getChildren().add(button);
+
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override  
             public void handle(ActionEvent arg0) {

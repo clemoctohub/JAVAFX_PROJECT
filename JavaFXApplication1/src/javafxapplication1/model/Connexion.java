@@ -43,17 +43,23 @@ public class Connexion {
         // chargement driver "com.mysql.jdbc.Driver"
         Class.forName("com.mysql.jdbc.Driver");
         
-        String urlDatabase = "jdbc:mysql://localhost:3308/movie";
+        String urlDatabase = "jdbc:mysql://localhost:3306/movie";
        // String urlDatabase = "jdbc:mysql://localhost:3308/jps?characterEncoding=latin1";
 
-        //création d'une connexion JDBC à la base
-        conn = DriverManager.getConnection(urlDatabase, "root","root");
+
+        //création d'une connexion JDBC à la base 
+        conn = DriverManager.getConnection(urlDatabase, "root","");
         
         // création d'un ordre SQL (statement)
         stmt = conn.createStatement(); 
         
     }
-
+/**
+ * Convertion d'un string de date en date type sql
+ * @param date
+ * @return
+ * @throws ParseException 
+ */
     public java.sql.Date convertDate(String date) throws ParseException{
         
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -61,8 +67,15 @@ public class Connexion {
         java.sql.Date sql = new java.sql.Date(parsed.getTime());
         return sql;
     }
-    
-    //Ajout d'un nouveau membre dans la base de donnees
+/**
+ * Ajout d'un membre dans la bdd
+ * @param login
+ * @param motDePasse
+ * @param firstName
+ * @param lastName
+ * @param age
+ * @throws SQLException 
+ */
     public void insert_member(String login, String motDePasse, String firstName, String lastName, int age) throws SQLException {
         String sql = " INSERT INTO membre(login, mot_de_passe, first_name, last_name, age)"+" VALUES(?,?,?,?,?)";
 
@@ -76,7 +89,18 @@ public class Connexion {
         
         conn.close();
     }
-    
+/**
+ * Ajout d'un film dans la bdd
+ * @param title
+ * @param author
+ * @param date
+ * @param rate
+ * @param type
+ * @param runningTime
+ * @param id
+ * @param description
+ * @throws SQLException 
+ */    
     public void add_movie(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, String description)throws SQLException{
         String sql = " INSERT INTO movie(id, titre, auteur, genre, date, runningTime, note, description)"+" VALUES(?,?,?,?,?,?,?,?)";
         
@@ -92,7 +116,12 @@ public class Connexion {
         nn.execute();
         conn.close();
     }
-    
+/**
+ * Ajout de sessions
+ * @param sessions
+ * @param id
+ * @throws SQLException 
+ */    
     public void insert_seance(ArrayList<Sessions> sessions,int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
         PreparedStatement mt = conn.prepareStatement(sql);
@@ -107,7 +136,12 @@ public class Connexion {
             mt.execute(); 
         }
     }
-    
+/**
+ * Ajout d'une session
+ * @param session
+ * @param id
+ * @throws SQLException 
+ */    
     public void insert_seance(Sessions session, int id) throws SQLException{
         String sql = " INSERT INTO session(id, movie_id, date, max_place, heure, actual_place, amount)"+" VALUES(?,?,?,?,?,?,?)";
         PreparedStatement pstm = conn.prepareStatement(sql);
@@ -121,7 +155,15 @@ public class Connexion {
         pstm.execute();
         conn.close();
     }
-    
+/**
+ * Ajout d'un client
+ * @param session_id
+ * @param id
+ * @param date
+ * @param mail
+ * @throws SQLException
+ * @throws ParseException 
+ */    
     public void insert_customer(int session_id, int id, String date,String mail) throws SQLException, ParseException{
         java.sql.Date dat = convertDate(date);
         String sql = " INSERT INTO customer(id, id_session, date, mail)"+" VALUES(?,?,?,?)";
@@ -132,7 +174,15 @@ public class Connexion {
         ps.setString(4, mail);
         ps.execute();
     }
-    
+/**
+ * Ajout d'un employé
+ * @param login
+ * @param mdp
+ * @param first
+ * @param last
+ * @param acc
+ * @throws SQLException 
+ */    
     public void insert_employee(String login,String mdp, String first, String last, String acc) throws SQLException{
         String sql = " INSERT INTO employee(login, motDePasse, firstName, lastName, cle_access)"+" VALUES(?,?,?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql);
@@ -144,7 +194,13 @@ public class Connexion {
         ps.execute();
         conn.close();
     }
-    
+/**
+ * Mise a jour d'une session
+ * @param tot
+ * @param amount
+ * @param id
+ * @throws SQLException 
+ */    
     public void add_update_session(int tot,double amount,int id) throws SQLException{
         String sql = "update session set actual_place = ?, amount = ? where id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -154,7 +210,11 @@ public class Connexion {
         preparedStmt.execute();
         conn.close();
     }
-    
+/**
+ * Mise a jour totale d'une session
+ * @param session
+ * @throws SQLException 
+ */    
     public void changeAll_seance(Sessions session) throws SQLException{
         String sql = "UPDATE session SET movie_id = ?, date = ?, max_place = ?, heure = ?, actual_place = ?, amount = ? WHERE id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -168,7 +228,12 @@ public class Connexion {
         preparedStmt.execute();
         conn.close();
     }
-    
+/**
+ * Mise a jour d'un membre
+ * @param tot
+ * @param id
+ * @throws SQLException 
+ */    
     public void update_member(int tot,String id) throws SQLException{
         String sql = "update membre set age = ? where login = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -177,7 +242,12 @@ public class Connexion {
         preparedStmt.execute();
         conn.close();
     }
-    
+/**
+ * Modification du mot de passe membre
+ * @param password
+ * @param id
+ * @throws SQLException 
+ */    
     public void change_password(String password,String id) throws SQLException{
         String sql = "update membre set mot_de_passe = ? where login = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -186,7 +256,12 @@ public class Connexion {
         preparedStmt.execute();
         conn.close();
     }
-    
+/**
+ * Modification du mot de passe employé
+ * @param password
+ * @param id
+ * @throws SQLException 
+ */    
     public void change_password2(String password,String id) throws SQLException{
         String sql = "update employee set motDePasse = ? where login = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -195,6 +270,11 @@ public class Connexion {
         preparedStmt.execute();
         conn.close();
     }
+/**
+ * Modification d'un film
+ * @param movie
+ * @throws SQLException 
+ */
     public void changeAll_(Movies movie) throws SQLException{
         String sql = "UPDATE movie SET titre = ?, auteur = ?, genre = ?, date = ?, runningTime = ?, description = ?, note = ? WHERE id = ?";
         PreparedStatement preparedStmt = conn.prepareStatement(sql);
@@ -209,7 +289,13 @@ public class Connexion {
         preparedStmt.executeUpdate();
         conn.close();
     }
-    
+/**
+ * Modification des remises
+ * @param i1
+ * @param i2
+ * @param i3
+ * @throws SQLException 
+ */    
     public void changePromotions(double i1,double i2, double i3) throws SQLException{
         if(i1!=-1){
             String sql = "update reduction set promo = ? where id = ?";
@@ -235,7 +321,11 @@ public class Connexion {
         
         conn.close();
     }
-    //Suppression d'un membre dans la base de donnees
+/**
+ * Suppression d'un membre dans la base de donnees
+ * @param login
+ * @throws SQLException 
+ */
     public void delete_member(String login) throws SQLException{
         ArrayList<Members> listeMem = recolterChampsMember();
         
@@ -248,7 +338,12 @@ public class Connexion {
             }
         }  
     }
-    //Suppression d'un movie de la base de donnees
+    
+/**
+ * Suppression d'un movie de la base de donnees
+ * @param id
+ * @throws SQLException 
+ */
     public void delete_movie(int id) throws SQLException{
         ArrayList<Movies> listeMov = recolterChampsMovies();
         
@@ -262,7 +357,11 @@ public class Connexion {
         }  
         conn.close();
     }
-    
+/**
+ * Suppression d'une session
+ * @param id
+ * @throws SQLException 
+ */    
     public void delete_session(int id) throws SQLException{
         ArrayList<Sessions> listeSess = recolterChampsSessions();
         
@@ -276,7 +375,13 @@ public class Connexion {
         }
         conn.close();
     }
-    
+/**
+ * Suppression d'un client
+ * @param id
+ * @param e
+ * @return
+ * @throws SQLException 
+ */    
     public boolean delete_customer(int id,String e) throws SQLException{
         ArrayList<Members> listeCust = recolterChampsCustomer();
         boolean condi = false;
@@ -291,7 +396,11 @@ public class Connexion {
         }
         return condi;
     }
-    
+/**
+ * Suppression d'un employé
+ * @param login
+ * @throws SQLException 
+ */    
     public void delete_employee(String login) throws SQLException{
         ArrayList<Employees> liste = recolterChampsEmployee();
         
@@ -305,7 +414,12 @@ public class Connexion {
         }
         conn.close();
     }
-    
+/**
+ * Recupere les sessions du client 
+ * @param login
+ * @return
+ * @throws SQLException 
+ */    
     public ArrayList<Integer> getSessionConnected(String login) throws SQLException{
         ArrayList<Integer> nvx = new ArrayList<>();
         rset = stmt.executeQuery("select * from customer");
@@ -318,6 +432,12 @@ public class Connexion {
         
         return nvx;
     }
+/**
+ * Recupere les Id des sessions du client
+ * @param login
+ * @return
+ * @throws SQLException 
+ */
     public ArrayList<Integer> getSessionConnectedID(String login) throws SQLException{
         ArrayList<Integer> nvx = new ArrayList<>();
         rset = stmt.executeQuery("select * from customer");
@@ -330,7 +450,12 @@ public class Connexion {
         conn.close();
         return nvx;
     }
-    
+/**
+ * Relie les sessions aux clients
+ * @param nvx
+ * @return
+ * @throws SQLException 
+ */    
     public ArrayList<Sessions> recolterSessionMember(ArrayList<Integer> nvx) throws SQLException{
         ArrayList<Sessions> other = new ArrayList<>();
         rset = stmt.executeQuery("select * from session");
@@ -352,7 +477,12 @@ public class Connexion {
         conn.close();
         return other;
     }
-    
+/**
+ * Recupere les sessions
+ * @param id
+ * @return
+ * @throws SQLException 
+ */    
     public Sessions recolterAmountSession(int id) throws SQLException{
         rset = stmt.executeQuery("select * from session");
         
@@ -371,7 +501,11 @@ public class Connexion {
         // Retourner l'ArrayList
         return null;
     }
-    
+/**
+ * Recupere les employés de la bdd
+ * @return
+ * @throws SQLException 
+ */    
     //Recolte des tables de donnees
     public ArrayList<Employees> recolterChampsEmployee() throws SQLException {
         // récupération de l'ordre de la requete
@@ -396,6 +530,11 @@ public class Connexion {
         // Retourner l'ArrayList
         return liste;
     }
+/**
+ * Recupere les membres de la bdd
+ * @return
+ * @throws SQLException 
+ */
     public ArrayList<Members> recolterChampsMember() throws SQLException {
         // récupération de l'ordre de la requete
         rset = stmt.executeQuery("select * from membre");
@@ -418,6 +557,11 @@ public class Connexion {
         // Retourner l'ArrayList
         return liste;
     }
+/**
+ * Recupere les films de la bdd
+ * @return
+ * @throws SQLException 
+ */
     public ArrayList<Movies> recolterChampsMovies() throws SQLException {
         // récupération de l'ordre de la requete
         rset = stmt.executeQuery("select * from movie");
@@ -444,7 +588,12 @@ public class Connexion {
         // Retourner l'ArrayList
         return liste;
     }   
-    
+/**
+ * Recupere un film dans la bdd selon l'ID
+ * @param id
+ * @return
+ * @throws SQLException 
+ */    
     
     public String recolterSpecifikMovie(int id) throws SQLException{
         rset = stmt.executeQuery("select * from movie");
@@ -458,7 +607,12 @@ public class Connexion {
         return "<Not found>";
     }
     
-    
+/**
+ * Recupere une session dans la bdd
+ * @param id
+ * @return
+ * @throws SQLException 
+ */    
     public int recolterSpecifikSession(int id) throws SQLException{
         rset = stmt.executeQuery("select * from session");
         while (rset.next()) {
@@ -470,11 +624,15 @@ public class Connexion {
         }
         return -1;
     }
-    
+/**
+ * Recupere les films d'un client
+ * @param id
+ * @param e
+ * @return
+ * @throws SQLException 
+ */    
     public int getMovieFromCust(int id,String e) throws SQLException{
         rset = stmt.executeQuery("select * from customer");
-
-        // creation d'une ArrayList d'Employees
         
         // tant qu'il reste une ligne 
         while (rset.next()) {
@@ -486,7 +644,11 @@ public class Connexion {
         }
         return -1;
     }
-    
+/**
+ * Recupere les sessions de la bdd
+ * @return
+ * @throws SQLException 
+ */    
     public ArrayList<Sessions> recolterChampsSessions() throws SQLException{
         rset = stmt.executeQuery("select * from session");
 
@@ -507,7 +669,12 @@ public class Connexion {
         // Retourner l'ArrayList
         return liste;
     }
-    
+/**
+ * Recupere les sessions d'un film
+ * @param idmov
+ * @return
+ * @throws SQLException 
+ */    
     public ArrayList<Sessions> recolterChampsSessionsMovie(int idmov) throws SQLException{
         ArrayList<Sessions> sess;
         ArrayList<Sessions> rep = new ArrayList<>();
@@ -522,7 +689,12 @@ public class Connexion {
         conn.close();
         return rep;
     }
-    
+/**
+ * Recupere les clients de la bdd selon l'ID d'un film
+ * @param id_movie
+ * @return
+ * @throws SQLException 
+ */    
     public ArrayList<Customers> recolterChampsCustomer(int id_movie) throws SQLException{
         rset = stmt.executeQuery("select * from customer");
 
@@ -540,7 +712,11 @@ public class Connexion {
         // Retourner l'ArrayList
         return liste;
     }
-    
+/**
+ * Recupere les clients de la bdd
+ * @return
+ * @throws SQLException 
+ */    
     public ArrayList<Members> recolterChampsCustomer() throws SQLException{
         rset = stmt.executeQuery("select * from customer");
 
@@ -558,7 +734,15 @@ public class Connexion {
         return liste;
     }
     
-    //Recherche du film parmi la liste de films disponibles
+/**
+ * Recherche de films
+ * @param name
+ * @param type
+ * @param time
+ * @param date
+ * @return
+ * @throws SQLException 
+ */
     public ArrayList<Movies> searchMovie(String name,String type,int time,String date)throws SQLException{
         ArrayList<Movies> liste = new ArrayList<>();
         ArrayList<Movies> request;
@@ -588,8 +772,13 @@ public class Connexion {
         conn.close();
         return liste;
     }
-    
-    //Check des logins et mot de passe pour les membres et les employés
+/**
+ * Verifie les identifiants lors de la connexion
+ * @param login
+ * @param mdp
+ * @return
+ * @throws SQLException 
+ */
     public Members checkLoginMember(String login, String mdp) throws SQLException{
         ArrayList<Members> listeMem = recolterChampsMember();
         
@@ -600,6 +789,13 @@ public class Connexion {
         }
         return null;        
     }
+/**
+ * Verifie les identifiants lors de la connexion
+ * @param login
+ * @param mdp
+ * @return
+ * @throws SQLException 
+ */
     public Employees checkLoginEmployee(String login, String mdp) throws SQLException{
         ArrayList<Employees> listeEmp = recolterChampsEmployee();
         
@@ -610,7 +806,11 @@ public class Connexion {
         }
         return null;        
     }  
-    
+/**
+ * Recupere les remises
+ * @return
+ * @throws SQLException 
+ */    
     public double[] getReduc() throws SQLException{
         double[] promo = new double[3];
         
@@ -627,7 +827,9 @@ public class Connexion {
         
         return promo;
     }
-    
+/**
+ * Fermeture de la connexion avec la bdd
+ */    
     public void closeConn(){
         try {
             conn.close();

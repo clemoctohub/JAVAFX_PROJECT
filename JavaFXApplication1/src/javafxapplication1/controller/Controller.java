@@ -24,12 +24,20 @@ public class Controller {
     private final String request;
     private final String location;
     private final String password_ddb = "root";
-    
+/**
+ * Constructeur
+ * @param request
+ * @param location 
+ */  
     public Controller(String request,String location){
         this.request = request;
         this.location = location;
     }  
-        
+/**
+ * Recupération d'un film dans la base de données
+ * @param id
+ * @return 
+ */        
     public String getAMovie(int id){
         String nom="";
         try {
@@ -41,7 +49,11 @@ public class Controller {
         }
         return nom;
     }
-    
+/**
+ * Recuperation des sessions du client connecté
+ * @param login
+ * @return 
+ */    
     public ArrayList<Sessions> getSessionConnected(String login){
         ArrayList<Integer> nvx;
         ArrayList<Sessions> other = new ArrayList<>();
@@ -56,7 +68,11 @@ public class Controller {
         
         return other;
     }
-    
+/**
+ * Recuperation de l'ID du client connecté
+ * @param login
+ * @return 
+ */    
     public ArrayList<Integer> getIdCustomerSess(String login){
         ArrayList<Integer> nvx = new ArrayList<>();
         try {
@@ -68,7 +84,10 @@ public class Controller {
         return nvx;
     }
     
-    
+/**
+ * Suppression d'un film
+ * @param id 
+ */    
     public void delete_movie(int id){
         try {
             Connexion conn = new Connexion("movie", "root", password_ddb);
@@ -78,7 +97,10 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+/**
+ * Mise a jour d'un film
+ * @param movie 
+ */    
     public void update_movie(Movies movie){
         try {
             Connexion conn = new Connexion("movie", "root", password_ddb);
@@ -88,7 +110,10 @@ public class Controller {
         }
 
     }
-    
+/**
+ * Ajout de film
+ * @param movie 
+ */    
     public void addmovie(Movies movie){
         try {
             Connexion conn = new Connexion("movie", "root", password_ddb);
@@ -97,7 +122,12 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+/**
+ * Suppression de reservation de session
+ * @param id
+ * @param mail
+ * @return 
+ */    
     public boolean delete_session_customer(String id,String mail){
         int num;
         boolean condi=false;
@@ -132,7 +162,11 @@ public class Controller {
         
         return condi;
     }
-    
+/**
+ * Modification du mot de passe d'un client
+ * @param password
+ * @param id 
+ */    
     public void changePassword(String password, String id){
         try {
             Connexion conn = new Connexion("movie", "root", password_ddb);
@@ -142,7 +176,11 @@ public class Controller {
         }
         
     }
-    
+/**
+ * Modification du mot de passe d'un employe
+ * @param password
+ * @param id 
+ */   
     public void changePassword2(String password, String id){
         try {
             Connexion conn = new Connexion("movie", "root", password_ddb);
@@ -152,7 +190,18 @@ public class Controller {
         }
         
     }
-    
+/**
+ * Ajout d'un client à une session
+ * @param num
+ * @param crypto
+ * @param mv
+ * @param id
+ * @param tot
+ * @param nbr
+ * @param date
+ * @param mail
+ * @return 
+ */    
     public int addCustomerToSession(String num, String crypto, String mv, int id, String tot, String nbr,String date,String mail){
         int x=0;
         for(int i=0;i<num.length();i++){
@@ -203,14 +252,32 @@ public class Controller {
         }
         return x;
     }
-    
+/**
+ * Recupere le film d'une session
+ * @param id
+ * @return
+ * @throws SQLException
+ * @throws ClassNotFoundException
+ * @throws ParseException 
+ */    
     public ArrayList<Sessions> getSessionMovie(int id) throws SQLException, ClassNotFoundException, ParseException{
         ArrayList<Sessions> nvx;
         Connexion conn = new Connexion("movie", "root",password_ddb);
         nvx = conn.recolterChampsSessionsMovie(id);
         return nvx;
     }
-    
+/**
+ * Recherche de Film parmi la liste
+ * @param name
+ * @param type
+ * @param time
+ * @param day
+ * @param month
+ * @return
+ * @throws SQLException
+ * @throws ClassNotFoundException
+ * @throws ParseException 
+ */    
     public ArrayList<Movies> searchMovies(String name,String type,String time,String day, String month) throws SQLException, ClassNotFoundException, ParseException{
         Connexion nvx = new Connexion("movie", "root", password_ddb);
         ArrayList<Movies> rep;
@@ -257,7 +324,15 @@ public class Controller {
         rep = nvx.searchMovie(name,type,temps,month+"-"+day);
         return rep;
     }
-    
+/**
+ * Recupere le client connecté
+ * @param id
+ * @param pwd
+ * @return
+ * @throws SQLException
+ * @throws ClassNotFoundException
+ * @throws ParseException 
+ */    
     public Members getConnectedMember(String id, String pwd) throws SQLException, ClassNotFoundException, ParseException{
         Members test;
         Connexion nvx = new Connexion("movie", "root", password_ddb);
@@ -265,7 +340,15 @@ public class Controller {
         nvx.closeConn();
         return test;
     }
-    
+/**
+ * Recupere l'employé connecté
+ * @param id
+ * @param pwd
+ * @return
+ * @throws SQLException
+ * @throws ClassNotFoundException
+ * @throws ParseException 
+ */    
     public Employees getConnectedEmployee(String id, String pwd) throws SQLException, ClassNotFoundException, ParseException{
         Employees test;
         Connexion nvx = new Connexion("movie", "root", password_ddb);
@@ -273,7 +356,17 @@ public class Controller {
         nvx.closeConn();
         return test;
     }
-    
+/**
+ * Creation/Ajout d'un nouveau membre
+ * @param firstName
+ * @param lastName
+ * @param age
+ * @param pwd
+ * @return
+ * @throws SQLException
+ * @throws ClassNotFoundException
+ * @throws ParseException 
+ */    
     public int createMember(String firstName,String lastName, String age, String pwd) throws SQLException, ClassNotFoundException, ParseException{
         
         if(firstName==null || firstName.equals("") || lastName==null || lastName.equals(""))
@@ -307,7 +400,10 @@ public class Controller {
         
         return condi;
     }
-    
+/**
+ * Recupere la liste des films
+ * @return 
+ */    
     public ArrayList<Movies> dispAllMovies()
     {
         ArrayList<Movies> movies=null;
@@ -322,7 +418,13 @@ public class Controller {
         
         return movies;
     }
-    
+/**
+ * Modification des remises
+ * @param in1
+ * @param in2
+ * @param in3
+ * @return 
+ */    
     public int changePromotion(String in1, String in2, String in3){
         
         double i1=-1,i2=-1,i3=-1;
@@ -383,7 +485,10 @@ public class Controller {
         }
         return -1;
     }
-    
+/**
+ * Recupere la liste de membre
+ * @return 
+ */    
     public ArrayList<Members> recolterMembre(){
         ArrayList<Members> nvx = new ArrayList<>();
         try {
@@ -396,6 +501,10 @@ public class Controller {
         
         return nvx;
     }
+/**
+ * Recupere la liste de sessions
+ * @return 
+ */
     public ArrayList<Sessions> recolterSessions(){
         ArrayList<Sessions> nvx = new ArrayList<>();
         try {
@@ -407,7 +516,10 @@ public class Controller {
         }
         return nvx;
     }
-    
+/**
+ * Recupere la liste d'employes
+ * @return 
+ */    
     public ArrayList<Employees> getAllEmployee(){
         ArrayList<Employees> nvx = new ArrayList<>();
         Connexion conn;
@@ -421,7 +533,10 @@ public class Controller {
         
         return nvx;
     }
-    
+/**
+ * Recupere la liste de client
+ * @return 
+ */    
     public ArrayList<Members> getAllMembers(){
         ArrayList<Members> nvx = new ArrayList<>();
         Connexion conn;
@@ -435,7 +550,10 @@ public class Controller {
         
         return nvx;
     }
-    
+/**
+ * Suppression d'un employé
+ * @param login 
+ */    
     public void deleteEmployee(String login){
         Connexion conn;
         try {
@@ -446,7 +564,12 @@ public class Controller {
         }
         
     }
-    
+/**
+ * Ajout d'un employé
+ * @param i1
+ * @param i2
+ * @param i3 
+ */    
     public void insert_employee(String i1,String i2,String i3){
         i1 = i1.replaceAll(" ","_");
         i2 = i2.replaceAll(" ","_");
@@ -479,7 +602,10 @@ public class Controller {
         }
         
     }
-    
+/**
+ * Suppression d'un membre
+ * @param id 
+ */    
     public void deleteMember(String id){
         try {
             Connexion conn = new Connexion("movie", "root", password_ddb);
@@ -489,7 +615,12 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+/**
+ * Modification d'un membre
+ * @param age
+ * @param login
+ * @return 
+ */    
     public boolean modifyMember(String age,String login){
         if(age.charAt(0)=='-' || age.charAt(0)==' ')
             return false;
@@ -514,7 +645,10 @@ public class Controller {
         }
         return true;
     }
-
+/**
+ * Mise a jour d'une session
+ * @param sess 
+ */
     public void update_Session(Sessions sess)
     {
         try {
@@ -524,7 +658,11 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+/**
+ * Ajout d'ne session
+ * @param sess
+ * @param id 
+ */    
     public void Add_Session(Sessions sess, int id)
     {
         try {
@@ -534,7 +672,10 @@ public class Controller {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+/**
+ * Suppression d'une session
+ * @param id 
+ */    
     public void delete_Session(int id)
     {
         try {
@@ -551,7 +692,11 @@ public class Controller {
         nvx.closeConn();
         return customers;
     }
-
+/**
+ * Suppression d'un client
+ * @param id
+ * @param e 
+ */
     public void delete_customer(int id, String e){
         try {
             Connexion conn = new Connexion("movie", "root", password_ddb);
