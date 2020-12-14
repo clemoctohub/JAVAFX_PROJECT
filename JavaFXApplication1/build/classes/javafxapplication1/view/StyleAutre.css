@@ -45,6 +45,7 @@ and open the template in the editor.
 }
 #dsgn-promo-txt{
     -fx-font-size : 1.5em;
+
     -fx-border-color: #DADFE1;
 }
 #dsgn-promo-radio{
