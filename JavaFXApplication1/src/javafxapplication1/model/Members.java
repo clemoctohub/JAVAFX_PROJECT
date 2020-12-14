@@ -16,12 +16,20 @@ import javax.mail.internet.MimeMessage;
 /**
  *
  * @author Utilisateur
+ * membres du cin"ma ayant accés aux réductions
  */
 public class Members extends Customers{
     private String password;
     private int age;
     private final String login;
-    
+    /**
+     * constructeur
+     * @param firstName
+     * @param lastName
+     * @param password
+     * @param age
+     * @param login 
+     */
     public Members(String firstName, String lastName,String password,int age, String login)
     {
         super(firstName,lastName);
@@ -29,7 +37,11 @@ public class Members extends Customers{
         this.age = age;
         this.login = login;
     }
-    
+    /**
+     * mise en place du login
+     * @param id
+     * @param login 
+     */
     public Members(int id,String login){
         super(id);
         this.login = login;
@@ -39,7 +51,10 @@ public class Members extends Customers{
     public void display() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+    /**
+     * getter du password
+     * @return 
+     */
      public String getPassword() {
         return password;
     }
@@ -47,15 +62,25 @@ public class Members extends Customers{
     public int getAge() {
         return age;
     }
-
+    /**
+     * getter du login
+     * @return 
+     */
     public String getLogin() {
         return login;
     }
-    
+    /**
+     * getter id du membre
+     * @return 
+     */
     public int getId(){
         return id;
     }
-    
+    /**
+     * envoie du mail de réservation
+     * @param x
+     * @param login 
+     */
     public void sendMessage(int x,String login){
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");

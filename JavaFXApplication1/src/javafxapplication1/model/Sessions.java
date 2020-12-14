@@ -10,6 +10,7 @@ import java.sql.Date;
 /**
  *
  * @author Utilisateur
+ * Informations d'un session
  */
 public class Sessions {
     private final Date date;
@@ -19,7 +20,16 @@ public class Sessions {
     private final int nbr_places_max;
     private final int actual_place;
     private final double amount;
-    
+    /**
+     * constructeur
+     * @param id
+     * @param movie
+     * @param date
+     * @param max
+     * @param actual
+     * @param horaire
+     * @param amount 
+     */
     public Sessions(int id,int movie,Date date,int max,int actual,String horaire,double amount)
     {
         this.movie=movie;
@@ -30,7 +40,10 @@ public class Sessions {
         this.horaire = horaire;
         this.amount = amount;
     }
-    
+    /**
+     * getter des différentes informations d'une session
+     * @return 
+     */
     public int getMovie(){
         return movie;
     }

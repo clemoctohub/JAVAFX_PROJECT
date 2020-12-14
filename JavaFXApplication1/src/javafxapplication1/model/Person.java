@@ -8,6 +8,7 @@ package javafxapplication1.model;
 /**
  *
  * @author Utilisateur
+ * interface permettant de différencier une personne employé membre ou simple client 
  */
 public interface Person {
     public void display();
