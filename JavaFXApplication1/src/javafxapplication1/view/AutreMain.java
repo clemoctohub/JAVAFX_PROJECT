@@ -1225,7 +1225,7 @@ public class AutreMain{
         error.setText("");
 
         
-        //Bouton Ajout Image
+        /**Bouton Ajout Image*/
         Button image = new Button("Import Image");
         image.setId("butEmpl");
         image.setOnAction(new EventHandler<ActionEvent>() {
@@ -1237,7 +1237,7 @@ public class AutreMain{
             }
         });
         
-        //Bouton Ajout Film
+        /**Bouton Ajout Film*/
         Button add = new Button("Add Movie");
         add.setId("butEmpl");
         add.setOnAction(new EventHandler<ActionEvent>() {
@@ -1412,7 +1412,7 @@ public class AutreMain{
                     }
                 }
             });
-            //Bouton Delete
+            /**Bouton Delete*/
             delete.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event){

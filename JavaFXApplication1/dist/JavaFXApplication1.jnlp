@@ -11,7 +11,7 @@
   </resources>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="JavaFXApplication1.jar" size="953169" download="eager" />
+    <jar href="JavaFXApplication1.jar" size="953194" download="eager" />
     <jar href="lib/dsn.jar" size="18478" download="eager" />
     <jar href="lib/imap.jar" size="178013" download="eager" />
     <jar href="lib/mail.jar" size="507849" download="eager" />
