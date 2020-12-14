@@ -1076,7 +1076,11 @@ public class MainClass extends Application {
         pane.setTop(dispPriceReduc());
         return pane;
     }
-    
+    /**
+     * affiche les boutons pour voir les reductions du cinema et s'inscrire + place ticket
+     * affichage dans le top du borderpane des boutons
+     * @return 
+     */
     public HBox dispPriceReduc(){
         Cinema cine = new Cinema();
         HBox nvx = new HBox(10);
@@ -1108,7 +1112,11 @@ public class MainClass extends Application {
         nvx.getChildren().addAll(but,first,second,third);
         return nvx;
     }
-    
+    /**
+     * sur l'onglet 1 (home page) permet a une personne de supprimer sa place en fonction de son id et email
+     * la selection est blindee et verifie avec une requete vers la base de donnee
+     * @return 
+     */
     public VBox deletePlace(){
         VBox nvx = new VBox(50);
         nvx.setAlignment(Pos.CENTER);
@@ -1149,7 +1157,13 @@ public class MainClass extends Application {
         nvx.getChildren().addAll(inter,id,mail,error,button);
         return nvx;
     }
-    
+    /**
+     * affichage des indicateurs du film : son nom, son auteur, sa date de sortie, son type, sa duree..
+     * on affiche aussi la note en fonction du nombre d'etoiles
+     * affichage de la description du film
+     * @param movies
+     * @return 
+     */
     public HBox getGridtab1(Movies movies)
     {
         HBox tot = new HBox(50);
@@ -1193,6 +1207,11 @@ public class MainClass extends Application {
         
         return tot;
     }
+    /**
+     * affiche sur le premier onglet les films avec un try catch une recherche d'image et un bouton
+     * quand on clique sur le bouton on accede aux seances du film
+     * @return 
+     */
     public FlowPane getPanetab1()
     {
         ArrayList<Movies> movies;
@@ -1267,7 +1286,12 @@ public class MainClass extends Application {
         tot.getChildren().addAll(ok,dac,idi,but);
         return tot;
     }
-    
+    /**
+     * fonction qui permet d'afficher la page d'inscription pour un client
+     * on affiche des erreurs si la personne entre un mauvais input
+     * @param message
+     * @return 
+     */
     public BorderPane getSubscription(String message){
         
         BorderPane test = new BorderPane();
@@ -1276,7 +1300,6 @@ public class MainClass extends Application {
         nvx.setStyle("-fx-background-color: #fff;");
         nvx.setMaxWidth(400);
         nvx.setAlignment(Pos.CENTER);
-        //layout.prefWidthProperty().bind(window.widthProperty().multiply(0.80));
         Label firstName = new Label("Enter your firstName :");
         Label lastName = new Label("Enter your lastName :");
         Label age = new Label("Enter your age :");
@@ -1284,7 +1307,7 @@ public class MainClass extends Application {
         Label confirmPassword = new Label("Confirm your password :");
         final Label error = new Label(message);
         error.setTextFill(RED);
-//Adding text-field to the form
+/**Adding text-field to the form*/
         final TextField tf1=new TextField();
         final TextField tf2=new TextField();
         final TextField tf3=new TextField();
@@ -1367,7 +1390,10 @@ public class MainClass extends Application {
         
         return test;
     }
-    
+    /**
+     * fonction qui gere l'affihage du deuxieme tab avec les boutons pour sign up et la box avec les reductions
+     * @return 
+     */    
     public BorderPane getDiscount(){
         BorderPane pane = new BorderPane();
         pane.setCenter(getGridtab2());
@@ -1393,7 +1419,10 @@ public class MainClass extends Application {
         pane.setBottom(bouton);
         return pane;
     }
-    
+    /**Affiche les promotions dans le deuxieme tab
+     * Un thread tourne toute les 15 secondes pour afficher les donnees de maniere reguliere et rafraichir la page
+     * @return 
+     */
     public GridPane getGridtab2(){
         final Cinema cine = new Cinema();
         GridPane root=new GridPane();

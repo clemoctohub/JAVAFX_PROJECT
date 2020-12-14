@@ -531,7 +531,7 @@ public class AutreMain{
         VBox tot = new VBox(10);
         tot.setAlignment(Pos.CENTER);
         Label lab = new Label("Change actual offers : ");
-        lab.setStyle("-fx-font-size:1.2em; -fx-text-fill: black;");
+        lab.setStyle("-fx-font-size:1.2em; -fx-text-fill: #000000;");
         final ToggleGroup group = new ToggleGroup();
         RadioButton button1 = new RadioButton("Senior : ");
         RadioButton button2 = new RadioButton("Children : ");  
@@ -1227,7 +1227,7 @@ public class AutreMain{
         error.setText("");
 
         
-        //Bouton Ajout Image
+        /**Bouton Ajout Image*/
         Button image = new Button("Import Image");
         image.setId("butEmpl");
         image.setOnAction(new EventHandler<ActionEvent>() {
@@ -1239,7 +1239,7 @@ public class AutreMain{
             }
         });
         
-        //Bouton Ajout Film
+        /**Bouton Ajout Film*/
         Button add = new Button("Add Movie");
         add.setId("butEmpl");
         add.setOnAction(new EventHandler<ActionEvent>() {
@@ -1414,7 +1414,7 @@ public class AutreMain{
                     }
                 }
             });
-            //Bouton Delete
+            /**Bouton Delete*/
             delete.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event){
