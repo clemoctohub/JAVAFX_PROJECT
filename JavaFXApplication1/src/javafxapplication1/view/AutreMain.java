@@ -500,7 +500,7 @@ public class AutreMain{
         VBox tot = new VBox(10);
         tot.setAlignment(Pos.CENTER);
         Label lab = new Label("Change actual offers : ");
-        lab.setStyle("-fx-font-size:1.2em; -fx-text-fill: #F5DEB3;");
+        lab.setStyle("-fx-font-size:1.2em; -fx-text-fill: #000000;");
         final ToggleGroup group = new ToggleGroup();
         RadioButton button1 = new RadioButton("Senior : ");
         RadioButton button2 = new RadioButton("Children : ");  

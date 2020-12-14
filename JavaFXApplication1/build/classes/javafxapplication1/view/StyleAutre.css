@@ -45,12 +45,12 @@ and open the template in the editor.
 }
 #dsgn-promo-txt{
     -fx-font-size : 1.5em;
-    -fx-border-color: #A0522D;
+    -fx-border-color: #DADFE1;
 }
 #dsgn-promo-radio{
     -fx-font-size : 1.2em;
     -fx-border-color: #DADFE1;
-    -fx-text-fill: #F5DEB3;
+    -fx-text-fill: #000000;
 }
 #stat-grid{
     -fx-padding : 0 0 0 2em;
@@ -69,7 +69,7 @@ and open the template in the editor.
     -fx-background-color:#DADFE1;
 }
 #labEmpl{
-    -fx-border-color: #DADFE1;
+    -fx-border-color: #gnDADFE1;
     -fx-font-size : 1.3em;
 }
 #butEmpl{
