@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Utilisateur
+ * information du cinéma et de ce qu'il contient
  */
 public class Cinema {
     private ArrayList<Movies> movies;
@@ -24,14 +25,23 @@ public class Cinema {
     public void setRegular(double regular) {
         this.regular = regular;
     }
-
+    /**
+     * senior promotion
+     * @param senior 
+     */
     public void setSenior(double senior) {
         this.senior = senior;
     }
-
+    /**
+     * children promotion
+     * @param children 
+     */
     public void setChildren(double children) {
         this.children = children;
     }
+    /**
+     * constructeur du cinéma
+     */
     public Cinema(){
         double[] promo = new double[3];
         try {
@@ -44,14 +54,24 @@ public class Cinema {
         this.children = promo[2];
         this.regular = promo[0];
     }
-    
+    /**
+     * mise en place des promotions
+     * @param movies
+     * @param senior
+     * @param children
+     * @param regular 
+     */
     public Cinema (ArrayList<Movies> movies,double senior,double children,double regular)
     {
         this.senior = senior;
         this.children = children;
         this.regular = regular;
     }
-    
+    /**
+     * return un movie selon son id 
+     * @param id
+     * @return 
+     */
     public Movies getCorrectMovie(int id){
         for (Movies movie : movies) {
             if (movie.getId() == id) {
@@ -60,7 +80,12 @@ public class Cinema {
         }
         return null;
     }
-    
+    /**
+     * mise en place prix du ticket
+     * @param mem
+     * @param i
+     * @return 
+     */
     public double prixTicket(Members mem,int i){
         double prix;
         prix = i*PRIX;
@@ -72,11 +97,17 @@ public class Cinema {
        
         return prix;
     } 
-    
+    /**
+     * getter prix 
+     * @return 
+     */
     public double getPrix(){
         return PRIX;
     }
-    
+    /**
+     * getter description
+     * @return 
+     */
     public String getDescription(){
         return description = "  Benefits all year round!!\n"
                                    +"  Thanks to CinéPass, enjoy exclusive benefits\n"

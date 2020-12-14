@@ -8,6 +8,7 @@ package javafxapplication1.model;
 /**
  *
  * @author Utilisateur
+ * Information du tous ce que contient un film
  */
 public class Movies {
     private final String title;
@@ -19,7 +20,17 @@ public class Movies {
     private final int runningTime;
     private final String description;
     //private ArrayList<Session> sessions;
-    
+    /**
+     * cosntructeur
+     * @param title
+     * @param author
+     * @param date
+     * @param rate
+     * @param type
+     * @param runningTime
+     * @param id
+     * @param description 
+     */
     public Movies(String title, String author,java.sql.Date date, int rate, String type, int runningTime, int id, String description)
     {
         this.title = title;
@@ -31,7 +42,10 @@ public class Movies {
         this.runningTime = runningTime;
         this.description = description;
     }
-    
+    /**
+     * getter de toutes les informations d'un film
+     * @return 
+     */
     public String getTitle() {
         return title;
     }

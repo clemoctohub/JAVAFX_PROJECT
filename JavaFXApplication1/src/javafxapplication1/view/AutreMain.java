@@ -57,7 +57,11 @@ public class AutreMain{
     private Label connected = new Label("");
     private Controller controller;
     
-    
+    /**
+     * 
+     * Constructeur de la deuxième scène pour la partie employé.
+     * 
+     */
     public AutreMain(Employees nvx){
         this.actual = nvx;
         second = new Stage();
@@ -86,7 +90,12 @@ public class AutreMain{
 
         });
     }
-    
+    /**
+     * Affichage de l'interface home partie employé
+     * Chaque bouton permet d'accéder à certaine fonctionnalité
+     * En fonction du grade de l'employé certains boutons sont désactivés.
+     * 
+     */
     public BorderPane homePage(){
         BorderPane tot = new BorderPane();
         VBox nvx = new VBox(50);
@@ -163,7 +172,12 @@ public class AutreMain{
         tot.setCenter(nvx);
         return tot;
     }
-    
+    /**
+     * 
+     * Permet à l'employé de modifier son mot de passe avec blindage 
+     * pour ne pas se tromper de format
+     * modification de la bdd pour le mdp
+     */
     public HBox changePassword(){
         HBox tot = new HBox();
         tot.setId("setBack");
@@ -222,7 +236,11 @@ public class AutreMain{
         tot.getChildren().add(nvx);
         return tot;
     }
-    
+    /**
+     * 
+     * Affichage des statistics du cinéma 
+     * sous forme de graphics 
+     */
     public ScrollPane seeStatistics(){
         ScrollPane scroll = new ScrollPane();
         scroll.setStyle("-fx-background-color:#DADFE1");
@@ -372,7 +390,15 @@ public class AutreMain{
         scroll.setContent(nvx);
         return scroll;
     }
-    
+    /**
+     * 
+     * @param movies
+     * @param sessions
+     * @param nbr_sess
+     * @param amount
+     * @return
+     * Calcul de toutes les stats pour les graphiques 
+     */
     public VBox totalTabStat(ArrayList<Movies> movies, ArrayList<Sessions> sessions,ArrayList<Integer> nbr_sess, ArrayList<Double> amount){
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
@@ -493,7 +519,11 @@ public class AutreMain{
         
         return box;
     }
-    
+    /**
+     * methode permettant à l'employé de changer une promotion en fonction 
+     * de senior, children et médium, possibilité de voir l'information changer en direct
+     * @return 
+     */
     public BorderPane changePromotion(){
         BorderPane toto=new BorderPane();
         toto.setStyle("-fx-background-color:#DADFE1");
@@ -645,7 +675,10 @@ public class AutreMain{
         
         return toto;
     }
-    
+    /**
+     * permet d'acceder à la bdd des employés ou des membres du cinéma
+     * @return 
+     */
     public BorderPane accessMembEmploy(){
         BorderPane tot = new BorderPane();
         tot.setStyle("-fx-background-color : #DADFE1");
@@ -694,7 +727,11 @@ public class AutreMain{
         tot.setRight(emptyRight(but.getWidth()));
         return tot;
     }
-    
+    /**
+     * permet d'accéder aux différentes fonctions du cinéma
+     * les films, les sessions et les clients en fonction de la bdd
+     * @return 
+     */
     public BorderPane accessCinemaData(){
         BorderPane tot = new BorderPane();
         tot.setStyle("-fx-background-color : #DADFE1");
@@ -764,7 +801,13 @@ public class AutreMain{
         tot.setCenter(nvx);
         return tot;
     }
-    
+    /**
+     * permet de supprimer un client du fichier de la bdd
+     * @return
+     * @throws SQLException
+     * @throws ParseException
+     * @throws ClassNotFoundException 
+     */
     public BorderPane accesCustomerData() throws SQLException, ParseException, ClassNotFoundException{
         BorderPane pane = new BorderPane();
         pane.setId("setBack");
@@ -834,7 +877,11 @@ public class AutreMain{
         
         return pane;
     }
-    
+    /**
+     * donnée lié aux films de la bdd
+     * interface pour modifier,supprimer ou ajouter un film 
+     *
+     */
     public BorderPane accesMoviesData() throws SQLException, ClassNotFoundException, ParseException{
         BorderPane pane = new BorderPane();
         ScrollPane scroll = new ScrollPane();
@@ -914,7 +961,14 @@ public class AutreMain{
                
        return pane; 
     }
-    
+    /**
+     * donnée lié aux sessions de la bdd
+     * interface pour modifier,supprimer ou ajouter une session 
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws ParseException 
+     */
     public BorderPane acessSessionData() throws SQLException, ClassNotFoundException, ParseException
     {
         final BorderPane pane = new BorderPane();
@@ -983,7 +1037,11 @@ public class AutreMain{
         pane.setCenter(scroll);
         return pane; 
     }
-    
+    /**
+     * permet de modifier les informations d'un film puis de les modifier dans la bdd
+     * @param movie
+     * @return 
+     */
     public BorderPane ModifMovie(final Movies movie){
         BorderPane pane = new BorderPane();
         pane.setId("setBack");
@@ -1096,7 +1154,12 @@ public class AutreMain{
         pane.setCenter(grid);       
         return pane;
     }
-    
+    /**
+     * permet d'ajouter un film dans la bdd en remplissant toutes les informations
+     * nécéssaires avec blindage de saisies
+     * @return
+     * @throws ParseException 
+     */
     public BorderPane AddMovie() throws ParseException{
         BorderPane pane = new BorderPane();
         pane.setId("setBack");
@@ -1242,7 +1305,12 @@ public class AutreMain{
         
        return pane; 
     }
-    
+    /**
+     * permet de modifier une session dans la bdd avec blindage de saisie
+     * @param sess
+     * @param id
+     * @return 
+     */
     public BorderPane ModifSess(final ArrayList<Sessions> sess, final int id)
     {
         BorderPane tot = new BorderPane();
@@ -1379,7 +1447,15 @@ public class AutreMain{
         tot.setCenter(nvx);
         return tot;
     }
-    
+    /**
+     * fonction permettant d'appeler le controller 
+     * afin de modifier la bdd pour les sessions
+     * @param session
+     * @param date
+     * @param np
+     * @param heure
+     * @throws ParseException 
+     */
     public void Up_Session(Sessions session,TextField date,TextField np, TextField heure) throws ParseException
     {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -1388,7 +1464,12 @@ public class AutreMain{
         Sessions ses = new Sessions(session.getId(),session.getMovie(),sql,Integer.valueOf(np.getText()),session.getActual(),heure.getText(),session.getAmount());
         controller.update_Session(ses);
     }
-    
+    /**
+     * permet de modifier une session en récupérant
+     * l'id de son film pour pas de confusion
+     * @param idmov
+     * @return 
+     */
     public BorderPane AddSession(final int idmov)
     {
         BorderPane pane = new BorderPane();
@@ -1523,7 +1604,11 @@ public class AutreMain{
         nvx.getChildren().add(but);
         return nvx;
     }
-    
+    /**
+     * sert à gérer la liste d'employé 
+     * que ce soit supprimer ou ajouter un employé
+     * @return 
+     */
     public VBox dispEmployee(){
         VBox nvx = new VBox(10);
         nvx.setId("setBack");
@@ -1575,7 +1660,11 @@ public class AutreMain{
         nvx.getChildren().addAll(butoo,uno,tot,buton);
         return nvx;
     }
-    
+    /**
+     * blindage pour la saisie de date
+     * @param date
+     * @return 
+     */
     public int checkDateFormat(String date){
         int condi = 0;
         if(date.length()==10)
@@ -1595,7 +1684,11 @@ public class AutreMain{
         }
         return condi;
     }
-    
+    /**
+     * blindage pour la saisie de nombre
+     * @param nb
+     * @return 
+     */
     public int EstUnNombre(String nb)
     {
         int a = 1;
@@ -1604,7 +1697,11 @@ public class AutreMain{
         
         return a;
     }
-    
+    /**
+     * blidnage pour la saisie d'heure
+     * @param heure
+     * @return 
+     */
     public int checkHeureFormat(String heure)
     {
         int condi = 0;
@@ -1622,7 +1719,11 @@ public class AutreMain{
         }else condi =0;
         return condi;
     }
-    
+    /**
+     * fonction pour supprimer un employé
+     * @param employee
+     * @return 
+     */
     public VBox deleteEmployee(final Employees employee){
         VBox nvx = new VBox(40);
         nvx.setId("setBack");
@@ -1657,7 +1758,10 @@ public class AutreMain{
         nvx.getChildren().addAll(lab1,lab2,lab3,inte);
         return nvx;
     }
-    
+    /**
+     * fonction pour ajouter un employé
+     * @return 
+     */
     public VBox addEmployee(){
         VBox tot = new VBox(20);
         tot.setId("setBack");
@@ -1715,7 +1819,10 @@ public class AutreMain{
         tot.getChildren().addAll(lab0,box1,box2,box3,lab4,box4);
         return tot;
     }
-    
+    /**
+     * affiche tous les clients membres
+     * @return 
+     */
     public VBox dispMember(){
         VBox nvx = new VBox(10);
         nvx.setId("setBack");
@@ -1764,7 +1871,11 @@ public class AutreMain{
         nvx.getChildren().addAll(butoo,uno,tot);
         return nvx;
     }
-    
+    /**
+     * modifier un client membre
+     * @param memb
+     * @return 
+     */
     public HBox modifyMembers(final Members memb){
         VBox tot = new VBox(20);
         
